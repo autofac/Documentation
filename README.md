@@ -3,8 +3,7 @@ Usage and API documentation for Autofac and integration libraries.
 
 [![Documentation Status](https://readthedocs.org/projects/autofac/badge/?version=latest)](https://readthedocs.org/projects/autofac/?badge=latest)
 
-[Check out the rendered documentation on ReadTheDocs!](http://autofac.readthedocs.org/)
-
+**[Check out the Autofac documentation at docs.autofac.org!](http://docs.autofac.org/)**
 
 ## Building
 
