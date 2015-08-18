@@ -11,8 +11,11 @@ Due to the differences in the way OWIN handles the application pipeline (detecti
 To take advantage of Autofac in your OWIN pipeline:
 
 * Reference the ``Autofac.Owin`` package from NuGet.
+* Register all the Middleware with the container
 * Build your Autofac container.
 * Register the Autofac middleware with OWIN and pass it the container.
+
+Note here that the UseAutofacMiddleware does not only add the AutofacMiddleware, it also loops over the registered Middleware with the container, instantiates them, and then add them to the IAppBuilder. Any Middleware added to the IAppBuilder directly using ``app.Use<OtherMiddleware>()`` will not be managed by Autofac.
 
 .. sourcecode:: csharp
 
@@ -21,13 +24,14 @@ To take advantage of Autofac in your OWIN pipeline:
       public void Configuration(IAppBuilder app)
       {
         var builder = new ContainerBuilder();
-        // Register dependencies, then...
+        // Register all the Middleware Autofac should manage
+        builder.RegisterType<SomeMiddleware>();
         var container = builder.Build();
 
-        // Register the Autofac middleware FIRST.
+        // Register the Autofac middleware FIRST. This will also loop over all the registered Middleware with the container above, instantiate them, and then add them to the IAppBuilder on your behalf
         app.UseAutofacMiddleware(container);
 
-        // ...then register your other middleware.
+        // ...then register other Middleware that should NOT be managed by Autofac
       }
     }
 
