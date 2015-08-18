@@ -13,3 +13,4 @@ Frequently Asked Questions
     isolate-autofac.rst
     pcl.rst
     binding-redirect.rst
+    injecting-global-parameters.rst
