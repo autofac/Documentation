@@ -65,9 +65,7 @@ When you register things in Autofac, you might have registrations that look like
 
 The only time you know the email server address is at runtime - maybe through a context or environment parameter, maybe through configuration.
 
-.. contents:: **How do you pass a parameter to the email server when you resolve the notifier?**
-  :local:
-  :depth: 1
+**How do you pass a parameter to the email server when you resolve the notifier?**
 
 Why This is a Design Problem
 ============================
@@ -79,114 +77,9 @@ Passing the server address as a parameter to the ``INotifier`` breaks the decoup
 
 **The key to solving the problem is to break that "knowledge" so you're not passing a parameter.**
 
-Option 1: Register Using a Lambda
-=================================
+Solutions
+=========
 
-In this option, rather than registering the email server type directly, :doc:`register using a lambda expression <../register/registration>`. This allows you to resolve things from the container or use the environment to get the value.
+Instead of trying to pass a parameter, flip the problem around - **figure out how you determine the parameter at runtime and wrap that in a provider or a lamda expression registration.**
 
-.. sourcecode:: csharp
-
-    var builder = new ContainerBuilder();
-    builder.Register(ctx =>
-    {
-      var address = Environment.GetEnvironmentVariable("SERVER_ADDRESS");
-      return new EmailServer(address);
-    }).As<IEmailServer>();
-
-As part of this, you may want to create some sort of abstraction around how you get the server address. For example, it may be something that you got as part of a web request and you've stored it in the ``HttpContext``. You could create an address provider like this:
-
-.. sourcecode:: csharp
-
-    public interface IServerAddressProvider
-    {
-      string GetServerAddress();
-    }
-
-    public class ContextServerAddressProvider : IServerAddressProvider
-    {
-      private HttpContextBase _context;
-      public ContextServerAddressProvider(HttpContextBase context)
-      {
-        this._context = context;
-      }
-
-      public string GetServerAddress()
-      {
-        return (string)this._context.Items["EMAIL_SERVER_ADDRESS"];
-      }
-    }
-
-Once you have a provider, you could register that with the container and use it in conjunction with the lambda.
-
-.. sourcecode:: csharp
-
-    var builder = new ContainerBuilder();
-    builder.RegisterType<ContextServerAddressProvider>()
-           .As<IServerAddressProvider>()
-           .InstancePerRequest();
-    builder.Register(ctx =>
-    {
-      var address = ctx.Resolve<IServerAddressProvider>().GetServerAddress();
-      return new EmailServer(address);
-    }).As<IEmailServer>();
-
-**If you need to pass a string parameter or can't modify the code, this is the recommended option.**
-
-Option 2: Use a Provider
-========================
-
-Usually the biggest problem is that the parameter you need to pass is a base type like an integer or a string. If you can switch this to use a provider a strongly-typed interface parameter, you can make registration a little easier.
-
-For example, you may be able to get the parameter from a web request context like this.
-
-.. sourcecode:: csharp
-
-    public interface IServerAddressProvider
-    {
-      string GetServerAddress();
-    }
-
-    public class ContextServerAddressProvider : IServerAddressProvider
-    {
-      private HttpContextBase _context;
-      public ContextServerAddressProvider(HttpContextBase context)
-      {
-        this._context = context;
-      }
-
-      public string GetServerAddress()
-      {
-        return (string)this._context.Items["EMAIL_SERVER_ADDRESS"];
-      }
-    }
-
-You could then refactor the email server code to take the provider rather than an address string:
-
-.. sourcecode:: csharp
-
-    public class EmailServer : IEmailServer
-    {
-      private IServerAddressProvider _serverAddressProvider;
-      public EmailServer(IServerAddressProvider serverAddressProvider)
-      {
-        this._serverAddressProvider = serverAddressProvider;
-      }
-
-      public void SendMessage(string toAddress, string fromAddress, message)
-      {
-        var address = this._serverAddressProvider.GetServerAddress();
-        // ...send the message through the specified server address.
-      }
-    }
-
-Now you can just register types:
-
-.. sourcecode:: csharp
-
-    var builder = new ContainerBuilder();
-    builder.RegisterType<ContextServerAddressProvider>()
-           .As<IServerAddressProvider>()
-           .InstancePerRequest();
-    builder.RegisterType<EmailServer>().As<IEmailServer>();(ctx =>
-
-**If you can modify the code, this is the recommended option.**
+This changes the question to a different FAQ where we walk through answers step by step: :doc:`How do I inject configuration, environment, or context parameters? <injecting-configured-parameters>`
