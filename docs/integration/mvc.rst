@@ -313,6 +313,23 @@ Then be sure to register your pre-application-start code with an assembly attrib
 
     [assembly: PreApplicationStartMethod(typeof(Initializer), "Initialize")]
 
+Using the Current Autofac DependencyResolver
+============================================
+
+Once you set the MVC ``DependencyResolver`` to an ``AutofacDependencyResolver``, you can use ``AutofacDependencyResolver.Current`` as a shortcut to getting the current dependency resolver and casting it to an ``AutofacDependencyResolver``.
+
+Unfortunately, there are some gotchas around the use of ``AutofacDependencyResolver.Current`` that can result in things not working quite right. Usually these issues arise by using a product like `Glimpse <http://getglimpse.com/>`_ or `Castle DynamicProxy <http://www.castleproject.org/projects/dynamicproxy/>`_ that "wrap" or "decorate" the dependency resolver to add functionality. If the current dependency resolver is decorated or otherwise wrapped/proxied, you can't cast it to ``AutofacDependencyResolver`` and there's no single way to "unwrap it" or get to the actual resolver.
+
+Prior to version 3.3.3 of the Autofac MVC integration, we tracked the current dependency resolver by dynamically adding it to the request lifetime scope. This got us around issues where we couldn't unwrap the ``AutofacDependencyResolver`` from a proxy... but it meant that ``AutofacDependencyResolver.Current`` would only work during a request lifetime - you couldn't use it in background tasks or at application startup.
+
+Starting with version 3.3.3, the logic for locating ``AutofacDependencyResolver.Current`` changed to first attempt to cast the current dependency resolver; then to specifically look for signs it was wrapped using `Castle DynamicProxy <http://www.castleproject.org/projects/dynamicproxy/>`_ and unwrap it via reflection. Failing that... we can't find the current ``AutofacDependencyResolver`` so we throw an ``InvalidOperationException`` with a message like:
+
+    The dependency resolver is of type 'Some.Other.DependencyResolver' but was expected to be of type 'Autofac.Integration.Mvc.AutofacDependencyResolver'. It also does not appear to be wrapped using DynamicProxy from the Castle Project. This issue could be the result of a change in the DynamicProxy implementation or the use of a different proxy library to wrap the dependency resolver.
+
+The typical place where this is seen is when using the action filter provider via ``ContainerBuilder.RegisterFilterProvider()``. The filter provider needs to access the Autofac dependency resolver and uses ``AutofacDependencyResolver.Current`` to do it.
+
+If you see this, it means you're decorating the resolver in a way that can't be unwrapped and functions that rely on ``AutofacDependencyResolver.Current`` will fail. The current solution is to not decorate the dependency resolver.
+
 Unit Testing
 ============
 
