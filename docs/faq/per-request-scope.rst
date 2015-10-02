@@ -232,7 +232,7 @@ In NUnit it'd look like this:
       // Build the container, then...
       this._configuration = new HttpConfiguration
       {
-        DependencyResolver = new AutofacWebApiDependencyResolver(container);
+        DependencyResolver = new AutofacWebApiDependencyResolver(container)
       }
     }
 
