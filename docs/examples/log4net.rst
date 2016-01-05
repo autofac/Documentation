@@ -37,7 +37,7 @@ Here's a sample module that configures Autofac to inject ``ILog`` parameters bas
           {
             new ResolvedParameter( 
                 (p, i) => p.ParameterType == typeof(ILog), 
-                (p, i) => LogManager.GetLogger(p.MemberInfo.DeclaringType)
+                (p, i) => LogManager.GetLogger(p.Member.DeclaringType)
             ),
           });
       }
