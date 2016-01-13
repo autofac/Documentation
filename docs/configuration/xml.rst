@@ -225,7 +225,7 @@ The new ``Microsoft.Extensions.Configuration`` mechanism adds a lot of flexibili
 
 - **Environment variable support.** You can use ``Microsoft.Extensions.Configuration.EnvironmentVariables`` to enable configuration changes based on the environment. A quick way to debug, patch, or fix something without touching code might be to switch an Autofac registration based on environment.
 - **Easy configuration merging.** The ``ConfigurationBuilder`` allows you to create configuration from a lot of sources and merge them into one. If you have a lot of configuration, consider scanning for your configuration files and building the configuration dynamically rather than hardcoding paths.
-- **Custom configuration sources.** You can implement ``Microsoft.Extensions.Configuration.IConfigurationSource`` yourself backed by more than just files. If you want to centralize configuration, consider a database or REST API backed configuration source.
+- **Custom configuration sources.** You can implement ``Microsoft.Extensions.Configuration.ConfigurationProvider`` yourself backed by more than just files. If you want to centralize configuration, consider a database or REST API backed configuration source.
 
 Configuring With Application Configuration (Legacy)
 ===================================================
