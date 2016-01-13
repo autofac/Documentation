@@ -14,15 +14,15 @@ Before diving too deeply into JSON/XML configuration, be sure to read :doc:`Modu
 
 Configuring With Microsoft Configuration
 ========================================
-With the release of `Microsoft.Framework.Configuration <https://www.nuget.org/packages/Microsoft.Framework.Configuration>`_, and Autofac.Configuration 4.0.0, Autofac takes advantage of the more flexible configuration model not previously available when limited to application configuration files. If you were using the ``app.config`` or ``web.config`` based configuration available before, you will need to migrate your configuration to the new format and update the way you set configuration with your application container.
+With the release of `Microsoft.Extensions.Configuration <https://www.nuget.org/packages/Microsoft.Extensions.Configuration>`_, and Autofac.Configuration 4.0.0, Autofac takes advantage of the more flexible configuration model not previously available when limited to application configuration files. If you were using the ``app.config`` or ``web.config`` based configuration available before, you will need to migrate your configuration to the new format and update the way you set configuration with your application container.
 
 Quick Start
 -----------
 The basic steps to getting configuration set up with your application are:
 
-1. Set up your configuration in JSON or XML files that can be read by ``Microsoft.Framework.Configuration``.
-2. Build the configuration using the ``Microsoft.Framework.Configuration.ConfigurationBuilder``.
-3. Create a new ``Autofac.Configuration.ConfigurationModule`` and pass the built ``Microsoft.Framework.Configuration.IConfiguration`` into it.
+1. Set up your configuration in JSON or XML files that can be read by ``Microsoft.Extensions.Configuration``.
+2. Build the configuration using the ``Microsoft.Extensions.Configuration.ConfigurationBuilder``.
+3. Create a new ``Autofac.Configuration.ConfigurationModule`` and pass the built ``Microsoft.Extensions.Configuration.IConfiguration`` into it.
 4. Register the ``Autofac.Configuration.ConfigurationModule`` with your container.
 
 A configuration file with some simple registrations looks like this:
@@ -76,7 +76,7 @@ JSON is cleaner and easier to read, but if you prefer XML, the same configuratio
         </components>
     </autofac>
 
-*Note the ordinal "naming" of components and services in XML - this is due to the way Microsoft.Framework.Configuration handles ordinal collections (arrays).*
+*Note the ordinal "naming" of components and services in XML - this is due to the way Microsoft.Extensions.Configuration handles ordinal collections (arrays).*
 
 Build up your configuration and register it with the Autofac ``ContainerBuilder`` like this:
 
@@ -211,25 +211,25 @@ Differences from Legacy Configuration
 -------------------------------------
 When migrating from the legacy ``app.config`` based format to the new format, there are some key changes to be aware of:
 
-- **Multiple configuration files handled differently.** The legacy configuration had a ``files`` element that would automatically pull several files together at once for configuration. Use the ``Microsoft.Framework.Configuration.ConfigurationBuilder`` to accomplish this now.
+- **Multiple configuration files handled differently.** The legacy configuration had a ``files`` element that would automatically pull several files together at once for configuration. Use the ``Microsoft.Extensions.Configuration.ConfigurationBuilder`` to accomplish this now.
 - **AutoActivate is supported.** You can specify :doc:`components should auto-activate <../lifetime/startup>` now, a feature previously unavailable in configuration.
-- **XML uses element children rather than attributes.** This helps keep the XML and JSON parsing the same when using ``Microsoft.Framework.Configuration`` so you can combine XML and JSON configuration sources correctly.
-- **Using XML requires you to name components and services with numbers.** ``Microsoft.Framework.Configuration`` requires every configuration item to have a name and a value. The way it supports ordinal collections (arrays) is that it implicitly gives unnamed elements in a collection names with numbers ("0", "1", and so on). You can see an example of this in the quick start, above. If you don't go with JSON, you need to watch for this requirement from ``Microsoft.Framework.Configuration`` or you won't get what you expect.
+- **XML uses element children rather than attributes.** This helps keep the XML and JSON parsing the same when using ``Microsoft.Extensions.Configuration`` so you can combine XML and JSON configuration sources correctly.
+- **Using XML requires you to name components and services with numbers.** ``Microsoft.Extensions.Configuration`` requires every configuration item to have a name and a value. The way it supports ordinal collections (arrays) is that it implicitly gives unnamed elements in a collection names with numbers ("0", "1", and so on). You can see an example of this in the quick start, above. If you don't go with JSON, you need to watch for this requirement from ``Microsoft.Extensions.Configuration`` or you won't get what you expect.
 - **Per-request lifetime scope is supported.** Previously you couldn't configure elements to have :doc:`per-request lifetime scope <../lifetime/instance-scope>`. Now you can.
 - **Dashes in names/values are gone.** Names of XML elements used to include dashes like ``inject-properties`` - to work with the JSON configuration format, these are now camel-case, like ``injectProperties``.
 - **Services get specified in a child element.** The legacy configuration allowed a service to be declared right at the top of the component. The new system requires all services be in the ``services`` collection.
 
 Additional Tips
 ---------------
-The new ``Microsoft.Framework.Configuration`` mechanism adds a lot of flexibility. Things you may want to take advantage of:
+The new ``Microsoft.Extensions.Configuration`` mechanism adds a lot of flexibility. Things you may want to take advantage of:
 
-- **Environment variable support.** You can use ``Microsoft.Framework.Configuration.EnvironmentVariables`` to enable configuration changes based on the environment. A quick way to debug, patch, or fix something without touching code might be to switch an Autofac registration based on environment.
+- **Environment variable support.** You can use ``Microsoft.Extensions.Configuration.EnvironmentVariables`` to enable configuration changes based on the environment. A quick way to debug, patch, or fix something without touching code might be to switch an Autofac registration based on environment.
 - **Easy configuration merging.** The ``ConfigurationBuilder`` allows you to create configuration from a lot of sources and merge them into one. If you have a lot of configuration, consider scanning for your configuration files and building the configuration dynamically rather than hardcoding paths.
-- **Custom configuration sources.** You can implement ``Microsoft.Framework.Configuration.IConfigurationSource`` yourself backed by more than just files. If you want to centralize configuration, consider a database or REST API backed configuration source.
+- **Custom configuration sources.** You can implement ``Microsoft.Extensions.Configuration.IConfigurationSource`` yourself backed by more than just files. If you want to centralize configuration, consider a database or REST API backed configuration source.
 
 Configuring With Application Configuration (Legacy)
 ===================================================
-Prior to the release of `Microsoft.Framework.Configuration <https://www.nuget.org/packages/Microsoft.Framework.Configuration>`_ and the updated configuration model, Autofac tied into standard .NET application configuration files. (``app.config`` / ``web.config``). In the 3.x series of the Autofac.Configuration package, this was the way to configure things.
+Prior to the release of `Microsoft.Extensions.Configuration <https://www.nuget.org/packages/Microsoft.Extensions.Configuration>`_ and the updated configuration model, Autofac tied into standard .NET application configuration files. (``app.config`` / ``web.config``). In the 3.x series of the Autofac.Configuration package, this was the way to configure things.
 
 Setup
 -----
