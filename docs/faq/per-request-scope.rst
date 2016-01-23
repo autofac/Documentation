@@ -55,7 +55,7 @@ When you register a component as ``InstancePerRequest()``, you're telling Autofa
     | +------------------------------------------------+ |
     +----------------------------------------------------+
 
-The request scope is tagged with a constant value ``Autofac.Core.Lifetime.MatchingScopeLifetimeTags.AutofacWebRequest``, which equates to the string ``AutofacWebRequest``. If the request lifetime scope isn't found, you'll get a ``DependencyResolutionException`` that tells you the request lifetime scope isn't found.
+The request scope is tagged with a constant value ``Autofac.Core.Lifetime.MatchingScopeLifetimeTags.RequestLifetimeScopeTag``, which equates to the string ``AutofacWebRequest``. If the request lifetime scope isn't found, you'll get a ``DependencyResolutionException`` that tells you the request lifetime scope isn't found.
 
 There are tips on troubleshooting this exception below in the :ref:`troubleshooting` section.
 
@@ -336,7 +336,7 @@ Implementing Custom Per-Request Semantics
 You may have a custom application that handles requests - like a Windows Service application that takes requests, performs some work, and provides some output. In cases like that, you can implement a custom mechanism that provides the ability to register and resolve dependencies on a per-request basis if you structure your application properly. The steps you would take are identical to the steps seen in other application types that naturally support per-request semantics.
 
   * **Build the container at application start.** Make your registrations, build the container, and store a reference to the global container for later use.
-  * **When a logical request is received, create a request lifetime scope.** The request lifetime scope should be tagged with the tag ``Autofac.Core.Lifetime.MatchingScopeLifetimeTags.AutofacWebRequest`` so you can use standard registration extension methods like ``InstancePerRequest()``. This will also enable you to share registration modules across application types if you so desire.
+  * **When a logical request is received, create a request lifetime scope.** The request lifetime scope should be tagged with the tag ``Autofac.Core.Lifetime.MatchingScopeLifetimeTags.RequestLifetimeScopeTag`` so you can use standard registration extension methods like ``InstancePerRequest()``. This will also enable you to share registration modules across application types if you so desire.
   * **Associate request lifetime scope with the request.** This means you need the ability to get the request scope from within the request and not have a single, static, global variable with the "request scope" - that's a threading problem. You either need a construct like ``HttpContext.Current`` (as in ASP.NET) or ``OperationContext.Current`` (as in WCF); or you need to store the request lifetime along with the actual incoming request information (like Web API).
   * **Dispose of the request lifetime after the request is done.** After the request has been processed and the response is sent, you need to call ``IDisposable.Dispose()`` on the request lifetime scope to ensure memory is cleaned up and service instances are released.
   * **Dispose of the container at application end.** When the application is shutting down, call ``IDisposable.Dispose()`` on the global application container to ensure any managed resources are properly disposed and connections to databases, etc. are shut down.
