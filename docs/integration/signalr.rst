@@ -144,7 +144,8 @@ If you are using SignalR :doc:`as part of an OWIN application <owin>`, you need 
         app.UseAutofacMiddleware(container);
         app.MapSignalR("/signalr", config);
         
-        // To add custom HubPipeline modules, you have to get the HubPipeline from the dependency resolver, for example:
+        // To add custom HubPipeline modules, you have to get the HubPipeline
+        // from the dependency resolver, for example:
         var hubPipeline = config.Resolver.Resolve<IHubPipeline>();
         hubPipeline.AddModule(new MyPipelineModule());
       }
