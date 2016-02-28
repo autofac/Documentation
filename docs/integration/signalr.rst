@@ -6,6 +6,8 @@ SignalR integration requires the `Autofac.SignalR NuGet package <https://nuget.o
 
 SignalR integration provides dependency injection integration for SignalR hubs. **Due to SignalR internals, there is no support in SignalR for per-request lifetime dependencies.**
 
+Along with this documentation that's Autofac specific, you may also be interested in the `Microsoft documentation on SignalR and dependency injection.<http://www.asp.net/signalr/overview/advanced/dependency-injection>`_
+
 .. contents::
   :local:
 
@@ -143,10 +145,9 @@ If you are using SignalR :doc:`as part of an OWIN application <owin>`, you need 
         app.MapSignalR("/signalr", config);
         
         // To add custom HubPipeline modules, you have to get the HubPipeline from the dependency resolver, for example:
-        var hubPipeline = config.Resolver.Resolve<Microsoft.AspNet.SignalR.Hubs.IHubPipeline>();
-        // "SignalRExceptionHandler" is your custom class extending HubPipelineModule or IHubPipelineModule that does exception logging (or anything else)
-        hubPipeline.AddModule(new SignalRExceptionHandler());
+        var hubPipeline = config.Resolver.Resolve<IHubPipeline>();
+        hubPipeline.AddModule(new MyPipelineModule());
       }
     }
 
-A common error in OWIN integration is use of the ``GlobalHost``. **In OWIN you create the configuration from scratch.** You should not reference ``GlobalHost`` anywhere when using the OWIN integration.
+A common error in OWIN integration is use of the ``GlobalHost``. **In OWIN you create the configuration from scratch.** You should not reference ``GlobalHost`` anywhere when using the OWIN integration. `Microsoft has documentation about this and other IoC integration concerns here.<http://www.asp.net/signalr/overview/advanced/dependency-injection>`_
