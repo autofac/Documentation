@@ -5,6 +5,7 @@ Application Integration
 .. toctree::
 
     aspnet.rst
+    aspnetcore.rst
     wcf.rst
     mef.rst
     csl.rst

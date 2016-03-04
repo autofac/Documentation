@@ -201,6 +201,8 @@ What this means is that if you try to resolve components that are registered as 
     var builder = new ContainerBuilder();
     builder.RegisterType<Worker>().InstancePerRequest();
 
+**ASP.NET Core uses Instance Per Lifetime Scope rather than Instance Per Request.** See the :doc:`ASP.NET Core integration doc for more <../integration/aspnetcore>`.
+
 Instance Per Owned
 ==================
 
