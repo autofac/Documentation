@@ -14,6 +14,7 @@ To take advantage of Autofac in your OWIN pipeline:
 
 * Reference the ``Autofac.Extensions.DependencyInjection`` package from NuGet.
 * In the ``ConfigureServices`` method of your ``Startup`` class...
+
   - Register services from the ``IServiceCollection``.
   - Build your container.
   - Return the ``IServiceProvider`` from the container.
