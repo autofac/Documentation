@@ -2,6 +2,8 @@
 Web API
 =======
 
+Web API 2 integration requires the `Autofac.WebApi2 NuGet package <https://www.nuget.org/packages/Autofac.WebApi2>`_.
+
 Web API integration requires the `Autofac.WebApi NuGet package <https://www.nuget.org/packages/Autofac.WebApi/>`_.
 
 Web API integration provides dependency injection integration for controllers, model binders, and action filters. It also adds :doc:`per-request lifetime support <../faq/per-request-scope>`.
