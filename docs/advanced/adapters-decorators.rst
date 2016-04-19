@@ -7,7 +7,7 @@ Adapters
 
 The `adapter pattern <http://en.wikipedia.org/wiki/Adapter_pattern>`_ takes one service contract and adapts it (like a wrapper) to another.
 
-This `introductory article <http://nblumhardt.com/2010/04/lightweight-adaptation-%E2%80%93-coming-soon/>`_ describes a concrete example of the adapter pattern and how you can work with it in Autofac.
+This `introductory article <http://nblumhardt.com/2010/04/lightweight-adaptation-coming-soon/>`_ describes a concrete example of the adapter pattern and how you can work with it in Autofac.
 
 Autofac provides built-in adapter registration so you can register a set of services and have them each automatically adapted to a different interface.
 
