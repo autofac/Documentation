@@ -133,7 +133,7 @@ An implementor of ``IQuoteService`` can be registered through the container:
 
 .. sourcecode:: csharp
 
-    builder.Register<WebQuoteService>().As<IQuoteService>();
+    builder.RegisterType<WebQuoteService>().As<IQuoteService>();
 
 The ``Shareholding`` instances will now be wired up correctly, but note: the signature of ``Shareholding.Factory`` **doesn't change!** Autofac will transparently add the extra parameter to the ``Shareholding`` constructor when a factory delegate is called.
 
