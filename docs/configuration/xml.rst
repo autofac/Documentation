@@ -129,7 +129,6 @@ This example shows one component that has *all of the options* on it, just for s
                 "autoActivate": true,
                 "injectProperties": true,
                 "instanceScope": "per-dependency",
-                "memberOf": "named-collection",
                 "metadata": [
                     {
                         "key": "answer",
@@ -159,7 +158,6 @@ Element Name           Description                                              
 ``autoActivate``       A Boolean indicating if the component should :doc:`auto-activate<../lifetime/startup>`.                                                                 ``true``, ``false``
 ``injectProperties``   A Boolean indicating whether :doc:`property (setter) injection<../register/prop-method-injection>` for the component should be enabled.                 ``true``, ``false``
 ``instanceScope``      :doc:`Instance scope<../lifetime/instance-scope>` for the component.                                                                                    ``singleinstance``, ``perlifetimescope``, ``perdependency``, ``perrequest``
-``memberOf``           When using named collections, allows you to specify the name of the collection in which this component will be registered.                              Any non-null, non-empty string.
 ``metadata``           An array of :doc:`metadata values <../advanced/metadata>` to associate with the component. Each item specifies the ``name``, ``type``, and ``value``.   Any :doc:`metadata values <../advanced/metadata>`.
 ``ownership``          Allows you to control :doc:`whether the lifetime scope disposes the component or your code does<../lifetime/disposal>`.                                 ``lifetimescope``, ``external``
 ``parameters``         A name/value dictionary where the name of each element is the name of a constructor parameter and the value is the value to inject.                     Any parameter in the constructor of the component type.
