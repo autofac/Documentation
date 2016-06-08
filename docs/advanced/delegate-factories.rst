@@ -76,7 +76,7 @@ To wire this up, the ``Portfolio`` class would be registered with the container 
 
 .. sourcecode:: csharp
 
-    builder.Register<Portfolio>();
+    builder.RegisterType<Portfolio>();
 
 Using the Components
 --------------------
