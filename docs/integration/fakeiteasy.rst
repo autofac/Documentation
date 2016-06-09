@@ -33,7 +33,7 @@ When writing your unit test, use the ``Autofac.Extras.FakeItEasy.AutoFake`` clas
       {
         // The AutoFake class will inject a fake IDependency
         // into the SystemUnderTest constructor
-        var sut = fake.Create<SystemUnderTest>();
+        var sut = fake.Resolve<SystemUnderTest>();
       }
     }
 
@@ -50,14 +50,14 @@ You can configure the automatic fakes and/or assert calls on them as you would n
       using (var fake = new AutoFake())
       {
         // Arrange - configure the fake
-        A.CallTo(() => fake.Create<IDependency>().GetValue()).Returns("expected value");
-        var sut = fake.Create<SystemUnderTest>();
+        A.CallTo(() => fake.Resolve<IDependency>().GetValue()).Returns("expected value");
+        var sut = fake.Resolve<SystemUnderTest>();
 
         // Act
         var actual = sut.DoWork();
 
         // Assert - assert on the fake
-        A.CallTo(() => fake.Create<IDependency>().GetValue()).MustHaveHappened();
+        A.CallTo(() => fake.Resolve<IDependency>().GetValue()).MustHaveHappened();
         Assert.AreEqual("expected value", actual);
       }
     }
