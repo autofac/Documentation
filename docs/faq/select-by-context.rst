@@ -345,10 +345,10 @@ You can associate metadata with registrations directly:
       {
         builder.RegisterType<PostalServiceSender>()
                .As<ISender>()
-               .WithMetadata("send-allowed", "order");
+               .WithMetadata("SendAllowed", "order");
         builder.RegisterType<EmailNotifier>()
                .As<ISender>()
-               .WithMetadata("send-allowed", "notification");
+               .WithMetadata("SendAllowed", "notification");
       }
     }
 
@@ -365,13 +365,13 @@ You can then make use of the metadata as parameters on consumer registrations:
                  new ResolvedParameter(
                    (pi, ctx) => pi.ParameterType == typeof(ISender),
                    (pi, ctx) => ctx.Resolve<IEnumerable<Meta<ISender>>>()
-                                   .First(a => a.Metadata["send-allowed"].Equals("order"))));
+                                   .First(a => a.Metadata["SendAllowed"].Equals("order"))));
         builder.RegisterType<CustomerNotifier>();
                .WithParameter(
                  new ResolvedParameter(
                    (pi, ctx) => pi.ParameterType == typeof(ISender),
                    (pi, ctx) => ctx.Resolve<IEnumerable<Meta<ISender>>>()
-                                   .First(a => a.Metadata["send-allowed"].Equals("notification"))));
+                                   .First(a => a.Metadata["SendAllowed"].Equals("notification"))));
       }
     }
 
