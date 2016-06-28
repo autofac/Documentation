@@ -2,7 +2,7 @@
 Multitenant Applications
 ========================
 
-``Autofac.Multitenant`` enables multitenant dependency injection support. (Prior to v4.0.0, the package was called `Autofac.Extras.Multitenant`.)
+``Autofac.Multitenant`` enables multitenant dependency injection support. (Prior to v4.0.0, the package was called ``Autofac.Extras.Multitenant``.)
 
 .. contents::
   :local:
