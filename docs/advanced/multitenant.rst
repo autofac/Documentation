@@ -2,7 +2,7 @@
 Multitenant Applications
 ========================
 
-``Autofac.Extras.Multitenant`` enables multitenant dependency injection support.
+``Autofac.Multitenant`` enables multitenant dependency injection support. (Prior to v4.0.0, the package was called `Autofac.Extras.Multitenant`.)
 
 .. contents::
   :local:
@@ -18,7 +18,7 @@ Many changes in a multitenant environment are performed via simple configuration
 
 In a more complex scenario, **you may need to change business logic on a per-tenant basis.** For example, a specific tenant leasing space on the application may want to change the way a value is calculated using some complex custom logic. **How do you register a default behavior/dependency for an application and allow a specific tenant to override it?**
 
-This is the functionality that ``Autofac.Extras.Multitenant`` attempts to address.
+This is the functionality that ``Autofac.Multitenant`` attempts to address.
 
 General Principles
 ==================
@@ -40,16 +40,16 @@ Reference NuGet Packages
 Any application that wants to use multitenancy needs to add references to the NuGet packages...
 
 - Autofac
-- Autofac.Extras.Multitenant
+- Autofac.Multitenant
 
-That's the bare minimum. **WCF applications** also need ``Autofac.Extras.Multitenant.Wcf``.
+That's the bare minimum. **WCF applications** also need ``Autofac.Multitenant.Wcf``.
 
 .. _register_dependencies:
 
 Register Dependencies
 ---------------------
 
-``Autofac.Extras.Multitenant`` introduces a new container type called ``Autofac.Extras.Multitenant.MultitenantContainer``. This container is used for managing application-level defaults and tenant-specific overrides.
+``Autofac.Multitenant`` introduces a new container type called ``Autofac.Multitenant.MultitenantContainer``. This container is used for managing application-level defaults and tenant-specific overrides.
 
 The overall registration process is:
 
@@ -95,7 +95,7 @@ General usage looks like this:
     // tenant-specific dependencies get registered as shown
     // above, in tenant-specific lifetimes.
 
-Note that **you may only configure a tenant one time.** After that, you may not change that tenant's overrides. Also, if you resolve a dependency for a tenant, their lifetime scope may not be changed. It is good practice to configure your tenant overrides at application startup to avoid any issues. If you need to perform some business logic to "build" the tenant configuration, you can use the ``Autofac.Extras.Multitenant.ConfigurationActionBuilder``.
+Note that **you may only configure a tenant one time.** After that, you may not change that tenant's overrides. Also, if you resolve a dependency for a tenant, their lifetime scope may not be changed. It is good practice to configure your tenant overrides at application startup to avoid any issues. If you need to perform some business logic to "build" the tenant configuration, you can use the ``Autofac.Multitenant.ConfigurationActionBuilder``.
 
 .. sourcecode:: csharp
 
@@ -130,7 +130,7 @@ Identify the Tenant
 
 In order to resolve a tenant-specific dependency, Autofac needs to know which tenant is making the resolution request. That is, "for the current execution context, which tenant is resolving dependencies?"
 
-Autofac.Extras.Multitenant includes an ``ITenantIdentificationStrategy`` interface that you can implement to provide just such a mechanism. This allows you to retrieve the tenant ID from anywhere appropriate to your application: an environment variable, a role on the current user's principal, an incoming request value, or anywhere else.
+Autofac.Multitenant includes an ``ITenantIdentificationStrategy`` interface that you can implement to provide just such a mechanism. This allows you to retrieve the tenant ID from anywhere appropriate to your application: an environment variable, a role on the current user's principal, an incoming request value, or anywhere else.
 
 The following example shows what a simple ``ITenantIdentificationStrategy`` that a web application might look like.
 
@@ -138,7 +138,7 @@ The following example shows what a simple ``ITenantIdentificationStrategy`` that
 
     using System;
     using System.Web;
-    using Autofac.Extras.Multitenant;
+    using Autofac.Multitenant;
 
     namespace DemoNamespace
     {
@@ -165,11 +165,11 @@ The following example shows what a simple ``ITenantIdentificationStrategy`` that
       }
     }
 
-In this example, a web application is using an incoming request parameter to get the tenant ID. (Note that **this is just an example and is not recommended** because it would allow any user on the system to very easily just switch tenants.) A slightly more robust version of this exact strategy is provided as ``Autofac.Extras.Multitenant.Web.RequestParameterTenantIdentificationStrategy`` but, again, is still not recommended for production due to the insecurity.
+In this example, a web application is using an incoming request parameter to get the tenant ID. (Note that **this is just an example and is not recommended** because it would allow any user on the system to very easily just switch tenants.) A slightly more robust version of this exact strategy is provided as ``Autofac.Multitenant.Web.RequestParameterTenantIdentificationStrategy`` but, again, is still not recommended for production due to the insecurity.
 
 In your custom strategy implementation, you may choose to represent your tenant IDs as GUIDs, integers, or any other custom type. The strategy here is where you would parse the value from the execution context into a strongly typed object and succeed/fail based on whether the value is present and/or whether it can be parsed into the appropriate type.
 
-``Autofac.Extras.Multitenant`` uses ``System.Object`` as the tenant ID type throughout the system for maximum flexibility.
+``Autofac.Multitenant`` uses ``System.Object`` as the tenant ID type throughout the system for maximum flexibility.
 
 **Performance is important in tenant identification.** Tenant identification happens every time you resolve a component, begin a new lifetime scope, etc. As such, it is very important to make sure your tenant identification strategy is fast. For example, you wouldn't want to do a service call or a database query during tenant identification.
 
@@ -231,7 +231,7 @@ If you need to specifically access a tenant's lifetime scope or the application 
 ASP.NET Integration
 ===================
 
-ASP.NET integration is not really any different than :doc:`standard ASP.NET application integration <../integration/aspnet>`. Really, the only difference is that you will set up your application's ``Autofac.Integration.Web.IContainerProvider`` or ``System.,Web.Mvc.IDependencyResolver`` or whatever with an ``Autofac.Extras.Multitenant.MultitenantContainer`` rather than a regular container built by a ``ContainerBuilder``. Since the ``MultitenantContainer`` handles multitenancy in a transparent fashion, "things just work."
+ASP.NET integration is not really any different than :doc:`standard ASP.NET application integration <../integration/aspnet>`. Really, the only difference is that you will set up your application's ``Autofac.Integration.Web.IContainerProvider`` or ``System.,Web.Mvc.IDependencyResolver`` or whatever with an ``Autofac.Multitenant.MultitenantContainer`` rather than a regular container built by a ``ContainerBuilder``. Since the ``MultitenantContainer`` handles multitenancy in a transparent fashion, "things just work."
 
 ASP.NET Application Startup
 ---------------------------
@@ -340,14 +340,14 @@ Reference Packages for WCF Integration
 For an application **consuming a multitenant service** (a client application), add references to...
 
 - Autofac
-- Autofac.Extras.Multitenant
+- Autofac.Multitenant
 
 For an application **providing a multitenant service** (a service application), add references to...
 
 - Autofac
 - Autofac.Integration.Wcf
-- Autofac.Extras.Multitenant
-- Autofac.Extras.Multitenant.Wcf
+- Autofac.Multitenant
+- Autofac.Multitenant.Wcf
 
 .. _behavior_id:
 
@@ -360,7 +360,7 @@ A common solution to this is to propagate the tenant ID in message headers. The 
 
 In WCF, the way to attach these "dynamic" headers to messages and read them back is through a behavior. You apply the behavior to both the client and the service ends so the same header information (type, URN, etc.) is used.
 
-``Autofac.Extras.Multitenant`` provides a simple tenant ID propagation behavior in ``Autofac.Extras.Multitenant.Wcf.TenantPropagationBehavior``. Applied on the client side, it uses the tenant ID strategy to retrieve the contextual tenant ID and insert it into a message header on an outgoing message. Applied on the server side, it looks for this inbound header and parses the tenant ID out, putting it into an OperationContext extension.
+``Autofac.Multitenant`` provides a simple tenant ID propagation behavior in ``Autofac.Multitenant.Wcf.TenantPropagationBehavior``. Applied on the client side, it uses the tenant ID strategy to retrieve the contextual tenant ID and insert it into a message header on an outgoing message. Applied on the server side, it looks for this inbound header and parses the tenant ID out, putting it into an OperationContext extension.
 
 The :ref:`wcf_startup` section below shows examples of putting this behavior in action both on the client and server sides.
 
@@ -371,9 +371,9 @@ If you use this behavior, a corresponding server-side tenant identification stra
 Tenant Identification from OperationContext
 -------------------------------------------
 
-Whether or not you choose to use the provided ``Autofac.Extras.Multitenant.Wcf.TenantPropagationBehavior`` to propagate behavior from client to server in a message header (see above :ref:`behavior_id`), a good place to store the tenant ID for the life of an operation is in the ``OperationContext``.
+Whether or not you choose to use the provided ``Autofac.Multitenant.Wcf.TenantPropagationBehavior`` to propagate behavior from client to server in a message header (see above :ref:`behavior_id`), a good place to store the tenant ID for the life of an operation is in the ``OperationContext``.
 
-``Autofac.Extras.Multitenant`` provides the ``Autofac.Extras.Multitenant.Wcf.TenantIdentificationContextExtension`` as an extension to the WCF ``OperationContext`` for just this purpose.
+``Autofac.Multitenant.Wcf`` provides the ``Autofac.Multitenant.Wcf.TenantIdentificationContextExtension`` as an extension to the WCF ``OperationContext`` for just this purpose.
 
 Early in the operation lifecycle (generally in a `System.ServiceModel.Dispatcher.IDispatchMessageInspector.AfterReceiveRequest() <http://msdn.microsoft.com/en-us/library/system.servicemodel.dispatcher.idispatchmessageinspector.afterreceiverequest.aspx>`_ implementation), you can add the ``TenantIdentificationContextExtension`` to the current ``OperationContext`` so the tenant can be easily identified. A sample ``AfterReceiveRequest()`` implementation below shows this in action:
 
@@ -392,7 +392,7 @@ Early in the operation lifecycle (generally in a `System.ServiceModel.Dispatcher
 
 Once the tenant ID is attached to the context, you can use an appropriate ``ITenantIdentificationStrategy`` to retrieve it as needed.
 
-**If you use the TenantIdentificationContextExtension, then the provided Autofac.Extras.Multitenant.Wcf.OperationContextTenantIdentificationStrategy will automatically work to get the tenant ID from OperationContext.**
+**If you use the TenantIdentificationContextExtension, then the provided Autofac.Multitenant.Wcf.OperationContextTenantIdentificationStrategy will automatically work to get the tenant ID from OperationContext.**
 
 .. _hosting:
 
@@ -401,7 +401,7 @@ Hosting Multitenant Services
 
 In a WCF service application, service implementations may be tenant-specific yet share the same service contract. This allows you to provide your service contracts in a separate assembly to tenant-specific developers and allow them to implement custom logic without sharing any of the internals of your default implementation.
 
-To enable this to happen, a custom strategy has been implemented for multitenant service location - ``Autofac.Extras.Multitenant.Wcf.MultitenantServiceImplementationDataProvider``.
+To enable this to happen, a custom strategy has been implemented for multitenant service location - ``Autofac.Multitenant.Wcf.MultitenantServiceImplementationDataProvider``.
 
 In your service's ``.svc`` file, you must specify:
 
@@ -458,7 +458,7 @@ However, when using a multitenant service host, the concrete service type that i
       </services>
     </system.serviceModel>
 
-To make this easier, ``Autofac.Extras.Multitenant`` provides the ``Autofac.Extras.Multitenant.Wcf.ServiceMetadataTypeAttribute``, which you can use to create a "metadata buddy class" (similar to the ``System.ComponentModel.DataAnnotations.MetadataTypeAttribute``) that you can mark with type-level attributes and modify the behavior of the dynamic proxy.
+To make this easier, ``Autofac.Multitenant.Wcf`` provides the ``Autofac.Multitenant.Wcf.ServiceMetadataTypeAttribute``, which you can use to create a "metadata buddy class" (similar to the ``System.ComponentModel.DataAnnotations.MetadataTypeAttribute``) that you can mark with type-level attributes and modify the behavior of the dynamic proxy.
 
 In this case, you need the dynamic proxy to have a ``System.ServiceModel.ServiceBehaviorAttribute`` so you can define the ``ConfigurationName`` to expect.
 
@@ -468,7 +468,7 @@ First, mark your service interface with a ``ServiceMetadataTypeAttribute``:
 
     using System;
     using System.ServiceModel;
-    using Autofac.Extras.Multitenant.Wcf;
+    using Autofac.Multitenant.Wcf;
 
     namespace MyNamespace
     {
@@ -575,7 +575,7 @@ WCF Service Application Startup
 - Set up the behavior for service hosts to expect an incoming tenant ID header (:ref:`behavior_id`) for tenant identification.
 - Set the service host factory container to a ``MultitenantContainer``.
 
-In the example below, **we are using the Autofac.Extras.Multitenant.Wcf.AutofacHostFactory** rather than the standard Autofac host factory (as outlined earlier).
+In the example below, **we are using the Autofac.Multitenant.Wcf.AutofacHostFactory** rather than the standard Autofac host factory (as outlined earlier).
 
 .. sourcecode:: csharp
 
