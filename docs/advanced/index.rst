@@ -15,3 +15,4 @@ Advanced Topics
     multitenant.rst
     aggregate-services.rst
     interceptors.rst
+    debugging.rst

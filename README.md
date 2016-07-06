@@ -24,9 +24,8 @@ propagate to Read The Docs. No build or separate push is required.
 ## Building
 
 1. Install [Python 2.7](https://www.python.org/download/)
-2. Install Python [setuptools](https://pypi.python.org/pypi/setuptools) (to get the easy_install script)
-3. Install Sphinx: `easy_install -U Sphinx`
-4. Build the docs after you edit them. There should be NO errors or warnings: `make.bat html`
+2. Install Sphinx: `pip install sphinx sphinx-autobuild`
+3. Build the docs after you edit them. There should be NO errors or warnings: `make.bat html`
 
 ## References
 

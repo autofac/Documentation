@@ -9,6 +9,9 @@ In order to understand per-request lifetime, you should have a good general unde
 .. contents::
   :local:
 
+Note on ASP.NET Core
+====================
+As noted in the :doc:`ASP.NET Core integration docs <../integration/aspnetcore>`, **ASP.NET Core doesn't have a specific per-request scope.** Everything is registered ``InstancePerLifetimeScope()`` instead of ``InstancePerRequest()`` for ASP.NET Core.
 
 Registering Dependencies as Per-Request
 =======================================
