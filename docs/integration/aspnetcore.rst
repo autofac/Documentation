@@ -10,14 +10,16 @@ ASP.NET Core (previously ASP.NET 5) changes the way dependency injection framewo
 Quick Start
 ===========
 
-To take advantage of Autofac in your OWIN pipeline:
+To take advantage of Autofac in your ASP.NET Core pipeline:
 
 * Reference the ``Autofac.Extensions.DependencyInjection`` package from NuGet.
 * In the ``ConfigureServices`` method of your ``Startup`` class...
 
   - Register services from the ``IServiceCollection``.
   - Build your container.
-  - Return the ``IServiceProvider`` from the container.
+  - Create an ``AutofacServiceProvider`` using the container and return it.
+
+* In the ``Configure`` method of your ``Startup`` class, you can optionally register with the ``IApplicationLifetime.ApplicationStopped`` event to dispose of the container at app shutdown.
 
 .. sourcecode:: csharp
 
@@ -25,7 +27,17 @@ To take advantage of Autofac in your OWIN pipeline:
     {
       public Startup(IHostingEnvironment env)
       {
+        var builder = new ConfigurationBuilder()
+            .SetBasePath(env.ContentRootPath)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+            .AddEnvironmentVariables();
+        this.Configuration = builder.Build();
       }
+
+      public IContainer ApplicationContainer { get; private set; }
+
+      public IConfigurationRoot Configuration { get; private set; }
 
       // ConfigureServices is where you register dependencies. This gets
       // called by the runtime before the Configure method, below.
@@ -38,20 +50,33 @@ To take advantage of Autofac in your OWIN pipeline:
         var builder = new ContainerBuilder();
 
         // Register dependencies, populate the services from
-        // the collection, and build the container.
+        // the collection, and build the container. If you want
+        // to dispose of the container at the end of the app,
+        // be sure to keep a reference to it as a property or field.
         builder.RegisterType<MyType>().As<IMyType>();
         builder.Populate(services);
-        var container = builder.Build();
+        this.ApplicationContainer = builder.Build();
 
-        // Return the IServiceProvider resolved from the container.
-        return container.Resolve<IServiceProvider>();
+        // Create the IServiceProvider based on the container.
+        return new AutofacServiceProvider(this.ApplicationContainer);
       }
- 
+
       // Configure is where you add middleware. This is called after
       // ConfigureServices. You can use IApplicationBuilder.ApplicationServices
       // here if you need to resolve things from the container.
-      public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+      public void Configure(
+        IApplicationBuilder app,
+        ILoggerFactory loggerFactory,
+        IApplicationLifetime appLifetime)
       {
+          loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
+          loggerFactory.AddDebug();
+
+          app.UseMvc();
+
+          // If you want to dispose of resources that have been resolved in the
+          // application container, register for the "ApplicationStopped" event.
+          appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
       }
     }
 
