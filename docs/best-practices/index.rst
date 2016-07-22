@@ -92,3 +92,5 @@ If you modify a container after being built, you run several risks, especially i
 - Component registrations that subscribe to lifetime events may be subscribed to the wrong events after the update - events don't all get re-initialized during update.
 
 If there's absolutely no way around it, you very well may need to ``Update()`` a container, but really try to avoid it if possible.
+
+**Instead of updating the container, consider registering updates or changes in a child lifetime scope.** :doc:`There are examples of this in the lifetime scope documentation. <../lifetime/working-with-scopes>`
