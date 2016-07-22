@@ -78,3 +78,17 @@ Becomes:
     builder.Register(c => new Component());
 
 This can yield an improvement of up to 10x faster ``Resolve()`` calls, but only makes sense for components that appear in many object graphs. See :doc:`the registration documentation <../register/index>` for more on lambda components.
+
+Consider a Container as Immutable
+=================================
+
+While Autofac provides an ``Update()`` method to update registrations in an existing container, for the most part it's there for backwards-compatibility with Autofac 2.x. Where at all possible, you should avoid updating a container and instead register everything up front before building the container.
+
+If you modify a container after being built, you run several risks, especially if you've started using the container. This is not an all-inclusive risk list, but examples include:
+
+- :doc:`Auto-start components <../lifetime/startup>` will have already run and potentially used registrations you've overridden during update. These auto-start components will not re-run.
+- Services that have already been resolved may have references to incorrect dependencies based on the additions made.
+- Disposable components may have already been resolved and will stick around until their owning lifetime scope is disposed - even if the new registrations would imply the disposable component shouldn't be used.
+- Component registrations that subscribe to lifetime events may be subscribed to the wrong events after the update - events don't all get re-initialized during update.
+
+If there's absolutely no way around it, you very well may need to ``Update()`` a container, but really try to avoid it if possible.
