@@ -19,6 +19,8 @@ This is where modules can help.
 
 The components within a module still make use dependencies at the component/service level to access components from other modules.
 
+**Modules do not, themselves, go through dependency injection.** They are used to configure the container, they are not actually registered and resolved like other components. If your module takes a constructor parameter, for example, you need to pass that in yourself. It won't come from the container.
+
 Advantages of Modules
 =====================
 
