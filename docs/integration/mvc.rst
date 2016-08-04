@@ -8,6 +8,8 @@ MVC integration requires the `Autofac.Mvc5 NuGet package <http://www.nuget.org/p
 
 MVC integration provides dependency injection integration for controllers, model binders, action filters, and views. It also adds :doc:`per-request lifetime support <../faq/per-request-scope>`.
 
+**This page explains ASP.NET classic MVC integration.** If you are using ASP.NET Core, :doc:`see the ASP.NET Core integration page <aspnetcore>`.
+
 .. contents::
   :local:
 

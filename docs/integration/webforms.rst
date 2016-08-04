@@ -6,6 +6,8 @@ ASP.NET web forms integration requires the `Autofac.Web NuGet package <http://ww
 
 Web forms integration provides dependency injection integration for code-behind classes. It also adds :doc:`per-request lifetime support <../faq/per-request-scope>`.
 
+**This page explains ASP.NET classic web forms integration.** If you are using ASP.NET Core, :doc:`see the ASP.NET Core integration page <aspnetcore>`.
+
 .. contents::
   :local:
 

@@ -8,6 +8,8 @@ Web API integration requires the `Autofac.WebApi NuGet package <https://www.nuge
 
 Web API integration provides dependency injection integration for controllers, model binders, and action filters. It also adds :doc:`per-request lifetime support <../faq/per-request-scope>`.
 
+**This page explains ASP.NET classic Web API integration.** If you are using ASP.NET Core, :doc:`see the ASP.NET Core integration page <aspnetcore>`.
+
 .. contents::
   :local:
 
