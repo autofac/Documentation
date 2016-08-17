@@ -382,7 +382,7 @@ Then consume the ``IIndex<X, B>`` to get a dictionary of keyed services:
       public void M()
       {
         var b = this._b["first"];
-        _b.DoSomething();
+        b.DoSomething();
       }
     }
 
