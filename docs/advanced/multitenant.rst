@@ -444,7 +444,7 @@ When configuring WCF services in XML configuration (e.g., web.config), WCF autom
 
     <system.serviceModel>
       <services>
-        <service name="MyNamespace.MyService" ... />
+        <service name="MyNamespace.MyService" />
       </services>
     </system.serviceModel>
 
@@ -454,7 +454,7 @@ However, when using a multitenant service host, the concrete service type that i
 
     <system.serviceModel>
       <services>
-        <service name="Castle.Proxies.IMyService_1" ... />
+        <service name="Castle.Proxies.IMyService_1" />
       </services>
     </system.serviceModel>
 
@@ -501,7 +501,7 @@ Now in your XML configuration file, you can use the configuration name you speci
 
     <system.serviceModel>
       <services>
-        <service name="MyNamespace.IMyService" ... />
+        <service name="MyNamespace.IMyService" />
       </services>
     </system.serviceModel>
 

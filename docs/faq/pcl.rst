@@ -8,7 +8,7 @@ As a Portable Class Library, if you open up Autofac in Reflector, dotPeek, or ot
 
 You may encounter an exception that looks something like this when using Autofac as a Portable Class Library:
 
-.. sourcecode:: csharp
+.. sourcecode:: none
 
     Test 'MyNamespace.MyFixture.MyTest' failed: System.IO.FileLoadException : Could not load file or assembly 'System.Core, Version=2.0.5.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e, Retargetable=Yes' or one of its dependencies. The given assembly name or codebase was invalid. (Exception from HRESULT: 0x80131047)
         at Autofac.Builder.RegistrationData..ctor(Service defaultService)

@@ -123,8 +123,7 @@ This example shows one component that has *all of the options* on it, just for s
                     {
                         "type": "Autofac.Example.Calculator.Api.IAddOperation",
                         "key": "add"
-                    },
-                    // ...
+                    }
                 ],
                 "autoActivate": true,
                 "injectProperties": true,
@@ -134,8 +133,7 @@ This example shows one component that has *all of the options* on it, just for s
                         "key": "answer",
                         "value": 42,
                         "type": "System.Int32, mscorlib"
-                    },
-                    // ...
+                    }
                 ],
                 "ownership": "external",
                 "parameters": {
@@ -145,8 +143,7 @@ This example shows one component that has *all of the options* on it, just for s
                     "DictionaryProp": { "key": "value" },
                     "ListProp": [1, 2, 3, 4, 5]
                 }
-            },
-            // ...
+            }
         ]
     }
 
@@ -188,8 +185,7 @@ This example shows one module that has *all of the options* on it, just for synt
                     "DictionaryProp": { "key": "value" },
                     "ListProp": [1, 2, 3, 4, 5]
                 }
-            },
-            // ...
+            }
         ]
     }
 
