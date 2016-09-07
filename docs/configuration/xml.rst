@@ -12,8 +12,13 @@ Before diving too deeply into JSON/XML configuration, be sure to read :doc:`Modu
   :local:
   :depth: 2
 
-Configuring With Microsoft Configuration
-========================================
+Configuring With Microsoft Configuration (4.0+)
+===============================================
+
+.. note::
+
+   Microsoft Configuration applies to the 4.0+ version of Autofac.Configuration. It does not work with previous versions of the configuration package.
+
 With the release of `Microsoft.Extensions.Configuration <https://www.nuget.org/packages/Microsoft.Extensions.Configuration>`_, and Autofac.Configuration 4.0.0, Autofac takes advantage of the more flexible configuration model not previously available when limited to application configuration files. If you were using the ``app.config`` or ``web.config`` based configuration available before, you will need to migrate your configuration to the new format and update the way you set configuration with your application container.
 
 Quick Start
@@ -30,29 +35,22 @@ A configuration file with some simple registrations looks like this:
 .. sourcecode:: json
 
     {
-        "defaultAssembly": "Autofac.Example.Calculator",
-        "components": [
-            {
-                "type": "Autofac.Example.Calculator.Addition.Add, Autofac.Example.Calculator.Addition",
-                "services": [
-                    {
-                        "type": "Autofac.Example.Calculator.Api.IOperation"
-                    }
-                ],
-                "injectProperties": true
-            },
-            {
-                "type": "Autofac.Example.Calculator.Division.Divide, Autofac.Example.Calculator.Division",
-                "services": [
-                    {
-                        "type": "Autofac.Example.Calculator.Api.IOperation"
-                    }
-                ],
-                "parameters": {
-                    "places": 4
-                }
-            }
-        ]
+      "defaultAssembly": "Autofac.Example.Calculator",
+      "components": [{
+        "type": "Autofac.Example.Calculator.Addition.Add, Autofac.Example.Calculator.Addition",
+        "services": [{
+          "type": "Autofac.Example.Calculator.Api.IOperation"
+        }],
+        "injectProperties": true
+      }, {
+        "type": "Autofac.Example.Calculator.Division.Divide, Autofac.Example.Calculator.Division",
+        "services": [{
+          "type": "Autofac.Example.Calculator.Api.IOperation"
+        }],
+        "parameters": {
+          "places": 4
+        }
+      }]
     }
 
 JSON is cleaner and easier to read, but if you prefer XML, the same configuration looks like this:
@@ -99,7 +97,7 @@ You can specify a "default assembly" option in the configuration to help write t
 .. sourcecode:: json
 
     {
-        "defaultAssembly": "Autofac.Example.Calculator"
+      "defaultAssembly": "Autofac.Example.Calculator"
     }
 
 Components
@@ -113,38 +111,33 @@ This example shows one component that has *all of the options* on it, just for s
 .. sourcecode:: json
 
     {
-        "components": [
-            {
-                "type": "Autofac.Example.Calculator.Addition.Add, Autofac.Example.Calculator.Addition",
-                "services": [
-                    {
-                        "type": "Autofac.Example.Calculator.Api.IOperation"
-                    },
-                    {
-                        "type": "Autofac.Example.Calculator.Api.IAddOperation",
-                        "key": "add"
-                    }
-                ],
-                "autoActivate": true,
-                "injectProperties": true,
-                "instanceScope": "per-dependency",
-                "metadata": [
-                    {
-                        "key": "answer",
-                        "value": 42,
-                        "type": "System.Int32, mscorlib"
-                    }
-                ],
-                "ownership": "external",
-                "parameters": {
-                    "places": 4
-                },
-                "properties": {
-                    "DictionaryProp": { "key": "value" },
-                    "ListProp": [1, 2, 3, 4, 5]
-                }
-            }
-        ]
+      "components": [{
+        "type": "Autofac.Example.Calculator.Addition.Add, Autofac.Example.Calculator.Addition",
+        "services": [{
+          "type": "Autofac.Example.Calculator.Api.IOperation"
+        }, {
+          "type": "Autofac.Example.Calculator.Api.IAddOperation",
+          "key": "add"
+        }],
+        "autoActivate": true,
+        "injectProperties": true,
+        "instanceScope": "per-dependency",
+        "metadata": [{
+          "key": "answer",
+          "value": 42,
+          "type": "System.Int32, mscorlib"
+        }],
+        "ownership": "external",
+        "parameters": {
+          "places": 4
+        },
+        "properties": {
+          "DictionaryProp": {
+            "key": "value"
+          },
+          "ListProp": [1, 2, 3, 4, 5]
+        }
+      }]
     }
 
 ====================== ======================================================================================================================================================= ===========================================================================
@@ -175,18 +168,18 @@ This example shows one module that has *all of the options* on it, just for synt
 .. sourcecode:: json
 
     {
-        "modules": [
-            {
-                "type": "Autofac.Example.Calculator.OperationModule, Autofac.Example.Calculator",
-                "parameters": {
-                    "places": 4
-                },
-                "properties": {
-                    "DictionaryProp": { "key": "value" },
-                    "ListProp": [1, 2, 3, 4, 5]
-                }
-            }
-        ]
+      "modules": [{
+        "type": "Autofac.Example.Calculator.OperationModule, Autofac.Example.Calculator",
+        "parameters": {
+          "places": 4
+        },
+        "properties": {
+          "DictionaryProp": {
+            "key": "value"
+          },
+          "ListProp": [1, 2, 3, 4, 5]
+        }
+      }]
     }
 
 ====================== ======================================================================================================================================================= ===============================================================================================
@@ -203,8 +196,9 @@ You are allowed to register *the same module multiple times using different para
 
 Differences from Legacy Configuration
 -------------------------------------
-When migrating from the legacy ``app.config`` based format to the new format, there are some key changes to be aware of:
+When migrating from the legacy (pre 4.0 version) ``app.config`` based format to the new format, there are some key changes to be aware of:
 
+- **There is no ConfigurationSettingsReader.** ``Microsoft.Extensions.Configuration`` has entirely replaced the old XML format configuration. The legacy configuration documentation does not apply to the 4.0+ series of configuration package.
 - **Multiple configuration files handled differently.** The legacy configuration had a ``files`` element that would automatically pull several files together at once for configuration. Use the ``Microsoft.Extensions.Configuration.ConfigurationBuilder`` to accomplish this now.
 - **AutoActivate is supported.** You can specify :doc:`components should auto-activate <../lifetime/startup>` now, a feature previously unavailable in configuration.
 - **XML uses element children rather than attributes.** This helps keep the XML and JSON parsing the same when using ``Microsoft.Extensions.Configuration`` so you can combine XML and JSON configuration sources correctly.
@@ -221,8 +215,13 @@ The new ``Microsoft.Extensions.Configuration`` mechanism adds a lot of flexibili
 - **Easy configuration merging.** The ``ConfigurationBuilder`` allows you to create configuration from a lot of sources and merge them into one. If you have a lot of configuration, consider scanning for your configuration files and building the configuration dynamically rather than hardcoding paths.
 - **Custom configuration sources.** You can implement ``Microsoft.Extensions.Configuration.ConfigurationProvider`` yourself backed by more than just files. If you want to centralize configuration, consider a database or REST API backed configuration source.
 
-Configuring With Application Configuration (Legacy)
-===================================================
+Configuring With Application Configuration (Legacy Pre-4.0)
+===========================================================
+
+.. note::
+
+   Legacy application configuration as described below applies to the 3.x and earlier versions of Autofac.Configuration. It does not work with the 4.0+ version of the package.
+
 Prior to the release of `Microsoft.Extensions.Configuration <https://www.nuget.org/packages/Microsoft.Extensions.Configuration>`_ and the updated configuration model, Autofac tied into standard .NET application configuration files. (``app.config`` / ``web.config``). In the 3.x series of the Autofac.Configuration package, this was the way to configure things.
 
 Setup

@@ -5,13 +5,13 @@ Modules
 Introduction
 ============
 
-IoC uses :doc:`components <../glossary>` as the basic building blocks of an application. Providing access to the constructor parameters and properties of components is very commonly used as a means to achieve :doc:`deployment-time configuration<./xml>`.
+IoC uses :doc:`components <../glossary>` as the basic building blocks of an application. Providing access to the constructor parameters and properties of components is very commonly used as a means to achieve :doc:`deployment-time configuration <xml>`.
 
 This is generally a dubious practice for the following reasons:
 
  * **Constructors can change**: Changes to the constructor signature or properties of a component can break deployed ``App.config`` files - these problems can appear very late in the development process.
- * **XML gets hard to maintain**: Configuration files for large numbers of components can become unwieldy to maintain - this is exacerbated by the fact that XML configuration is weakly-typed and hard to read.
- * **"Code" starts showing up in XML**: Exposing the properties and constructor parameters of classes is an unpleasant breach of the 'encapsulation' of the application's internals - these details don't belong in configuration files.
+ * **JSON/XML gets hard to maintain**: Configuration files for large numbers of components can become unwieldy to maintain.
+ * **"Code" starts showing up in configuration**: Exposing the properties and constructor parameters of classes is an unpleasant breach of the 'encapsulation' of the application's internals - these details don't belong in configuration files.
 
 This is where modules can help.
 
@@ -97,15 +97,18 @@ Our ``CarTransportModule`` provides the ``ObeySpeedLimit`` configuration paramet
         ObeySpeedLimit = true
     });
 
-or in XML:
+or in ``Microsoft.Extensions.Configuration`` :doc:`configuration format <xml>`:
 
-.. sourcecode:: xml
+.. sourcecode:: json
 
-    <module type="CarTransportModule">
-      <properties>
-        <property name="ObeySpeedLimit" value="true" />
-      </properties>
-    </module>
+    {
+      "modules": [{
+        "type": "MyNamespace.CarTransportModule, MyAssembly",
+        "properties": {
+          "ObeySpeedLimit": true
+        }
+      }]
+    }
 
 This is valuable because the implementation of the module can vary without a flow on effect. That's the idea of encapsulation, after all.
 
@@ -121,13 +124,20 @@ It is a 'best practice' when using Autofac to add any XML configuration *after* 
     builder.RegisterModule(new CarTransportModule());
     builder.RegisterModule(new ConfigurationSettingsReader());
 
-In this way, 'emergency' overrides can be made in the XML configuration file:
+In this way, 'emergency' overrides can be made in :doc:`a configuration file <xml>`:
 
 .. sourcecode:: xml
 
-    <component
-      service="IDriver"
-      type="LearnerDriver" />
+.. sourcecode:: json
+
+    {
+      "components": [{
+        "type": "MyNamespace.LearnerDriver, MyAssembly",
+        "services": [{
+          "type": "MyNamespace.IDriver, MyAssembly"
+        }]
+      }]
+    }
 
 So, modules increase encapsulation but don't preclude you from tinkering with their innards if you have to.
 
@@ -155,4 +165,4 @@ Common Use Cases for Modules
  * Package optional application features as 'plug-ins'
  * Provide pre-built packages for integration with a system, e.g. an accounting system
  * Register a number of similar services that are often used together, e.g. a set of file format converters
- * New or customised mechanisms for configuring the container, e.g. XML configuration is implemented using a module; configuration using attributes could be added this way
+ * New or customised mechanisms for configuring the container, e.g. JSON/XML configuration is implemented using a module; configuration using attributes could be added this way
