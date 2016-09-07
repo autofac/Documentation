@@ -15,20 +15,20 @@ What's New / Release Notes
   + `MVC <https://github.com/autofac/Autofac/wiki/Mvc-Integration-Release-Notes>`_
   + `Web API <https://github.com/autofac/Autofac/wiki/Web-Api-Integration-Release-Notes>`_
   + `SignalR <https://github.com/autofac/Autofac/wiki/SignalR-Integration-Release-Notes>`_
-  + RIA/Domain Services
+  + `RIA/Domain Services <https://github.com/autofac/Autofac/wiki/Domain-Services-Release-Notes>`_
   + OWIN
 
-    * OWIN Core
+    * `OWIN Core <https://github.com/autofac/Autofac/wiki/OWIN-Core-Release-Notes>`_
     * OWIN / Web API
     * OWIN / MVC
 
  - WCF
  - `MEF <https://github.com/autofac/Autofac/wiki/Mef-Integration-Release-Notes>`_
  - `Common Service Locator <https://github.com/autofac/Autofac/wiki/Common-Service-Locator-Release-Notes>`_
- - Enterprise Library 5
- - NHibernate
+ - `Enterprise Library 5 Configurator <https://github.com/autofac/Autofac/wiki/Enterprise-Library-Configurator-Release-Notes>`_
+ - `NHibernate <https://github.com/autofac/Autofac/wiki/NHibernate-Release-Notes>`_
  - `Moq <https://github.com/autofac/Autofac/wiki/Moq-Auto-Mocking-Release-Notes>`_
- - FakeItEasy
+ - `FakeItEasy <https://github.com/autofac/Autofac/wiki/FakeItEasy-Release-Notes>`_
 
 * Extended features
 
@@ -36,4 +36,4 @@ What's New / Release Notes
  - `Attribute Metadata <https://github.com/autofac/Autofac/wiki/Attribute-Metadata-Release-Notes>`_
  - `Dynamic Proxy / Interception <https://github.com/autofac/Autofac/wiki/Dynamic-Proxy2-Release-Notes>`_
  - `Multitenant Applications <https://github.com/autofac/Autofac/wiki/Multitenant-Integration-Release-Notes>`_
- - Multitenant WCF Services
+ - `Multitenant WCF Services <https://github.com/autofac/Autofac/wiki/Multitenant-WCF-Integration-Release-Notes>`_
