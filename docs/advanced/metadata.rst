@@ -17,17 +17,23 @@ Values describing metadata are associated with the component at registration tim
         .As<ILogAppender>()
         .WithMetadata("AppenderName", "screen");
 
-The same thing can be represented in XML:
+The same thing can be represented in :doc:`deployment-time configuration <../configuration/xml>`
 
-.. sourcecode:: xml
+.. sourcecode:: json
 
-    <component
-       type="MyApp.Components.Logging.ScreenAppender, MyApp"
-       service="MyApp.Services.Logging.ILogAppender, MyApp" >
-        <metadata>
-            <item name="AppenderName" value="screen" type="System.String" />
-        </metadata>
-    </component>
+    {
+      "components": [{
+        "type": "MyApp.Components.Logging.ScreenAppender, MyApp",
+        "services": [{
+          "type": "MyApp.Services.Logging.ILogAppender, MyApp"
+        }],
+        "metadata": [{
+          "key": "AppenderName",
+          "value": "screen",
+          "type": "System.String, mscorlib"
+        }]
+      }]
+    }
 
 Consuming Metadata
 ==================
