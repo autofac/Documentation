@@ -167,7 +167,7 @@ Resolving the value can be done in the same manner as for class based metadata.
 Attribute-Based Metadata
 ========================
 
-The ``Autofac.Extras.Attributed`` package enables metadata to be specified via attributes as well as allowing components to filter incoming dependencies using attributes.
+The ``Autofac.Extras.AttributeMetadata`` package enables metadata to be specified via attributes as well as allowing components to filter incoming dependencies using attributes.
 
 To get attributed metadata working in your solution, you need to perform the following steps:
 
