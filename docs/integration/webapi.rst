@@ -106,7 +106,7 @@ Because attributes are created via the reflection API you don't get to call the 
 Register the Filter Provider
 ----------------------------
 
-You need to register the Autofac filter provider implementation because it is does the work of wiring up the filter based on the registration. This is done by calling the ``RegisterWebApiFilterProvider`` method on the container builder and providing an ``HttpConfiguration`` instance.
+You need to register the Autofac filter provider implementation because it does the work of wiring up the filter based on the registration. This is done by calling the ``RegisterWebApiFilterProvider`` method on the container builder and providing an ``HttpConfiguration`` instance.
 
 .. sourcecode:: csharp
 
