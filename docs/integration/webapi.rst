@@ -129,16 +129,20 @@ Instead of deriving from one of the existing Web API filter attributes your clas
         _logger = logger;
       }
 
-      public void OnActionExecuting(HttpActionContext actionContext)
+      public Task OnActionExecutingAsync(HttpActionContext actionContext, CancellationToken cancellationToken)
       {
         _logger.Write(actionContext.ActionDescriptor.ActionName);
+        return Task.FromResult(0);
       }
 
-      public void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
+      public Task OnActionExecutedAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
       {
         _logger.Write(actionExecutedContext.ActionContext.ActionDescriptor.ActionName);
+        return Task.FromResult(0);
       }
     }
+
+Note in the sample there's no actual async code that runs so it returns ``Task.FromResult(0)``, which is a common way to return an "empty task." If your filter does require async code, you can return a real ``Task`` object or use ``async``/``await`` code just like any other asynchronous method.
 
 Register the Filter
 -------------------
@@ -155,7 +159,7 @@ In the example below the filter is being applied to the ``Get`` action method on
      
     builder.Register(c => new LoggingActionFilter(c.Resolve<ILogger>()))
         .AsWebApiActionFilterFor<ValuesController>(c => c.Get(default(int)))
-        .InstancePerApiRequest();
+        .InstancePerRequest();
 
 When applying the filter to an action method that requires a parameter use the ``default`` keyword with the data type of the parameter as a placeholder in your lambda expression. For example, the ``Get`` action method in the example above required an ``int`` parameter and used ``default(int)`` as a strongly-typed placeholder in the lambda expression.
 
@@ -179,12 +183,12 @@ Now compare that to the Autofac interface that you need to implement instead.
 
     public interface IAutofacActionFilter
     {
-      void OnActionExecuting(HttpActionContext actionContext);
+      Task OnActionExecutedAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken);
 
-      void OnActionExecuted(HttpActionExecutedContext actionExecutedContext);
+      Task OnActionExecutingAsync(HttpActionContext actionContext, CancellationToken cancellationToken);
     }
 
-The problem is that the ``OnActionExecuting`` and ``OnActionExecuted`` methods are actually defined on the the ``ActionFilterAttribute`` and not on the ``IActionFilter`` interface. Extensive use of the ``System.Threading.Tasks`` namespace in Web API means that chaining the return task along with the appropriate error handling in the attribute actually requires a significant amount of code (the ``ActionFilterAttribute`` contains nearly 100 lines of code for that). This is definitely not something that you want to be handling yourself.
+The problem is that the ``OnActionExecutingAsync`` and ``OnActionExecutedAsync`` methods are actually defined on the the ``ActionFilterAttribute`` and not on the ``IActionFilter`` interface. Extensive use of the ``System.Threading.Tasks`` namespace in Web API means that chaining the return task along with the appropriate error handling in the attribute actually requires a significant amount of code (the ``ActionFilterAttribute`` contains nearly 100 lines of code for that). This is definitely not something that you want to be handling yourself.
 
 Autofac introduces the new interfaces to allow you to concentrate on implementing the code for your filter and not all that plumbing. Internally it creates custom instances of the actual Web API attributes that resolve the filter implementations from the container and execute them at the appropriate time.
 
