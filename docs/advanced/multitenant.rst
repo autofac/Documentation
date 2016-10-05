@@ -625,3 +625,10 @@ In the example below, **we are using the Autofac.Multitenant.Wcf.AutofacHostFact
         }
       }
     }
+
+Example
+=======
+
+The Autofac example repository has a `multitenant WCF service <https://github.com/autofac/Examples/tree/master/src/MultitenantExample.WcfService>`_ and `associated client MVC application <https://github.com/autofac/Examples/tree/master/src/MultitenantExample.MvcApplication>`_ to illustrate how :doc:`multitenant service hosting <../advanced/multitenant>` works.
+
+There is also a `very simple console application <https://github.com/autofac/Examples/tree/master/src/MultitenantExample.ConsoleApplication>`_ example.

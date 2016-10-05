@@ -340,7 +340,7 @@ When unit testing an ASP.NET MVC app that uses Autofac where you have ``Instance
 
 The :doc:`per-request lifetime scope <../faq/per-request-scope>` topic outlines strategies for testing and troubleshooting per-request-scope components.
 
-Example Implementation
-======================
+Example
+=======
 
-`The Autofac source <https://github.com/autofac/Autofac>`_ contains a demo web application project called ``Remember.Web``. It demonstrates many of the aspects of MVC that Autofac is used to inject.
+There is an example project showing ASP.NET MVC integration `in the Autofac examples repository <https://github.com/autofac/Examples/tree/master/src/MvcExample>`_.

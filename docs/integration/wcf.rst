@@ -354,8 +354,9 @@ The reason for this is that WCF hosting (internal to .NET) requires the host be 
 
 Again, you only need to do this if you're decorating the service implementation class itself. If you are only decorating/adapting dependencies of the service implementation, you do not need the multitenant host. Standard hosting will work.
 
+Example
+-------
 
-Example Implementation
-----------------------
+The Autofac example repository has a `WCF service implementation example <https://github.com/autofac/Examples/tree/master/src/WcfExample>`_ as well as `an MVC application that acts as a client for that service <https://github.com/autofac/Examples/tree/master/src/MvcExample>`_.
 
-`The Autofac source <https://github.com/autofac/Autofac>`_ contains a demo web application project called ``Remember.Web`` that consumes a WCF service from ``Remember.Service``. It demonstrates how Autofac WCF integration works. There is also a demo project ``MultitenantExample.WcfService`` that shows how :doc:`multitenant service hosting <../advanced/multitenant>` works.
+There are also examples showing a `multitenant WCF service <https://github.com/autofac/Examples/tree/master/src/MultitenantExample.WcfService>`_ and `associated client <https://github.com/autofac/Examples/tree/master/src/MultitenantExample.MvcApplication>`_ to illustrate how :doc:`multitenant service hosting <../advanced/multitenant>` works.

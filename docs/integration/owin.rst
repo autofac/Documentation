@@ -51,7 +51,7 @@ For custom middleware, you can allow Autofac to inject dependencies into the mid
     builder.RegisterType<MyCustomMiddleware>();
     //...
     var container = builder.Build();
-    
+
     // This will add the Autofac middleware as well as the middleware
     // registered in the container.
     app.UseAutofacMiddleware(container);
@@ -59,3 +59,31 @@ For custom middleware, you can allow Autofac to inject dependencies into the mid
 When you call ``app.UseAutofacMiddleware(container);`` the Autofac middleware itself will be added to the pipeline, after which any ``Microsoft.Owin.OwinMiddleware`` classes registered with the container will also be added to the pipeline.
 
 Middleware registered in this way will be resolved from the request lifetime scope for each request passing through the OWIN pipeline.
+
+Controlling Middleware Order
+============================
+
+For a simple scenario, ``app.UseAutofacMiddleware(container);`` will handle both adding an Autofac lifetime to the OWIN request scope as well as adding middleware that is registered with Autofac into the pipeline.
+
+If you want more control over when DI-enabled middleware is added to the pipeline, you can use the ``UseAutofacLifetimeScopeInjector`` and ``UseMiddlewareFromContainer`` extensions.
+
+.. sourcecode:: csharp
+
+    var builder = new ContainerBuilder();
+    builder.RegisterType<MyCustomMiddleware>();
+    //...
+    var container = builder.Build();
+
+    // This adds ONLY the Autofac lifetime scope to the pipeline.
+    app.UseAutofacLifetimeScopeInjector(container);
+
+    // Now you can add middleware from the container into the pipeline
+    // wherever you like. For example, this adds custom DI-enabled middleware
+    // AFTER the Web API middleware/handling.
+    app.UseWebApi(config);
+    app.UseMiddlewareFromContainer<MyCustomMiddleware>();
+
+Example
+=======
+
+There is an example project showing Web API in conjunction with OWIN self hosting `in the Autofac examples repository <https://github.com/autofac/Examples/tree/master/src/WebApiExample.OwinSelfHost>`_.

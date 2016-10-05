@@ -357,3 +357,8 @@ Unit Testing
 When unit testing an ASP.NET Web API app that uses Autofac where you have ``InstancePerRequest`` components registered, you'll get an exception when you try to resolve those components because there's no HTTP request lifetime during a unit test.
 
 The :doc:`per-request lifetime scope <../faq/per-request-scope>` topic outlines strategies for testing and troubleshooting per-request-scope components.
+
+Example
+=======
+
+There is an example project showing Web API in conjunction with OWIN self hosting `in the Autofac examples repository <https://github.com/autofac/Examples/tree/master/src/WebApiExample.OwinSelfHost>`_.
