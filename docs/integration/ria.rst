@@ -53,7 +53,7 @@ To get Autofac integrated with RIA/domain services app you need to reference the
 
 When you write your domain services, use constructor injection and other standard patterns just like any other Autofac/IoC usage.
 
-Example Implementation
-======================
+Example
+=======
 
-`The Autofac source <https://github.com/autofac/Autofac>`_ contains a demo application project called ``DomainServicesExample`` that is consumed by the ``Remember.Web`` example project. It demonstrates how to integrate Autofac with a Domain Services project.
+The Autofac examples repository (at tag ``3.5.2``) has a `Domain Services project <https://github.com/autofac/Examples/tree/v3.5.2/src/DomainServicesExample>`_ that is consumed by a Silverlight application.

@@ -32,3 +32,8 @@ The ``RegisterEnterpriseLibrary()`` extension does allow you to specify your own
     var container = builder.Build();
     var csl = new AutofacServiceLocator(container);
     EnterpriseLibraryContainer.Current = csl;
+
+Example
+=======
+
+There is an example project showing Enterprise Library 5 configuration along with the Exception Handling Block `in the Autofac examples repository <https://github.com/autofac/Examples/tree/master/src/EnterpriseLibraryExample.MvcApplication>`_.
