@@ -298,3 +298,8 @@ There is one abstract member to implement:
     protected abstract IInjectionBehaviour GetInjectionBehaviourForHandlerType(Type handlerType);
 
 The returned ``IInjectionBehaviour`` can be one of the predefined ``NoInjection``, ``PropertyInjection``, or ``UnsetPropertyInjection`` properties; or a custom implementation of the ``IInjectionBehaviour`` interface.
+
+Example
+=======
+
+There is an example project showing ASP.NET web forms integration `in the Autofac examples repository <https://github.com/autofac/Examples/tree/master/src/WebFormsExample>`_.
