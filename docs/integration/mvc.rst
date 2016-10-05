@@ -23,11 +23,12 @@ To get Autofac integrated with MVC you need to reference the MVC integration NuG
     {
       var builder = new ContainerBuilder();
 
-      // Register your MVC controllers.
+      // Register your MVC controllers. (MvcApplication is the name of
+      // the class in Global.asax.)
       builder.RegisterControllers(typeof(MvcApplication).Assembly);
 
       // OPTIONAL: Register model binders that require DI.
-      builder.RegisterModelBinders(Assembly.GetExecutingAssembly());
+      builder.RegisterModelBinders(typeof(MvcApplication).Assembly);
       builder.RegisterModelBinderProvider();
 
       // OPTIONAL: Register web abstractions like HttpContextBase.
