@@ -69,7 +69,7 @@ Example:
     var cb = new ContainerBuilder();
     cb.RegisterType<DependsByCtor>()
       .InstancePerLifetimeScope();
-    cb.RegisterType<DependsByProperty>()
+    cb.RegisterType<DependsByProp>()
       .InstancePerLifetimeScope()
       .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
 
