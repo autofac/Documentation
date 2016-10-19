@@ -21,13 +21,13 @@ which is very similar to Markdown but not quite. References below.
 Updates to the documentation checked into the `/docs` folder will automatically
 propagate to Read The Docs. No build or separate push is required.
 
-## Building
+### Building
 
 1. Install [Python 2.7](https://www.python.org/download/)
 2. Install Sphinx: `pip install sphinx sphinx-autobuild`
 3. Build the docs after you edit them. There should be NO errors or warnings: `make.bat html`
 
-## References
+### References
 
 * [ReStructured Text Quick Start](http://docutils.sourceforge.net/docs/user/rst/quickstart.html)
 * [ReStructured Text Quick Reference](http://docutils.sourceforge.net/docs/user/rst/quickref.html)
@@ -35,3 +35,7 @@ propagate to Read The Docs. No build or separate push is required.
 * [ReStructured Text Primer](http://sphinx-doc.org/rest.html)
 * [Sphinx Markup Constructs](http://sphinx-doc.org/markup/index.html)
 * [ReadTheDocs Getting Started](https://docs.readthedocs.org/en/latest/getting_started.html)
+
+## Updating API Documentation
+
+The API documentation is hosted on `autofac.github.com` and the rendered/built docs are in there. This repository has the project that enables _building_ the doc (a manual process) but publishing is a separate step.
