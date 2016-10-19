@@ -39,3 +39,20 @@ propagate to Read The Docs. No build or separate push is required.
 ## Updating API Documentation
 
 The API documentation is hosted on `autofac.github.com` and the rendered/built docs are in there. This repository has the project that enables _building_ the doc (a manual process) but publishing is a separate step.
+
+The `Placeholder` project holds references to the various Autofac packages to document. Use that as the basis for gathering the list of doc sources.
+
+### Adding/Updating Doc Sources
+
+1. Add or update the NuGet package to the `Placeholder` project.
+2. Open the `app.config` for the `Placeholder` project and copy the assembly binding redirects to the appropriate location in `Documentation.shfbproj`. These are required for the documentation project to obey redirects.
+
+### Building the Documentation
+
+Run `msbuild Documentation.proj` to kick off the build. This will restore required NuGet packages, build the `Placeholder` project, and run documentation on the Autofac referenced assemblies.
+
+The build generates a lot of warnings. These indicate where we're missing documentation. (If you're looking to submit a PR, better API docs is a good thing...)
+
+Build output gets put in the `artifacts` folder.
+
+The contents of `artifacts\doc\Website` is what gets copied to the `autofac.github.com` repo.

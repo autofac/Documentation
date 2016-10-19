@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Document" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
 	<Target Name="Document">
+		<RemoveDir Directories="$(MSBuildProjectDirectory)\artifacts;$(MSBuildProjectDirectory)\Placeholder\bin;$(MSBuildProjectDirectory)\Placeholder\obj" />
 		<Exec Command="nuget.exe restore Placeholder.sln" WorkingDirectory="$(MSBuildProjectDirectory)" />
 		<MSBuild Projects="Placeholder.sln" Targets="Clean;Build" Properties="Configuration=Release" />
 		<!--
