@@ -191,6 +191,15 @@ Your ``.svc`` file specifies the service name you registered and host factory, l
         Service="my-service"
         Factory="Autofac.Integration.Wcf.AutofacServiceHostFactory, Autofac.Integration.Wcf" %>
 
+Pick the Right Host Factory
+---------------------------
+
+WCF offers two service host factories. Autofac has corresponding implementations for each.
+
+If you were using ``ServiceHostFactory`` in your ``.svc`` file, update to the ``AutofacServiceHostFactory``. This is the most common usage of Autofac and WCF.
+
+If you were using ``WebServiceHostFactory`` in your ``.svc`` file, update to ``AutofacWebServiceHostFactory``.
+
 Svc-Less Services
 -----------------
 
