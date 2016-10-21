@@ -95,7 +95,7 @@ Here are some helpful links into the ASP.NET Core documentation with specific in
 * `View injection <https://docs.asp.net/en/latest/mvc/views/dependency-injection.html>`_
 * `Authorization requirement handlers injection <https://docs.asp.net/en/latest/security/authorization/dependencyinjection.html>`_
 * `Middleware options injection <https://docs.asp.net/en/latest/migration/http-modules.html#loading-middleware-options-through-direct-injection>`_
-* `Middleware 'Invoke' method injection <ttp://docs.asp.net/en/latest/fundamentals/middleware.html>`_
+* `Middleware 'Invoke' method injection <https://docs.asp.net/en/latest/fundamentals/middleware.html>`_
 * `Wiring up EF 6 with ASP.NET Core <https://docs.asp.net/en/latest/data/entity-framework-6.html#setup-connection-strings-and-dependency-injection>`_
 
 Differences From ASP.NET Classic
