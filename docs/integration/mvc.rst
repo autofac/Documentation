@@ -253,6 +253,8 @@ If you are using MVC :doc:`as part of an OWIN application <owin>`, you need to:
       }
     }
 
+**Minor gotcha: MVC doesn't run 100% in the OWIN pipeline.** It still needs ``HttpContext.Current`` and some other non-OWIN things. At application startup, when MVC registers routes, it instantiates an ``IControllerFactory`` that ends up creating two request lifetime scopes. It only happens during app startup at route registration time, not once requests start getting handled, but it's something to be aware of. This is an artifact of the two pipelines being mangled together. `We looked into ways to try working around it <https://github.com/autofac/Autofac.Mvc/issues/5>`_ but were unable to do so in a clean fashion.
+
 Using "Plugin" Assemblies
 =========================
 
