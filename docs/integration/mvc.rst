@@ -40,6 +40,9 @@ To get Autofac integrated with MVC you need to reference the MVC integration NuG
       // OPTIONAL: Enable property injection into action filters.
       builder.RegisterFilterProvider();
 
+      // OPTIONAL: Enable action method parameter injection (RARE).
+      builder.InjectActionInvoker();
+
       // Set the dependency resolver to be Autofac.
       var container = builder.Build();
       DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
@@ -216,6 +219,15 @@ After applying the attributes to your actions as usual your work is done.
     {
     }
 
+Enable Injection of Action Parameters
+=====================================
+
+While not common, some folks want to have Autofac populate parameters in action methods when they're called. **It is recommended you use constructor injection on your controller rather than action method injection** but you can enable action method injection if you desire:
+
+.. sourcecode:: csharp
+
+    builder.InjectActionInvoker();
+
 OWIN Integration
 ================
 
@@ -334,6 +346,32 @@ Starting with version 3.3.3, the logic for locating ``AutofacDependencyResolver.
 The typical place where this is seen is when using the action filter provider via ``ContainerBuilder.RegisterFilterProvider()``. The filter provider needs to access the Autofac dependency resolver and uses ``AutofacDependencyResolver.Current`` to do it.
 
 If you see this, it means you're decorating the resolver in a way that can't be unwrapped and functions that rely on ``AutofacDependencyResolver.Current`` will fail. The current solution is to not decorate the dependency resolver.
+
+Glimpse Integration
+===================
+
+Integration of an MVC application with Glimpse when using Autofac is pretty much the same as with any other integration. **However, if you use action method parameter injection** (e.g., with ``builder.InjectActionInvoker()``) then Glimpse execution inspection will fail.
+
+You can work around this by adding the following to your Glimpse configuration:
+
+.. sourcecode:: xml
+
+    <glimpse defaultRuntimePolicy="On" endpointBaseUri="~/Glimpse.axd">
+      <inspectors>
+        <ignoredTypes>
+          <add type="Glimpse.Mvc.Inspector.ExecutionInspector, Glimpse.Mvc"/>
+        </ignoredTypes>
+      </inspectors>
+      <tabs>
+        <ignoredTypes>
+          <add type="Glimpse.Mvc.Tab.Execution, Glimpse.Mvc"/>
+        </ignoredTypes>
+      </tabs>
+  </glimpse>
+
+Again, you **only need to do this if you're using the action parameter injection**. This is one of the many reasons it's recommended to use controller constructor injection instead of action method parameter injection.
+
+For more info on why this is (including links to the associated info from Glimpse), `check out this issue <https://github.com/autofac/Autofac.Mvc/issues/7>`_.
 
 Unit Testing
 ============
