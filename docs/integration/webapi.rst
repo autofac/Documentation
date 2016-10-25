@@ -79,6 +79,8 @@ Register Controllers
 
 At application startup, while building your Autofac container, you should register your Web API controllers and their dependencies. This typically happens in an OWIN startup class or in the ``Application_Start`` method in ``Global.asax``.
 
+By default types that implement ``IHttpController`` and have a name with the suffix ``Controller`` will be registered. 
+
 .. sourcecode:: csharp
 
     var builder = new ContainerBuilder();
@@ -88,6 +90,13 @@ At application startup, while building your Autofac container, you should regist
 
     // ...or you can register individual controlllers manually.
     builder.RegisterType<ValuesController>().InstancePerRequest();
+    
+If your controllers do not follow the standard naming convention you may choose to provide a custom suffix using an overload of the ``RegisterApiControllers`` method.
+
+.. sourcecode:: csharp
+
+    // You can also use assembly scanning to register controllers with a custom suffix.
+    builder.RegisterApiControllers("MyCustomSuffix", Assembly.GetExecutingAssembly());
 
 Set the Dependency Resolver
 ===========================
