@@ -4,7 +4,7 @@ Type Interceptors
 
 DynamicProxy2, part of the from `the Castle Project core <http://castleproject.org>`_, provides a method interception framework.
 
-The ``Autofac.Extras.DynamicProxy2`` integration package enables method calls on Autofac components to be intercepted by other components. Common use-cases are transaction handling, logging, and declarative security.
+The ``Autofac.Extras.DynamicProxy`` integration package enables method calls on Autofac components to be intercepted by other components. Common use-cases are transaction handling, logging, and declarative security. You can use ``Autofac.Extras.DynamicProxy2`` for Autofac versions up to 4.0.0
 
 Enabling Interception
 =====================
