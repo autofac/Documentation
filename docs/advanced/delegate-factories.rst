@@ -2,8 +2,6 @@
 Delegate Factories
 ==================
 
-[TODO: Include an example of using ``RegisterGeneratedFactory``.]
-
 Factory adapters provide the instantiation features of the container to managed components without exposing the container itself to them.
 
 If type ``T`` is registered with the container, Autofac will :doc:`automatically resolve dependencies <../resolve/relationships>` on ``Func<T>`` as factories that create ``T`` instances through the container.
