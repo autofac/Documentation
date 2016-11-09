@@ -43,7 +43,7 @@ Autofac can make use of this to automatically generate a factory that can be acc
     var shareholdingFactory = container.Resolve<Shareholding.Factory>();
     var shareholding = shareholdingFactory.Invoke("ABC", 1234);
 
-The factory is a standard delegate that can be called with ``Invoke()``, as above, or with the function syntax ``shareholdingFactory("ABC", 123)``.
+The factory is a standard delegate that can be called with ``Invoke()``, as above, or with the function syntax ``shareholdingFactory("ABC", 1234)``.
 
 **By default, Autofac matches the parameters of the delegate to the parameters of the constructor by name.** If you use the generic Func types, Autofac will switch to matching parameters by type.
 
