@@ -55,6 +55,7 @@ You can dive deeper on lifetime scopes in `Nick Blumhardt's Autofac lifetime pri
 
     working-with-scopes.rst
     instance-scope.rst
+    captive-dependencies.rst
     disposal.rst
     events.rst
     startup.rst

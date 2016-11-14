@@ -6,7 +6,10 @@ Instance scope determines how an instance is shared between requests for the sam
 
 When a request is made for a service, Autofac can return a single instance (single instance scope), a new instance (per dependency scope), or a single instance within some kind of context, e.g. a thread or an HTTP request (per lifetime scope).
 
-This applies to instances returned from an explicit `Resolve()` call as well as instances created internally by the container to satisfy the dependencies of another component.
+This applies to instances returned from an explicit ``Resolve()`` call as well as instances created internally by the container to satisfy the dependencies of another component.
+
+.. note::
+  Choosing the right lifetime scope will help you avoid :doc:`captive dependencies <captive-dependencies>` and other pitfalls where a component lives too long or not long enough. It is up to the developer to make the correct choice for each of their application components.
 
 .. contents::
   :local:
