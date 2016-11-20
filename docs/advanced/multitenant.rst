@@ -30,7 +30,7 @@ In general, a multitenant application has four tasks that need to be performed w
 #. :ref:`tenant_identification`
 #. :ref:`resolve_dependencies`
 
-This section outlines how these three steps work. Later sections will expand on these topics to include information on how to integrate these principles with specific application types.
+This section outlines how these four steps work. Later sections will expand on these topics to include information on how to integrate these principles with specific application types.
 
 .. _reference_packages:
 
