@@ -168,7 +168,7 @@ The supplied tag value is associated with a lifetime scope when you start it. **
         // w3 will be DIFFERENT than the worker resolved in the
         // earlier tagged lifetime scope.
         var w3 = scope3.Resolve<Worker>();
-        using(var scope4 = scope1.BeginLifetimeScope())
+        using(var scope4 = scope3.BeginLifetimeScope())
         {
           var w4 = scope4.Resolve<Worker>();
 
