@@ -238,4 +238,4 @@ Need Help?
 Building from Source
 ====================
 
-The source code along with Visual Studio project files is available `on GitHub <https://github.com/autofac/Autofac>`_. Build instructions are in a README in the root of the code, and more information about the project is in the :doc:`Contributor Guide <../contributors>`.
+The source code along with Visual Studio project files is available `on GitHub <https://github.com/autofac/Autofac>`_. Build instructions and details on contributing can be found in the :doc:`Contributor Guide <../contributors>`.
