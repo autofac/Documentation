@@ -229,12 +229,14 @@ Use Metadata Filters on Consumers
 
 Along with providing metadata via attributes, you can also set up automatic filters for consuming components. This will help wire up parameters for your constructors based on provided metadata.
 
-You can filter based on :doc:`a service key <keyed-services>` or based on registration metadata.
+You can filter based on :doc:`a service key <keyed-services>` or based on registration metadata. This attribute based filtering can be performed without custom metadata attributes.
 
-WithKeyAttribute
-""""""""""""""""
+The ``KeyFilterAttribute``, ``MetadataFilterAttribute``, and ``WithAttributeFiltering`` extension method below can be found in the ``Autofac.Features.AttributeFilters`` namespace in the core Autofac package.
 
-The ``WithKeyAttribute`` allows you to select a specific keyed service to consume.
+KeyFilterAttribute
+""""""""""""""""""
+
+The ``KeyFilterAttribute`` allows you to select a specific keyed service to consume.
 
 This example shows a class that requires a component with a particular key:
 
@@ -242,7 +244,7 @@ This example shows a class that requires a component with a particular key:
 
     public class ArtDisplay : IDisplay
     {
-      public ArtDisplay([WithKey("Painting")] IArtwork art) { ... }
+      public ArtDisplay([KeyFilter("Painting")] IArtwork art) { ... }
     }
 
 That component will require you to register a keyed service with the specified name. You'll also need to register the component with the filter so the container knows to look for it.
@@ -254,16 +256,16 @@ That component will require you to register a keyed service with the specified n
     // Register the keyed service to consume
     builder.RegisterType<MyArtwork>().Keyed<IArtwork>("Painting");
 
-    // Specify WithAttributeFilter for the consumer
-    builder.RegisterType<ArtDisplay>().As<IDisplay>().WithAttributeFilter();
+    // Specify WithAttributeFiltering for the consumer
+    builder.RegisterType<ArtDisplay>().As<IDisplay>().WithAttributeFiltering();
 
     // ...
     var container = builder.Build();
 
-WithMetadataAttribute
-"""""""""""""""""""""
+MetadataFilterAttribute
+"""""""""""""""""""""""
 
-The ``WithMetadataAttribute`` allows you to filter for components based on specific metadata values.
+The ``MetadataFilterAttribute`` allows you to filter for components based on specific metadata values.
 
 This example shows a class that requires a component with a particular metadata value:
 
@@ -271,7 +273,7 @@ This example shows a class that requires a component with a particular metadata 
 
     public class ArtDisplay : IDisplay
     {
-      public ArtDisplay([WithMetadata("Age", 100)] IArtwork art) { ... }
+      public ArtDisplay([MetadataFilter("Age", 100)] IArtwork art) { ... }
     }
 
 That component will require you to register a service with the specified metadata name/value pair. You could use the attributed metadata class seen in earlier examples, or manually specify metadata during registration time. You'll also need to register the component with the filter so the container knows to look for it.
@@ -288,7 +290,7 @@ That component will require you to register a service with the specified metadat
     builder.RegisterType<CenturyArtwork>().As<IArtwork>();
 
     // Specify WithAttributeFilter for the consumer
-    builder.RegisterType<ArtDisplay>().As<IDisplay>().WithAttributeFilter();
+    builder.RegisterType<ArtDisplay>().As<IDisplay>().WithAttributeFiltering();
 
     // ...
     var container = builder.Build();
@@ -314,13 +316,13 @@ The metadata attributes you create aren't just used by default. In order to tell
     // ...
     var container = builder.Build();
 
-If you're using metadata filters (``WithKeyAttribute`` or ``WithMetadataAttribute`` in your constructors), you need to register those components using the ``WithAttributeFilter`` extension. Note that if you're *only* using filters but not attributed metadata, you don't actually need the ``AttributedMetadataModule``. Metadata filters stand on their own.
+If you're using metadata filters (``KeyFilterAttribute`` or ``WithAttributeFiltering`` in your constructors), you need to register those components using the ``WithAttributeFiltering`` extension. Note that if you're *only* using filters but not attributed metadata, you don't actually need the ``AttributedMetadataModule``. Metadata filters stand on their own.
 
 .. sourcecode:: csharp
 
     var builder = new ContainerBuilder();
 
     // Specify WithAttributeFilter for the consumer
-    builder.RegisterType<ArtDisplay>().As<IDisplay>().WithAttributeFilter();
+    builder.RegisterType<ArtDisplay>().As<IDisplay>().WithAttributeFiltering();
     // ...
     var container = builder.Build();
