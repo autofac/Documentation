@@ -226,6 +226,17 @@ While not common, some folks want to have Autofac populate parameters in action 
 
 .. sourcecode:: csharp
 
+    // The Autofac ExtensibleActionInvoker attempts to resolve parameters
+    // from the request lifetime scope IF the model binder can't bind
+    // to the parameter.
+    builder.RegisterType<ExtensibleActionInvoker>().As<IActionInvoker>();
+    builder.InjectActionInvoker();
+
+Note you can use the ``InjectActionInvoker()`` mechanism with your own custom invoker, too.
+
+.. sourcecode:: csharp
+
+    builder.RegisterType<MyCustomActionInvoker>().As<IActionInvoker>();
     builder.InjectActionInvoker();
 
 OWIN Integration
