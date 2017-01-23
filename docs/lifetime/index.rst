@@ -4,7 +4,7 @@ Controlling Scope and Lifetime
 
 A great place to start learning about Autofac scope and lifetime is in `Nick Blumhardt's Autofac lifetime primer <http://nblumhardt.com/2011/01/an-autofac-lifetime-primer/>`_. There's a lot to digest, though, and a lot of intermixed concepts there, so we'll try to complement that article here.
 
-You may recall from the :doc:`registration topic <../register/registration>` that you add **components** to the container that implement **services**. You then end up :doc:`resolving services <../resolve/index>` and using those service instances to do your work.
+You may recall from the :doc:`registration topic <../register/registration>` that you add **components** that implement **services** to the container. You then end up :doc:`resolving services <../resolve/index>` and using those service instances to do your work.
 
 The **lifetime** of a service is how long the service instance will live in your application - from the original instantiation to :doc:`disposal <disposal>`. For example, if you "new up" an object that implements `IDisposable <http://msdn.microsoft.com/en-us/library/system.idisposable.aspx>`_ and then later call ``Dispose()`` on it, the lifetime of that object is from the time you instantiated it all the way through disposal (or garbage collection if you didn't proactively dispose it).
 
