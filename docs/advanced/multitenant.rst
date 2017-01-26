@@ -142,11 +142,14 @@ The following example shows what a simple ``ITenantIdentificationStrategy`` that
 
     namespace DemoNamespace
     {
+      // SUPER IMPORTANT DISCLAIMERS:
+      // * This is an EXAMPLE ONLY and is NOT RECOMMENDED.
+      // * There's very little error checking here and is NOT ROBUST.
+      // * SERIOUSLY THIS IS JUST AN ILLUSTRATIVE EXAMPLE.
       public class RequestParameterStrategy : ITenantIdentificationStrategy
       {
         public bool TryIdentifyTenant(out object tenantId)
         {
-          // This is an EXAMPLE ONLY and is NOT RECOMMENDED.
           tenantId = null;
           try
           {
@@ -165,7 +168,7 @@ The following example shows what a simple ``ITenantIdentificationStrategy`` that
       }
     }
 
-In this example, a web application is using an incoming request parameter to get the tenant ID. (Note that **this is just an example and is not recommended** because it would allow any user on the system to very easily just switch tenants.) A slightly more robust version of this exact strategy is provided as ``Autofac.Multitenant.Web.RequestParameterTenantIdentificationStrategy`` but, again, is still not recommended for production due to the insecurity.
+In this example, a web application is using an incoming request parameter to get the tenant ID. (Note that **this is just an example and is not recommended** because it would allow any user on the system to very easily just switch tenants. It also doesn't handle resolving things that occur outside of a web request.)
 
 In your custom strategy implementation, you may choose to represent your tenant IDs as GUIDs, integers, or any other custom type. The strategy here is where you would parse the value from the execution context into a strongly typed object and succeed/fail based on whether the value is present and/or whether it can be parsed into the appropriate type.
 
