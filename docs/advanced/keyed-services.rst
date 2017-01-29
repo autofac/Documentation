@@ -6,7 +6,7 @@ Autofac provides three typical ways to identify services. The most common is to 
 
 .. sourcecode:: csharp
 
-    builder.Register<OnlineState>().As<IDeviceState>();
+    builder.RegisterType<OnlineState>().As<IDeviceState>();
 
 This example associates the ``IDeviceState`` typed service with the ``OnlineState`` component. Instances of the component can be retrieved using the service type with the ``Resolve()`` method:
 
@@ -23,7 +23,7 @@ Services can be further identified using a service name. Using this technique, t
 
 .. sourcecode:: csharp
 
-    builder.Register<OnlineState>().Named<IDeviceState>("online");
+    builder.RegisterType<OnlineState>().Named<IDeviceState>("online");
 
 To retrieve a named service, the ``ResolveNamed()`` method is used:
 
