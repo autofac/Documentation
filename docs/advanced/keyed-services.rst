@@ -99,7 +99,7 @@ In the ``SwitchOn()`` method, the index is used to find the implementation of ``
 
 Resolving with Attributes
 -------------------------
-The :doc:`metadata feature of Autofac provides a WithKeyAttribute <metadata>` that allows you to mark constructor parameters with an attribute specfying which keyed service should be used. The attribute usage looks like this:
+The :doc:`metadata feature of Autofac provides a KeyFilterAttribute <metadata>` that allows you to mark constructor parameters with an attribute specfying which keyed service should be used. The attribute usage looks like this:
 
 .. sourcecode:: csharp
 
