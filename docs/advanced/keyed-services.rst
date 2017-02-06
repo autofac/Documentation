@@ -105,7 +105,7 @@ The :doc:`metadata feature of Autofac provides a WithKeyAttribute <metadata>` th
 
     public class ArtDisplay : IDisplay
     {
-      public ArtDisplay([WithKey("Painting")] IArtwork art) { ... }
+      public ArtDisplay([KeyFilter("Painting")] IArtwork art) { ... }
     }
 
 :doc:`See the metadata documentation <metadata>` for more info on how to get this set up.
