@@ -79,7 +79,7 @@ Register Controllers
 
 At application startup, while building your Autofac container, you should register your Web API controllers and their dependencies. This typically happens in an OWIN startup class or in the ``Application_Start`` method in ``Global.asax``.
 
-By default types that implement ``IHttpController`` and have a name with the suffix ``Controller`` will be registered. 
+By default types that implement ``IHttpController`` and have a name with the suffix ``Controller`` will be registered.
 
 .. sourcecode:: csharp
 
@@ -90,7 +90,7 @@ By default types that implement ``IHttpController`` and have a name with the suf
 
     // ...or you can register individual controlllers manually.
     builder.RegisterType<ValuesController>().InstancePerRequest();
-    
+
 If your controllers do not follow the standard naming convention you may choose to provide a custom suffix using an overload of the ``RegisterApiControllers`` method.
 
 .. sourcecode:: csharp
@@ -203,8 +203,8 @@ Autofac introduces the new interfaces to allow you to concentrate on implementin
 
 Another reason for creating the internal attribute wrappers is to support the ``InstancePerRequest`` lifetime scope for filters. See below for more on that.
 
-Standard Web API Filters are Singletons
----------------------------------------
+Standard Web API Filter Attributes are Singletons
+-------------------------------------------------
 
 You may notice that if you use the standard Web API filters that you can't use ``InstancePerRequest`` dependencies.
 
@@ -232,6 +232,18 @@ Here's an example of a filter that uses service location with the Web API ``IDep
         service.DoWork();
       }
     }
+
+
+Instance Filters Don't Get Injected
+-----------------------------------
+
+When setting up filters, you may want to manually add filters to a collection like this:
+
+.. sourcecode:: csharp
+
+    config.Filters.Add(new MyActionFilter());
+
+**Autofac will not inject properties on filters registered this way.** This is somewhat similar to when you use ``RegisterInstance`` to put a pre-constructed instance of an object into Autofac - Autofac won't inject or modify pre-constructed instances. This same holds true for filter instances that are pre-constructed and added to a filter collection. As with attribute filters (as noted above), you can work around this by using service location rather than property injection.
 
 Per-Controller-Type Services
 ============================
