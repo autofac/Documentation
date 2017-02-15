@@ -219,9 +219,9 @@ To use svc-less services, add a factory entry under the ``serviceActivation`` el
 
     <serviceHostingEnvironment aspNetCompatibilityEnabled="true" multipleSiteBindingsEnabled="true">
       <serviceActivations>
-        <add factory="Autofac.Integration.Wcf.AutofacServiceHostFactory"
+        <add factory="Autofac.Integration.Wcf.AutofacServiceHostFactory, Autofac.Integration.Wcf"
              relativeAddress="~/Service1.svc"
-             service="TestService.Service1" />
+             service="TestService.Service1, TestService" />
       </serviceActivations>
     </serviceHostingEnvironment>
 
