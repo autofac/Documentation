@@ -110,6 +110,7 @@ In simple terms, think about a .NET type that implements an interface, like this
     }
 
 You could address that type in one of two ways:
+
 - As the type itself, ``SomeType``
 - As the interface, an ``IService``
 
