@@ -156,9 +156,20 @@ Note in the sample there's no actual async code that runs so it returns ``Task.F
 Register the Filter
 -------------------
 
-For the filter to execute you need to register it with the container and inform it which controller, and optionally action, should be targeted. This is done using the ``AsActionFilterFor()``, ``AsAuthorizationFilterFor()`` and ``AsExceptionFilterFor()`` extension methods on the ``ContainerBuilder``.
+For the filter to execute you need to register it with the container and inform it which controller, and optionally action, should be targeted. This is done using the following ``ContainerBuilder`` extension methods:
+
+- ``AsWebApiActionFilterFor<TController>()``
+- ``AsWebApiActionFilterOverrideFor<TController>()``
+- ``AsWebApiAuthorizationFilterFor<TController>()``
+- ``AsWebApiAuthorizationOverrideFilterFor<TController>()``
+- ``AsWebApiAuthenticationFilterFor<TController>()``
+- ``AsWebApiAuthenticationOverrideFilterFor<TController>()``
+- ``AsWebApiExceptionFilterFor<TController>()``
+- ``AsWebApiExceptionOverrideFilterFor<TController>()``
 
 These methods require a generic type parameter for the type of the controller, and an optional lambda expression that indicates a specific method on the controller the filter should be applied to. If you don’t provide the lambda expression the filter will be applied to all action methods on the controller in the same way that placing an attribute based filter at the controller level would.
+
+You can apply as many filters as you want. Registering a filter of one type does not remove or replace previously registered filters.
 
 In the example below the filter is being applied to the ``Get`` action method on the ``ValuesController``.
 
@@ -173,6 +184,17 @@ In the example below the filter is being applied to the ``Get`` action method on
 When applying the filter to an action method that requires a parameter use the ``default`` keyword with the data type of the parameter as a placeholder in your lambda expression. For example, the ``Get`` action method in the example above required an ``int`` parameter and used ``default(int)`` as a strongly-typed placeholder in the lambda expression.
 
 It is also possible to provide a base controller type in the generic type parameter to have the filter applied to all derived controllers. In addition, you can also make your lambda expression for the action method target a method on a base controller type and have it applied to that method on all derived controllers.
+
+Filter Overrides
+----------------
+When registering filters, there are basic registration methods like ``AsWebApiActionFilterFor<TController>()`` and override registration methods like ``AsWebApiActionFilterOverrideFor<TController>()``. The point of the override methods is to provide a way to ensure certain filters execute first. You can have as many overrides as you want - these aren't *replacement* filters, just filters that run *first*.
+
+Filters will run in the order:
+
+- Controller-scoped overrides
+- Action-scoped overrides
+- Controller scoped filters
+- Action scoped filters
 
 Why We Use Non-Standard Filter Interfaces
 -----------------------------------------
