@@ -302,6 +302,67 @@ To override this behavior, use the ``PreserveExistingDefaults()`` modifier:
 
 In this scenario, ``ConsoleLogger`` will be the default for ``ILogger`` because the later registration for ``FileLogger`` used ``PreserveExistingDefaults()``.
 
+Conditional Registration
+========================
+In most cases, overriding registrations as noted in the section above, "Default Registrations," is enough to get the right component resolved at runtime. Ensuring things get registered in the right order; using ``PreserveExistingDefaults()``; and taking advantage of lambda/delegate registrations for more complex conditions and behavior can get you pretty far.
+
+There can be a few scenarios where this may not be the way you want to go:
+
+- You don't want the component present in the system if something else is handling the functionality. For example, if you resolve an ``IEnumerable<T>`` of a service, all of the registered components implementing that service will be returned, whether or not you've used ``PreserveExistingDefaults()``. Usually this is fine, but there are some edge cases where you may not want that.
+- You only want to register the component if some other component *isn't* registered; or only if some other component *is* registered. You can't resolve things out of a container that you're building, and you shouldn't update a container that's already built. Being able to conditionally register a component based on other registrations can be helpful.
+
+There are two registration extensions that can help in these cases:
+
+- ``OnlyIf()`` - Provide a lambda that uses an ``IComponentRegistry`` to determine if a registration should happen.
+- ``IfNotRegistered()`` - Shortcut to stop a registration from happening if some other service is already registered.
+
+These extensions run at the time of ``ContainerBuilder.Build()`` and will execute in the order of the actual component registrations. Here are some examples showing how they work:
+
+.. sourcecode:: csharp
+
+    var builder = new ContainerBuilder();
+
+    // Only ServiceA will be registered.
+    // Note the IfNotRegistered takes the SERVICE TYPE to
+    // check for (the As<T>), NOT the COMPONENT TYPE
+    // (the RegisterType<T>).
+    builder.RegisterType<ServiceA>()
+           .As<IService>();
+    builder.RegisterType<ServiceB>()
+           .As<IService>()
+          .IfNotRegistered(typeof(IService));
+
+    // HandlerA WILL be registered - it's running
+    // BEFORE HandlerB has a chance to be registered
+    // so the IfNotRegistered check won't find it.
+    //
+    // HandlerC will NOT be registered because it
+    // runs AFTER HandlerB. Note it can check for
+    // the type "HandlerB" because HandlerB registered
+    // AsSelf() not just As<IHandler>(). Again,
+    // IfNotRegistered can only check for "As"
+    // types.
+    builder.RegisterType<HandlerA>()
+           .AsSelf()
+           .As<IHandler>()
+           .IfNotRegistered(typeof(HandlerB));
+    builder.RegisterType<HandlerB>()
+           .AsSelf()
+           .As<IHandler>();
+    builder.RegisterType<HandlerC>()
+           .AsSelf()
+           .As<IHandler>()
+           .IfNotRegistered(typeof(HandlerB));
+
+    // Manager will be registered because both an IService
+    // and HandlerB are registered. The OnlyIf predicate
+    // can allow a lot more flexibility.
+    builder.RegisterType<Manager>()
+           .As<IManager>()
+           .OnlyIf(reg =>
+             reg.IsRegistered(new TypedService(typeof(IService))) &&
+             reg.IsRegistered(new TypedService(typeof(HandlerB))));
+
 Configuration of Registrations
 ==============================
 You can :doc:`use XML or programmatic configuration ("modules") <../configuration/index>` to provide groups of registrations together or change registrations at runtime. You can also use :doc:`use Autofac modules <../configuration/modules>` for some dynamic registration generation or conditional registration logic.
