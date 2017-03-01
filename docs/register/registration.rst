@@ -304,6 +304,9 @@ In this scenario, ``ConsoleLogger`` will be the default for ``ILogger`` because 
 
 Conditional Registration
 ========================
+
+.. note:: Conditional registration was introduced in Autofac **4.4.0**
+
 In most cases, overriding registrations as noted in the section above, "Default Registrations," is enough to get the right component resolved at runtime. Ensuring things get registered in the right order; using ``PreserveExistingDefaults()``; and taking advantage of lambda/delegate registrations for more complex conditions and behavior can get you pretty far.
 
 There can be a few scenarios where this may not be the way you want to go:
