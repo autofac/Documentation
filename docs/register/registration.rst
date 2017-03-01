@@ -333,7 +333,7 @@ These extensions run at the time of ``ContainerBuilder.Build()`` and will execut
            .As<IService>();
     builder.RegisterType<ServiceB>()
            .As<IService>()
-          .IfNotRegistered(typeof(IService));
+           .IfNotRegistered(typeof(IService));
 
     // HandlerA WILL be registered - it's running
     // BEFORE HandlerB has a chance to be registered
@@ -365,6 +365,11 @@ These extensions run at the time of ``ContainerBuilder.Build()`` and will execut
            .OnlyIf(reg =>
              reg.IsRegistered(new TypedService(typeof(IService))) &&
              reg.IsRegistered(new TypedService(typeof(HandlerB))));
+
+    // This is when the conditionals actually run. Again,
+    // they run in the order the registrations were added
+    // to the ContainerBuilder.
+    var container = builder.Build();
 
 Configuration of Registrations
 ==============================
