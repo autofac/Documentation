@@ -83,6 +83,10 @@ When you resolve a single instance component, you always get the same instance n
         }
       }
     }
+    
+Be mindful of some pitfalls using single instance:
+
+  * `Captive dependency <https://github.com/autofac/Autofac/issues/809>` when the single instance has a dependency that lives in a different lifetime scope, such as tied to a `HttpContext` in a web app or using a child lifetime scope. The single instance would hold a reference to the dependency after the lifetime of the dependency ended.
 
 Instance Per Lifetime Scope
 ===========================
