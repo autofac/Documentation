@@ -429,13 +429,13 @@ The consuming components can then use the metadata just like normal - the names 
                  new ResolvedParameter(
                    (pi, ctx) => pi.ParameterType == typeof(ISender),
                    (pi, ctx) => ctx.Resolve<IEnumerable<Meta<ISender>>>()
-                                   .First(a => a.Metadata["SendAllowed"].Equals("order"))));
+                                   .First(a => a.Metadata["send-allowed"].Equals("order"))));
         builder.RegisterType<CustomerNotifier>();
                .WithParameter(
                  new ResolvedParameter(
                    (pi, ctx) => pi.ParameterType == typeof(ISender),
                    (pi, ctx) => ctx.Resolve<IEnumerable<Meta<ISender>>>()
-                                   .First(a => a.Metadata["SendAllowed"].Equals("notification"))));
+                                   .First(a => a.Metadata["send-allowed"].Equals("notification"))));
       }
     }
 
