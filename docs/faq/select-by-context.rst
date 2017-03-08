@@ -445,12 +445,12 @@ For your consuming components, you can also use attributed metadata if you don't
 
     public class ShippingProcessor
     {
-      public ShippingProcessor([WithMetadata("SendAllowed", "order")] ISender shippingStrategy) { ... }
+      public ShippingProcessor([WithMetadata("send-allowed", "order")] ISender shippingStrategy) { ... }
     }
 
     public class CustomerNotifier
     {
-      public CustomerNotifier([WithMetadata("SendAllowed", "notification")] ISender notificationStrategy) { ... }
+      public CustomerNotifier([WithMetadata("send-allowed", "notification")] ISender notificationStrategy) { ... }
     }
 
 If your consuming components use the attribute, you need to register them ``WithAttributeFilter``:
