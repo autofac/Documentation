@@ -57,4 +57,7 @@ To register an auto-activated component, use the ``AutoActivate()`` registration
     var builder = new ContainerBuilder();
     builder
        .RegisterType<TypeRequiringWarmStart>()
+       .AsSelf()
        .AutoActivate();
+
+Note: If you *omit* the ``AsSelf()`` or ``As<T>()`` service registration calls when you register an ``AutoActivate()`` component, the component will *only* be registered to auto-activate and won't necessarily be resolvable "as itself" after container build.
