@@ -194,6 +194,36 @@ Note that both ``parameters`` and ``properties`` support dictionary and enumerab
 
 You are allowed to register *the same module multiple times using different parameter/property sets* if you so choose.
 
+Type Names
+----------
+In all cases where you see a type name (component type, service types, module type) it is expected to be `the standard, assembly qualified type name <https://msdn.microsoft.com/en-us/library/yfsftwz6(v=vs.110).aspx>`_ that you would normally be able to pass to ``Type.GetType(string typename)``. If the type is in the ``defaultAssembly`` you can leave the assembly name off, but it doens't hurt to put it there regardless.
+
+Assembly qualified type names have the full type with namespace, a comma, and the name of the assembly, like ``Autofac.Example.Calculator.OperationModule, Autofac.Example.Calculator``. In that case, ``Autofac.Example.Calculator.OperationModule`` is the type and it's in the ``Autofac.Example.Calculator`` assembly.
+
+Generics are a little more complicated. Configuration does not support open generics so you have to specify the fully qualified name of each of the generic parameters, too.
+
+For example, say you have a repository ``IRepository<T>`` in a ``ConfigWithGenericsDemo`` assembly. Let's also say you have a class ``StringRepository`` that implements ``IRepository<string>``. To register that in configuration, it would look like this:
+
+.. sourcecode:: json
+
+    {
+      "components": [{
+        "type": "ConfigWithGenericsDemo.StringRepository, ConfigWithGenericsDemo",
+        "services": [{
+          "type": "ConfigWithGenericsDemo.IRepository`1[[System.String, mscorlib]], ConfigWithGenericsDemo"
+        }]
+      }]
+    }
+
+If you're having a difficult time figuring out what your type name is, you can always do something like this in code:
+
+
+.. sourcecode:: csharp
+
+    // Write the type name to the Debug output window and
+    // copy/paste it out of there into your config.
+    System.Diagnostics.Debug.WriteLine(typeof(IRepository<string>).AssemblyQualifiedName);
+
 Differences from Legacy Configuration
 -------------------------------------
 When migrating from the legacy (pre 4.0 version) ``app.config`` based format to the new format, there are some key changes to be aware of:
