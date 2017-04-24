@@ -26,8 +26,10 @@ Quick Start
 The basic steps to getting configuration set up with your application are:
 
 1. Set up your configuration in JSON or XML files that can be read by ``Microsoft.Extensions.Configuration``.
-  * JSON configuration uses ``Microsoft.Extensions.Configuration.Json``
-  * XML configuration uses ``Microsoft.Extensions.Configuration.Xml``
+
+   * JSON configuration uses ``Microsoft.Extensions.Configuration.Json``
+   * XML configuration uses ``Microsoft.Extensions.Configuration.Xml``
+
 2. Build the configuration using the ``Microsoft.Extensions.Configuration.ConfigurationBuilder``.
 3. Create a new ``Autofac.Configuration.ConfigurationModule`` and pass the built ``Microsoft.Extensions.Configuration.IConfiguration`` into it.
 4. Register the ``Autofac.Configuration.ConfigurationModule`` with your container.
