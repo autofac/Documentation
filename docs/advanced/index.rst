@@ -15,4 +15,5 @@ Advanced Topics
     multitenant.rst
     aggregate-services.rst
     interceptors.rst
+    cross-platform-apps.rst
     debugging.rst
