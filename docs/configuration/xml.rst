@@ -6,7 +6,7 @@ Most IoC containers provide a programmatic interface as well as JSON/XML file-ba
 
 Autofac encourages programmatic configuration through the ``ContainerBuilder`` class. Using the programmatic interface is central to the design of the container. JSON or XML is recommended when concrete classes cannot be chosen or configured at compile-time.
 
-Before diving too deeply into JSON/XML configuration, be sure to read :doc:`Modules<modules>` - this explains how to handle more complex scenarios than the basic JSON/XML component registration will allow.
+Before diving too deeply into JSON/XML configuration, be sure to read :doc:`Modules<modules>` - this explains how to handle more complex scenarios than the basic JSON/XML component registration will allow. Configuration in JSON/XML is not a feature-for-feature replacement for programmatic configuration, so complex scenarios may require a combination of JSON/XML and modules.
 
 .. contents::
   :local:
