@@ -5,7 +5,7 @@ Contributor Guide
 Process, Standards, and Build
 =============================
 
-`The Autofac contributor's guide is located in GitHub. <https://github.com/autofac/Autofac/blob/master/CONTRIBUTING.md>`_ If you are interested in contributing or building the project from source, check it out.
+`The Autofac contributor's guide is located in GitHub. <https://github.com/autofac/Autofac/blob/develop/CONTRIBUTING.md>`_ If you are interested in contributing or building the project from source, check it out.
 
 Contributors
 ============
