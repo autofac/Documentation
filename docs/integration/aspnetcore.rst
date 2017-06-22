@@ -6,18 +6,102 @@ ASP.NET Core (previously ASP.NET 5) changes the way dependency injection framewo
 
 **This page explains ASP.NET Core integration.** If you are using ASP.NET classic, :doc:`see the ASP.NET classic integration page <aspnet>`.
 
+If you're using .NET Core without ASP.NET Core, :doc:`there's a simpler example here <netcore>` showing that integration.
+
 .. contents::
   :local:
 
-Quick Start
-===========
+Quick Start (With ConfigureContainer)
+=====================================
 
-To take advantage of Autofac in your ASP.NET Core pipeline:
+ASP.NET Core 1.1 introduced the ability to have strongly-typed container configuration. It provides a ``ConfigureContainer`` method where you register things with Autofac separately from registering things with the ``ServiceCollection``.
+
+* Reference the ``Autofac.Extensions.DependencyInjection`` package from NuGet.
+* In your ``Program.Main`` method, where you configure the ``WebHostBuilder``, call ``AddAutofac`` to hook Autofac into the startup pipeline.
+* In the ``ConfigureServices`` method of your ``Startup`` class register things into the ``IServiceCollection`` using extension methods provided by other libraries.
+* In the ``ConfigureContainer`` method of your ``Startup`` class register things directly into an Autofac ``ContainerBuilder``.
+
+The ``IServiceProvider`` will automatically be created for you, so there's nothing you have to do but *register things*.
+
+.. sourcecode:: csharp
+
+    public class Program
+    {
+      public static void Main(string[] args)
+      {
+        // The ConfigureServices call here allows for
+        // ConfigureContainer to be supported in Startup with
+        // a strongly-typed ContainerBuilder.
+        var host = new WebHostBuilder()
+            .UseKestrel()
+            .ConfigureServices(services => services.AddAutofac())
+            .UseContentRoot(Directory.GetCurrentDirectory())
+            .UseIISIntegration()
+            .UseStartup<Startup>()
+            .Build();
+
+        host.Run();
+      }
+    }
+
+    public class Startup
+    {
+      public Startup(IHostingEnvironment env)
+      {
+        var builder = new ConfigurationBuilder()
+            .SetBasePath(env.ContentRootPath)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+            .AddEnvironmentVariables();
+        this.Configuration = builder.Build();
+      }
+
+      public IConfigurationRoot Configuration { get; private set; }
+
+      // ConfigureServices is where you register dependencies. This gets
+      // called by the runtime before the ConfigureContainer method, below.
+      public void ConfigureServices(IServiceCollection services)
+      {
+        // Add services to the collection. Don't build or return
+        // any IServiceProvider or the ConfigureContainer method
+        // won't get called.
+        services.AddMvc();
+      }
+
+      // ConfigureContainer is where you can register things directly
+      // with Autofac. This runs after ConfigureServices so the things
+      // here will override registrations made in ConfigureServices.
+      // Don't build the container; that gets done for you. If you
+      // need a reference to the container, you need to use the
+      // "Without ConfigureContainer" mechanism shown later.
+      public void ConfigureContainer(ContainerBuilder builder)
+      {
+          builder.RegisterModule(new AutofacModule());
+      }
+
+      // Configure is where you add middleware. This is called after
+      // ConfigureContainer. You can use IApplicationBuilder.ApplicationServices
+      // here if you need to resolve things from the container.
+      public void Configure(
+        IApplicationBuilder app,
+        ILoggerFactory loggerFactory)
+      {
+          loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
+          loggerFactory.AddDebug();
+          app.UseMvc();
+      }
+    }
+
+Quick Start (Without ConfigureContainer)
+========================================
+
+If you need more flexibility over how your container is built or if you need to actually store a reference to the built container (e.g. so you can dispose of the container yourself at app shutdown), you will need to skip using ``ConfigureContainer`` and register everything during ``ConfigureServices``. This is also the path you'd take for ASP.NET Core 1.0.
 
 * Reference the ``Autofac.Extensions.DependencyInjection`` package from NuGet.
 * In the ``ConfigureServices`` method of your ``Startup`` class...
 
-  - Register services from the ``IServiceCollection``.
+  - Register services from the ``IServiceCollection`` into the ``ContainerBuilder`` via ``Populate``.
+  - Register services into the ``ContainerBuilder`` directly.
   - Build your container.
   - Create an ``AutofacServiceProvider`` using the container and return it.
 
@@ -55,8 +139,15 @@ To take advantage of Autofac in your ASP.NET Core pipeline:
         // the collection, and build the container. If you want
         // to dispose of the container at the end of the app,
         // be sure to keep a reference to it as a property or field.
-        builder.RegisterType<MyType>().As<IMyType>();
+        //
+        // Note that Populate is basically a foreach to add things
+        // into Autofac that are in the collection. If you register
+        // things in Autofac BEFORE Populate then the stuff in the
+        // ServiceCollection can override those things; if you register
+        // AFTER Populate those registrations can override things
+        // in the ServiceCollection. Mix and match as needed.
         builder.Populate(services);
+        builder.RegisterType<MyType>().As<IMyType>();
         this.ApplicationContainer = builder.Build();
 
         // Create the IServiceProvider based on the container.
@@ -78,9 +169,73 @@ To take advantage of Autofac in your ASP.NET Core pipeline:
 
           // If you want to dispose of resources that have been resolved in the
           // application container, register for the "ApplicationStopped" event.
+          // You can only do this if you have a direct reference to the container,
+          // so it won't work with the above ConfigureContainer mechanism.
           appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
       }
     }
+
+Configuration Method Naming Conventions
+=======================================
+
+The ``Configure``, ``ConfigureServices``, and ``ConfigureContainer`` methods all support environment-specific naming conventions based on the ``IHostingEnvironment.EnvironmentName`` in your app. By default, the names are ``Configure``, ``ConfigureServices``, and ``ConfigureContainer``. If you want environment-specific setup you can put the environment name after the ``Configure`` part, like ``ConfigureDevelopment``, ``ConfigureDevelopmentServices``, and ``ConfigureDevelopmentContainer``. If a method isn't present with a name matching the environment it'll fall back to the default.
+
+This means you don't necessarily have to use :doc:`Autofac configuration <../configuration/index>` to switch configuration between a development and production environment; you can set it up programmatically in ``Startup``.
+
+.. sourcecode:: csharp
+
+    public class Startup
+    {
+      public Startup(IHostingEnvironment env)
+      {
+        // Do Startup-ish things like read configuration.
+      }
+
+      // This is the default if you don't have an environment specific method.
+      public void ConfigureServices(IServiceCollection services)
+      {
+        // Add things to the service collection.
+      }
+
+      // This only gets called if your environment is Development. The
+      // default ConfigureServices won't be automatically called if this
+      // one is called.
+      public void ConfigureDevelopmentServices(IServiceCollection services)
+      {
+        // Add things to the service collection that are only for the
+        // development environment.
+      }
+
+      // This is the default if you don't have an environment specific method.
+      public void ConfigureContainer(ContainerBuilder builder)
+      {
+        // Add things to the Autofac ContainerBuilder.
+      }
+
+      // This only gets called if your environment is Production. The
+      // default ConfigureContainer won't be automatically called if this
+      // one is called.
+      public void ConfigureProductionContainer(ContainerBuilder builder)
+      {
+        // Add things to the ContainerBuilder that are only for the
+        // production environment.
+      }
+
+      // This is the default if you don't have an environment specific method.
+      public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
+      {
+        // Set up the application.
+      }
+
+      // This only gets called if your environment is Staging. The
+      // default Configure won't be automatically called if this one is called.
+      public void ConfigureStaging(IApplicationBuilder app, ILoggerFactory loggerFactory)
+      {
+        // Set up the application for staging.
+      }
+    }
+
+The `StartupLoader class in ASP.NET Core <https://github.com/aspnet/Hosting/blob/rel/1.1.0/src/Microsoft.AspNetCore.Hosting/Internal/StartupLoader.cs>`_ is what locates the methods to call during app startup. Check that class out if you want a more in-depth understanding of how this works.
 
 Dependency Injection Hooks
 ==========================
