@@ -64,3 +64,46 @@ To take advantage of Autofac in your .NET Core application via the ``Microsoft.E
     }
 
 **You don't have to use Microsoft.Extensions.DependencyInjection.** If you aren't writing a .NET Core app that requires it or if you're not using any of the DI extensions provided by other libraries you can consume Autofac directly. You also may only need to do the ``Populate()`` call and not need the ``AutofacServiceProvider``. Use the pieces that make sense for your app.
+
+Using a Child Scope as a Root
+=============================
+
+In a complex application you may want to keep services registered using ``Populate()`` in a child lifetime scope. For example, an application that does some self-hosting of ASP.NET Core components may want to keep the MVC registrations and such isolated from the main container. The ``Populate()`` method offers an overload to allow you to specify a tagged child lifetime scope that should serve as the "container" for items.
+
+.. note::
+
+   If you use this, you will not be able to use the ASP.NET Core support for ``IServiceProviderFactory{TContainerBuilder}`` (the ``ConfigureContainer`` support). This is because ``IServiceProviderFactory{TContainerBuilder}`` assumes it's working at the root level.
+
+.. sourcecode:: csharp
+
+    public class Program
+    {
+      private const string RootLifetimeTag = "MyIsolatedRoot";
+
+      public static void Main(string[] args)
+      {
+        var serviceCollection = new ServiceCollection();
+        serviceCollection.AddLogging();
+
+        var containerBuilder = new ContainerBuilder();
+        containerBuilder.RegisterType<MessageHandler>().As<IHandler>();
+        var container = containerBuilder.Build();
+
+        using(var scope = container.BeginLifetimeScope(RootLifetimeTag, b =>
+        {
+          b.Populate(serviceCollection, RootLifetimeTag);
+        }))
+        {
+          // This service provider will have access to global singletons
+          // and registrations but the "singletons" for things registered
+          // in the service collection will be "rooted" under this
+          // child scope, unavailable to the rest of the application.
+          //
+          // Obviously it's not super helpful being in this using block,
+          // so likely you'll create the scope at app startup, keep it
+          // around during the app lifetime, and dispose of it manually
+          // yourself during app shutdown.
+          var serviceProvider = new AutofacServiceProvider(scope);
+        }
+      }
+    }
