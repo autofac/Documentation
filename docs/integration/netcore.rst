@@ -18,7 +18,7 @@ To take advantage of Autofac in your .NET Core application via the ``Microsoft.E
 * During application startup (e.g., in the ``Program`` or  ``Startup`` class)...
 
   - Register services in an ``IServiceCollection`` using framework extensions.
-  - Populate those registered servcies into Autofac.
+  - Populate those registered services into Autofac.
   - Add Autofac registrations and overrides.
   - Build your container.
   - Create an ``AutofacServiceProvider`` using the container.
