@@ -32,6 +32,9 @@ To get Autofac integrated with Web API you need to reference the Web API integra
       // OPTIONAL: Register the Autofac filter provider.
       builder.RegisterWebApiFilterProvider(config);
 
+      // OPTIONAL: Register the Autofac model binder provider.
+      builder.RegisterWebApiModelBinderProvider();
+
       // Set the dependency resolver to be Autofac.
       var container = builder.Build();
       config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
@@ -266,6 +269,41 @@ When setting up filters, you may want to manually add filters to a collection li
     config.Filters.Add(new MyActionFilter());
 
 **Autofac will not inject properties on filters registered this way.** This is somewhat similar to when you use ``RegisterInstance`` to put a pre-constructed instance of an object into Autofac - Autofac won't inject or modify pre-constructed instances. This same holds true for filter instances that are pre-constructed and added to a filter collection. As with attribute filters (as noted above), you can work around this by using service location rather than property injection.
+
+Provide Model Binders via Dependency Injection
+==============================================
+
+The Autofac integration with Web API provides the ability to resolve your model binders using dependency injection and associate binders with types using a fluent interface.
+
+Register the Binder Provider
+----------------------------
+
+You need to register the Autofac model binder provider so it can resolve any registered ``IModelBinder`` implementations when needed. This is done by calling the ``RegisterWebApiModelBinderProvider`` method on the container builder.
+
+.. sourcecode:: csharp
+
+    var builder = new ContainerBuilder();
+    builder.RegisterWebApiModelBinderProvider();
+
+Register Model Binders
+----------------------
+
+Once you've implemented ``System.Web.Http.ModelBinding.IModelBinder`` to handle binding concerns, register it with Autofac and let Autofac know which types should be bound using that binder.
+
+.. sourcecode:: csharp
+
+    builder
+      .RegisterType<AutomobileBinder>()
+      .AsModelBinderForTypes(typeof(CarModel), typeof(TruckModel));
+
+Mark Parameters With ModelBinderAttribute
+-----------------------------------------
+
+Even if you have your model binder registered, you still need to mark your parameters with the ``[ModelBinder]`` attribute so Web API knows to use a model binder instead of a media type formatter to bind your model. You don't have to specify the model binder type anymore, but you do have to mark the parameter with the attribute. `This is also mentioned in the Web API documentation. <https://docs.microsoft.com/en-us/aspnet/web-api/overview/formats-and-model-binding/parameter-binding-in-aspnet-web-api>`_
+
+.. sourcecode:: csharp
+
+    public HttpResponseMessage Post([ModelBinder] CarModel car) { ... }
 
 Per-Controller-Type Services
 ============================
