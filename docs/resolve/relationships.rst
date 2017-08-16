@@ -168,7 +168,7 @@ An example of this relationship looks like:
 
 Parameterized Instantiation (Func<X, Y, B>)
 -------------------------------------------
-You can also use an *auto-generated factory* to pass strongly-typed parameters to the resolution function. This is an alternative to :doc:`passing parameters during registration <../register/parameters>` or :doc:`passing during manual resoution <../resolve/parameters>`:
+You can also use an *auto-generated factory* to pass strongly-typed parameters to the resolution function. This is an alternative to :doc:`passing parameters during registration <../register/parameters>` or :doc:`passing during manual resolution <../resolve/parameters>`:
 
 .. sourcecode:: csharp
 
