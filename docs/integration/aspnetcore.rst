@@ -305,6 +305,71 @@ You can change this by specifying ``AddControllersAsServices()`` when you regist
 
 There is a more detailed article `with a walkthrough on Filip Woj's blog <http://www.strathweb.com/2016/03/the-subtle-perils-of-controller-dependency-injection-in-asp-net-core-mvc/>`_. Note one of the commenters there `found some changes based on how RC2 handles controllers as services <http://www.strathweb.com/2016/03/the-subtle-perils-of-controller-dependency-injection-in-asp-net-core-mvc/#comment-2702995712>`_.
 
+Multitenant Support
+===================
+
+Due to the way ASP.NET Core is eager about generating the request lifetime scope it causes multitenant support to not quite work out of the box. Sometimes the ``IHttpContextAccessor``, commonly used in tenant identification, also isn't set up in time. The `Autofac.AspNetCore.Multitenant <https://github.com/autofac/Autofac.AspNetCore.Multitenant>`_ package was added to fix that.
+
+To enable multitenant support:
+
+* Add a reference to the ``Autofac.AspNetCore.Multitenant`` NuGet package.
+* In your ``Program.Main`` when building the web host...
+
+  * Include a call to the ``UseAutofacMultitenantRequestServices`` extension and let Autofac know how to locate your multitenant container.
+  * **Do not use** the ``ConfigureContainer`` support listed above. You can't do that because it won't give you a chance to create your multitenant container.
+
+* In your ``Startup.ConfigureServices`` method create your multitenant container and return an ``AutofacServiceProvider`` using that container.
+
+Here's an example of what you do in ``Program.Main``:
+
+.. sourcecode:: csharp
+
+    public class Program
+    {
+      public static void Main(string[] args)
+      {
+        var host = new WebHostBuilder()
+          .UseKestrel()
+          .UseContentRoot(Directory.GetCurrentDirectory())
+
+          // This enables the request lifetime scope to be properly spawned from
+          // the container rather than be a child of the default tenant scope.
+          // The ApplicationContainer static property is where the multitenant container
+          // will be stored once it's built.
+          .UseAutofacMultitenantRequestServices(() => Startup.ApplicationContainer)
+          .UseIISIntegration()
+          .UseStartup<Startup>()
+          .Build();
+
+        host.Run();
+      }
+    }
+
+...and here's what ``Startup`` looks like:
+
+.. sourcecode:: csharp
+
+    public class Startup
+    {
+      // Omitting extra stuff so you can see the important part...
+      public IServiceProvider ConfigureServices(IServiceCollection services)
+      {
+        services.AddMvc();
+        var builder = new ContainerBuilder();
+        builder.Populate(services);
+
+        this.ApplicationContainer = builder.Build();
+        var strategy = new MyTenantIdentificationStrategy();
+        var mtc = new MultitenantContainer(strategy, container);
+        Startup.ApplicationContainer = mtc;
+        return new AutofacServiceProvider(mtc);
+      }
+
+      // This is what the middleware will use to create your request lifetime scope.
+      public static MultitenantContainer ApplicationContainer { get; set; }
+    }
+
+
 Using a Child Scope as a Root
 =============================
 
