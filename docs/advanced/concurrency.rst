@@ -51,7 +51,7 @@ When making use of the LifetimeEvents available, don't call back into the contai
 Thread Scoped Services
 ----------------------
 
-You can use Autofac to register services that are specific to a thread. The ThreadScoping page has more information on this.
+You can use Autofac to register services that are specific to a thread. The :doc:`instance lifetime scope <../lifetime/instance-scope>` page has more information on this.
 
 Internals
 ---------
