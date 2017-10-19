@@ -358,7 +358,7 @@ Here's an example of what you do in ``Program.Main``:
         var builder = new ContainerBuilder();
         builder.Populate(services);
 
-        this.ApplicationContainer = builder.Build();
+        var container = builder.Build();
         var strategy = new MyTenantIdentificationStrategy();
         var mtc = new MultitenantContainer(strategy, container);
         Startup.ApplicationContainer = mtc;
