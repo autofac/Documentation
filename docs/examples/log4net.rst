@@ -6,7 +6,7 @@ While there is no specific assembly for log4net support, you can easily inject `
 
 This module is also a good example of how to use :doc:`Autofac modules <../configuration/modules>` for more than simple configuration - they're also helpful for doing some more advanced extensions.
 
-Here's a sample module that configures Autofac to inject ``ILog`` parameters based on the type of the component being activated. This sample module willl handle both constructor and property injection.
+Here's a sample module that configures Autofac to inject ``ILog`` parameters based on the type of the component being activated. This sample module will handle both constructor and property injection.
 
 .. sourcecode:: csharp
 
