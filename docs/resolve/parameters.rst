@@ -44,7 +44,7 @@ You could pass a parameter to the ``Resolve()`` call like this:
 
     var reader = scope.Resolve<ConfigReader>(new NamedParameter("configSectionName", "sectionName"));
 
-:doc:`As with registration-time parameters <../register/parameters>`, the ``NamedParameter`` in the example will map to the corresponding named constructor parameter, assuming the ``Person`` component was :doc:`registered using reflection <../register/registration>`.
+:doc:`As with registration-time parameters <../register/parameters>`, the ``NamedParameter`` in the example will map to the corresponding named constructor parameter, assuming the ``ConfigReader`` component was :doc:`registered using reflection <../register/registration>`.
 
 If you have more than one parameter, just pass them all in via the ``Resolve()`` method:
 
