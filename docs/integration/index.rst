@@ -8,6 +8,7 @@ Application Integration
     netcore.rst
     aspnetcore.rst
     wcf.rst
+    servicefabric.rst
     mef.rst
     csl.rst
     entlib.rst
