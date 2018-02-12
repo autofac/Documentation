@@ -2,14 +2,14 @@
 Type Interceptors
 =================
 
-DynamicProxy2, part of the from `the Castle Project core <http://castleproject.org>`_, provides a method interception framework.
+`Castle.Core <https://github.com/castleproject/Core>`_, part of `the Castle Project <http://castleproject.org>`_, provides a method interception framework called "DynamicProxy."
 
 The ``Autofac.Extras.DynamicProxy`` integration package enables method calls on Autofac components to be intercepted by other components. Common use-cases are transaction handling, logging, and declarative security. You can use ``Autofac.Extras.DynamicProxy2`` for Autofac versions up to 4.0.0
 
 Enabling Interception
 =====================
 
-The basic steps to get DynamicProxy2 integration working are:
+The basic steps to get DynamicProxy integration working are:
 
 - :ref:`create_interceptors`
 - :ref:`register_interceptors`
@@ -192,3 +192,32 @@ Class Interceptors and UsingConstructor
 ---------------------------------------
 
 If you are using class interceptors via ``EnableClassInterceptors()`` then avoid using the constructor selector ``UsingConstructor()`` with it. When class interception is enabled, the generated proxy adds some new constructors that also take the set of interceptors you want to use. When you specify ``UsingConstructor()`` you'll bypass this logic and your interceptors won't be used.
+
+Known Issues
+============
+
+Asynchronous Method Interception
+--------------------------------
+
+Castle interceptors only expose a synchronous mechanism to intercept methods - there's no explicit ``async``/``await`` sort of support. However, given ``async``/``await`` is just syntactic sugar around returning ``Task`` objects, you can use ``Task`` and ``ContinueWith()`` sorts of methods in your interceptor. `This issue <https://github.com/castleproject/Core/issues/107>`_ shows an example of that. Alternatively, there are `helper libraries <https://github.com/JSkimming/Castle.Core.AsyncInterceptor>`_ that make async work easier.
+
+Castle.Core Versioning
+----------------------
+
+As of Castle.Core 4.2.0, the Castle.Core *NuGet package version* updates but the *assembly version* does not. Further, the assembly version in Castle.Core 4.1.0 matched the package (4.1.0.0) but the 4.2.0 package *back-versioned* to 4.0.0.0. In full .NET framework projects any confusion around Castle.Core versioning can be solved by adding an assembly binding redirect to force use of Castle.Core 4.0.0.0.
+
+Unfortunately, .NET core doesn't have assembly binding redirects so if you have a *transitive* dependency on Castle.Core through a library like Autofac.Extras.DynamicProxy and you *also* have a direct dependency on Castle.Core, you may see something like:
+
+``System.IO.FileLoadException: Could not load file or assembly 'Castle.Core, Version=4.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc'. The located assembly's manifest definition does not match the assembly reference. (Exception from HRESULT: 0x80131040)``
+
+This happens because of the back-versioned assembly.
+
+**Be sure you have the latest Autofac.Extras.DynamicProxy.** We do our best to fix as much as possible from the Autofac end. An update to that and/or Castle.Core may help.
+
+If that doesn't work, there are two solutions:
+
+One, you can remove your direct Castle.Core reference. The transitive references should sort themselves out.
+
+Two, if you can't remove your direct reference or removing it doesn't work... all of the direct dependencies you have will need to update to version 4.2.0 or higher of Castle.Core. You'll have to file issues with those projects; it's not something Autofac can fix for you.
+
+`For reference, here's the Castle.Core issue discussing this challenge. <https://github.com/castleproject/Core/issues/288>`_
