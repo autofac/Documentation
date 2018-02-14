@@ -8,7 +8,11 @@ Autofac has a lot of :doc:`integration packages <../integration/index>` and exte
 
 We do this because, generally speaking, we don't want to force anyone to update their version of Autofac core unless they absolutely must. This is a fairly good practice for any library set - if a person doesn't *have* to take an update, you shouldn't *force* them to do so.
 
-**What this results in is the need to use assembly binding redirects.** `This is the official supported way <https://msdn.microsoft.com/en-us/library/vstudio/2fc472t2.aspx>`_ to tell the .NET runtime that you need to redirect requests for one version of a strong-named assembly to a later version of that assembly. This is common enough that both NuGet and Visual Studio will, in many cases, automatically add these to your configuration files.
+**The simple solution is to just add a direct reference in your app/project to your desired Auotfac core version.**
+
+**In .NET Core this "just works."** The project system figures out the latest version of Autofac in the project (i.e., your direct reference) and redirects all bindings to that. No extra cruft, no work. Like magic.
+
+**In .NET full framework projects this results in is the need to use assembly binding redirects.** `This is the official supported way <https://msdn.microsoft.com/en-us/library/vstudio/2fc472t2.aspx>`_ to tell the .NET runtime that you need to redirect requests for one version of a strong-named assembly to a later version of that assembly. This is common enough that both NuGet and Visual Studio will, in many cases, automatically add these to your configuration files.
 
 Here's an example of what assembly binding redirects look like:
 
