@@ -83,5 +83,5 @@ There are no substitutes or workarounds to access instance names/keys or metadat
 
 However, you can potentially reduce usage of these through your code by...
 
-  * Creating a factory: You could wrap usage of these relationships in a factory. Define the factory interface in your application code assembly and definte the implementation in a separate assembly that is allowed to reference Autofac.
+  * Creating a factory: You could wrap usage of these relationships in a factory. Define the factory interface in your application code assembly and define the implementation in a separate assembly that is allowed to reference Autofac.
   * Use lambda registrations: You can register components :doc:`using a lambda <../register/registration>` and resolve the value right in the lambda. This is sort of like putting the factory inside the lambda registration rather than defining a separate interface for it. It takes a little bit of application code and puts it in the registration (e.g., the use of the metadata and/or the service key) but that may be an acceptable compromise.
