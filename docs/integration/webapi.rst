@@ -243,7 +243,7 @@ Here's an example of a filter that uses service location with the Web API ``IDep
 
 .. sourcecode:: csharp
 
-    public interface ServiceCallActionFilterAttribute : ActionFilterAttribute
+    public class ServiceCallActionFilterAttribute : ActionFilterAttribute
     {
       public override void OnActionExecuting(HttpActionContext actionContext)
       {
