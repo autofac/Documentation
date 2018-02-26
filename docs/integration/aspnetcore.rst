@@ -368,6 +368,11 @@ Here's an example of what you do in ``Program.Main``:
       // This is what the middleware will use to create your request lifetime scope.
       public static MultitenantContainer ApplicationContainer { get; set; }
     }
+    
+.. note::
+    By default ASP.NET Core has a void return type for method ``ConfigureServices(IServiceCollection services)``. This needs to be      
+    updated to return the ``IServiceProvider`` type as shown above. 
+    Please refer to the Microsoft `documentation <https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection#replacing-the-default-services-container>`_ about replacing the default container.
 
 
 Using a Child Scope as a Root
