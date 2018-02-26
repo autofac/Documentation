@@ -318,7 +318,7 @@ To enable multitenant support:
   * Include a call to the ``UseAutofacMultitenantRequestServices`` extension and let Autofac know how to locate your multitenant container.
   * **Do not use** the ``ConfigureContainer`` support listed above. You can't do that because it won't give you a chance to create your multitenant container.
 
-* In your ``Startup.ConfigureServices`` method create your multitenant container and return an ``AutofacServiceProvider`` using that container.
+* Change your ``Startup.ConfigureServices`` method to return ``IServiceProvider``, create your multitenant container, and return an ``AutofacServiceProvider`` using that container.
 
 Here's an example of what you do in ``Program.Main``:
 
