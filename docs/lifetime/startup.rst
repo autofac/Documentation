@@ -18,7 +18,7 @@ A **startable component** is one that is activated by the container when the con
 
 The key is to implement the ``Autofac.IStartable`` interface. When the container is built, the component will be activated and the ``IStartable.Start()`` method will be called.
 
-**This only happens once, for a single instance of each component, the first time the container is built.** Resolving startable components by hand won't result in their ``Start()`` method being called. It isn't recommended that startable components implement other services, or be registered as anything other than ``SingleInstance()``.
+**This only happens once, for a single instance of each component, the first time the container is built.** Resolving startable components by hand won't result in their ``Start()`` method being called. It isn't recommended that startable components are registered as anything other than ``SingleInstance()``.
 
 Components that need to have something like a ``Start()`` method called *each time they are activated* should use :doc:`a lifetime event <events>` like ``OnActivated`` instead.
 
@@ -46,7 +46,53 @@ Then register your component and **be sure to specify** it as ``IStartable`` or 
 
 When the container is built, the type will be activated and the ``IStartable.Start()`` method will be called. In this example, a message will be written to the console.
 
-**Known issue:** While the ``IStartable`` components will be *resolved* in dependency order, the ``Start()`` methods may not actually *be called* in dependency order. You can work around this using container build callbacks combined with ``SingleInstance`` registrations. See below.
+The order in which components are started is not defined, however, when a component implementing ``IStartable`` depends on another component that is ``IStartable``, the ``Start()`` method is guaranteed to have been called on the dependency before the dependent component is activated:
+
+.. sourcecode:: csharp
+
+    static void Main(string[] args)
+    {
+
+        var builder = new ContainerBuilder();
+        builder.RegisterType<Startable1>().AsSelf().As<IStartable>().SingleInstance();
+        builder.RegisterType<Startable2>().As<IStartable>().SingleInstance();
+        builder.Build();
+    }
+
+    class Startable1 : IStartable
+    {
+        public Startable1()
+        {
+            Console.WriteLine("Startable1 activated");
+        }
+
+        public void Start()
+        {
+            Console.WriteLine("Startable1 started");
+        }
+    }
+
+    class Startable2 : IStartable
+    {
+        public Startable2(Startable1 startable1)
+        {
+            Console.WriteLine("Startable2 activated");
+        }
+
+        public void Start()
+        {
+            Console.WriteLine("Startable2 started");
+        }
+    }
+
+Will output the following:
+
+::
+
+    Startable1 activated
+    Startable1 started
+    Startable2 activated
+    Startable2 started
 
 Auto-Activated Components
 =========================
@@ -80,7 +126,7 @@ You can register any arbitrary action to happen at container build time by regis
     // but before it's returned.
     var container = builder.Build();
 
-You can use build callbacks as another way to automatically start/warm up an object on container build. Do that by using them in conjunction with :doc:`the lifetime event OnActivated <events>` and ``SingleInstance`` registrations. This can work around the known issue where ``IStartable`` implementations are *resolved* in dependency order but the ``Start()`` methods aren't necessarily *called* in dependency order.
+You can use build callbacks as another way to automatically start/warm up an object on container build. Do that by using them in conjunction with :doc:`the lifetime event OnActivated <events>` and ``SingleInstance`` registrations.
 
 A long/contrived example in unit test form:
 
