@@ -46,7 +46,7 @@ Then register your component and **be sure to specify** it as ``IStartable`` or 
 
 When the container is built, the type will be activated and the ``IStartable.Start()`` method will be called. In this example, a message will be written to the console.
 
-The order in which components are started is not defined, however, when a component implementing ``IStartable`` depends on another component that is ``IStartable``, the ``Start()`` method is guaranteed to have been called on the dependency before the dependent component is activated:
+The order in which components are started is not defined, however, as of Autofac 4.7.0 when a component implementing ``IStartable`` depends on another component that is ``IStartable``, the ``Start()`` method is guaranteed to have been called on the dependency before the dependent component is activated:
 
 .. sourcecode:: csharp
 
