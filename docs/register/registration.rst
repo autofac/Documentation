@@ -32,7 +32,7 @@ Each component exposes one or more **services** that are wired up using the ``As
     // to the IConfigReader service.
     using(var scope = container.BeginLifetimeScope())
     {
-      var reader = container.Resolve<IConfigReader>();
+      var reader = scope.Resolve<IConfigReader>();
     }
 
 .. _register-registration-reflection-components:
@@ -75,7 +75,7 @@ Now say you register components and services in your container like this:
 
     using(var scope = container.BeginLifetimeScope())
     {
-      var component = container.Resolve<MyComponent>();
+      var component = scope.Resolve<MyComponent>();
     }
 
 When you resolve your component, Autofac will see that you have an ``ILogger`` registered, but you don't have an ``IConfigReader`` registered. In that case, the second constructor will be chosen since that's the one with the most parameters that can be found in the container.
