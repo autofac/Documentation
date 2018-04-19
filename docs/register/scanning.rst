@@ -22,9 +22,16 @@ Each ``RegisterAssemblyTypes()`` call will apply one set of rules only - multipl
 Filtering Types
 ---------------
 
-``RegisterAssemblyTypes()`` accepts a parameter array of one or more assemblies. By default, all public, concrete classes in the assembly will be registered. You can filter the set of types to register using some provided LINQ-style predicates.
+``RegisterAssemblyTypes()`` accepts a parameter array of one or more assemblies. By default, **all concrete classes in the assembly will be registered.** This includes internal and nested private classes. You can filter the set of types to register using some provided LINQ-style predicates.
 
-To filter the types that are registered, use the ``Where()`` predicate:
+In 4.8.0 a ``PublicOnly()`` extension was added to make data encapsulation easier. If you only want your public classes registered, use ``PublicOnly()``:
+
+.. sourcecode:: csharp
+
+    builder.RegisterAssemblyTypes(asm)
+           .PublicOnly();
+
+To apply custom filtering to the types that are registered, use the ``Where()`` predicate:
 
 .. sourcecode:: csharp
 
@@ -47,6 +54,13 @@ The ``Except()`` predicate also allows you to customize the registration for the
               ct.As<ISpecial>().SingleInstance());
 
 Multiple filters can be used, in which case they will be applied with logical AND.
+
+.. sourcecode:: csharp
+
+    builder.RegisterAssemblyTypes(asm)
+           .PublicOnly()
+           .Where(t => t.Name.EndsWith("Repository"))
+           .Except<MyUnwantedRepository>();
 
 Specifying Services
 -------------------
