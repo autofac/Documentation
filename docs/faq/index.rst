@@ -15,3 +15,4 @@ Frequently Asked Questions
     binding-redirect.rst
     injecting-configured-parameters.rst
     injecting-global-parameters.rst
+    container-analysis.rst
