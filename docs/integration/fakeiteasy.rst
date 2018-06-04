@@ -143,9 +143,6 @@ You can specify options for fake creation using optional constructor parameters 
         // Calls to fakes of abstract types will call the base methods on the abstract types
         callsBaseMethods: true,
 
-        // Calls to fake methods will return null rather than generated fakes
-        callsDoNothing: true,
-
         // Provide an action to perform upon the creation of each fake
         onFakeCreated: f => { ... }))
     {
