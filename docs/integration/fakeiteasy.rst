@@ -2,7 +2,11 @@
 FakeItEasy
 ==========
 
-The `FakeItEasy <http://fakeiteasy.github.io>`_ integration package allows you to automatically create fake dependencies for both concrete and fake abstract instances in unit tests using an Autofac container. You can `get the Autofac.Extras.FakeItEasy package on NuGet <https://nuget.org/packages/Autofac.Extras.FakeItEasy>`_.
+The `FakeItEasy <http://fakeiteasy.github.io>`_ integration package allows you to automatically create fake dependencies for both concrete and fake abstract instances in unit tests using an Autofac container.
+
+Array types, ``IEnumerable<T>`` types, and concrete types will be created via the underlying container, which is automatically configured with :doc:`the AnyConcreteTypeNotAlreadyRegisteredSource  <../advanced/registration-sources>`, while other interfaces and abstract classes will be created as FakeItEasy Fakes.
+
+You can `get the Autofac.Extras.FakeItEasy package on NuGet <https://nuget.org/packages/Autofac.Extras.FakeItEasy>`_.
 
 Getting Started
 ===============
