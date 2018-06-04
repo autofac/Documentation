@@ -148,3 +148,5 @@ You can specify options for fake creation using optional constructor parameters 
     {
       // Use the fakes/run the test.
     }
+
+Be careful when mixing these options. It makes no sense to specify ``callsBaseMethods`` with any other options, as it will override them. When both ``onFakeCreated`` and ``strict`` are specified, the configuration supplied to ``onFakeCreated`` will override ``strict``, as applicable.
