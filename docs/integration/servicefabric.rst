@@ -71,7 +71,7 @@ In your ``Main`` program method, build up your container and register services u
 Per-Request Scopes
 ==================
 
-It is possible to achieve a "per request" style scoping mechanism by making use of the :doc:`implcit relationships <../resolve/relationships>` supported by Autofac.
+It is possible to achieve a "per request" style scoping mechanism by making use of the :doc:`implicit relationships <../resolve/relationships>` supported by Autofac.
 
 For example, if you have a stateless service, its lifetime is effectively a singleton. You would want to use the ``Func<T>`` or ``Func<Owned<T>>`` relationships (for non-disposable vs. disposable components, respectively) to inject an auto-generated factory into your service. Your service could then resolve dependencies as needed.
 
@@ -97,7 +97,7 @@ For example, say you have a user service that is stateless and it needs to read 
       }
     }
 
-While there's no "built in" semantics around per-request handling specifically, you can do a lot with the :doc:`implcit relationships <../resolve/relationships>` so it's worth becoming familiar with them.
+While there's no "built in" semantics around per-request handling specifically, you can do a lot with the :doc:`implicit relationships <../resolve/relationships>` so it's worth becoming familiar with them.
 
 Example
 =======
