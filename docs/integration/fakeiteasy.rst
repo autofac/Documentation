@@ -2,7 +2,11 @@
 FakeItEasy
 ==========
 
-The `FakeItEasy <http://fakeiteasy.github.io>`_ integration package allows you to automatically create fake dependencies for both concrete and fake abstract instances in unit tests using an Autofac container. You can `get the Autofac.Extras.FakeItEasy package on NuGet <https://nuget.org/packages/Autofac.Extras.FakeItEasy>`_.
+The `FakeItEasy <https://fakeiteasy.github.io>`_ integration package allows you to automatically create fake dependencies for both concrete and fake abstract instances in unit tests using an Autofac container.
+
+Array types, ``IEnumerable<T>`` types, and concrete types will be created via the underlying container, which is automatically configured with :doc:`the AnyConcreteTypeNotAlreadyRegisteredSource  <../advanced/registration-sources>`, while other interfaces and abstract classes will be created as FakeItEasy Fakes.
+
+You can `get the Autofac.Extras.FakeItEasy package on NuGet <https://nuget.org/packages/Autofac.Extras.FakeItEasy>`_.
 
 Getting Started
 ===============
@@ -139,11 +143,10 @@ You can specify options for fake creation using optional constructor parameters 
         // Calls to fakes of abstract types will call the base methods on the abstract types
         callsBaseMethods: true,
 
-        // Calls to fake methods will return null rather than generated fakes
-        callsDoNothing: true,
-
         // Provide an action to perform upon the creation of each fake
         onFakeCreated: f => { ... }))
     {
       // Use the fakes/run the test.
     }
+
+Be careful when mixing these options. It makes no sense to specify ``callsBaseMethods`` with any other options, as it will override them. When both ``onFakeCreated`` and ``strict`` are specified, the configuration supplied to ``onFakeCreated`` will override ``strict``, as applicable.
