@@ -328,6 +328,11 @@ Then when the tenant overrides the controller in their tenant configuration, it 
 
 **Due to the relative complexity of this, it may be a better idea to isolate business logic into external dependencies that get passed into your controllers so the tenants can provide override dependencies rather than override controllers.**
 
+ASP.NET Core Integration
+========================
+
+ASP.NET Core changes a lot of things. The multitenant integration is outlined :doc:`on our ASP.NET Core integration page. <../integration/aspnetcore>`
+
 .. _wcf_integration:
 
 WCF Integration
