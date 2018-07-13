@@ -126,6 +126,30 @@ While lifetime scopes themselves implement ``IDisposable``, the lifetime scopes 
 
 It's important to distinguish between scopes **you create** and scopes the **integration libraries create for you**. You don't have to worry about managing integration scopes (like the ASP.NET request scope) - those will be done for you. However, if you manually create your own scope, you will be responsible for cleaning it up.
 
+Provided Instances
+==================
+
+If you provide :doc:`an instance registration <../register/registration>` to Autofac, Autofac will assume ownership of that instance and will handle its disposal.
+
+.. sourcecode:: csharp
+
+    // If you do this, Autofac will dispose of the StringWriter
+    // instance when the container is disposed.
+    var output = new StringWriter();
+    builder.RegisterInstance(output)
+           .As<TextWriter>();
+
+If you want to take control of the disposal of the instance yourself, you need to register the instance as ``ExternallyOwned()``.
+
+.. sourcecode:: csharp
+
+    // Using ExternallyOwned means you will be responsible for
+    // disposing the StringWriter instead of Autofac.
+    var output = new StringWriter();
+    builder.RegisterInstance(output)
+           .As<TextWriter>()
+           .ExternallyOwned();
+
 Advanced Hierarchies
 ====================
 
