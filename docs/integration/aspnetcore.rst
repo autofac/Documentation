@@ -95,7 +95,7 @@ The ``IServiceProvider`` will automatically be created for you, so there's nothi
 Quick Start (Without ConfigureContainer)
 ========================================
 
-If you need more flexibility over how your container is built or if you need to actually store a reference to the built container (e.g. so you can dispose of the container yourself at app shutdown), you will need to skip using ``ConfigureContainer`` and register everything during ``ConfigureServices``. This is also the path you'd take for ASP.NET Core 1.0.
+If you need more flexibility over how your container is built or if you need to actually store a reference to the built container you will need to skip using ``ConfigureContainer`` and register everything during ``ConfigureServices``. This is also the path you'd take for ASP.NET Core 1.0.
 
 * Reference the ``Autofac.Extensions.DependencyInjection`` package from NuGet.
 * In the ``ConfigureServices`` method of your ``Startup`` class...
@@ -104,8 +104,6 @@ If you need more flexibility over how your container is built or if you need to 
   - Register services into the ``ContainerBuilder`` directly.
   - Build your container.
   - Create an ``AutofacServiceProvider`` using the container and return it.
-
-* In the ``Configure`` method of your ``Startup`` class, you can optionally register with the ``IApplicationLifetime.ApplicationStopped`` event to dispose of the container at app shutdown.
 
 .. sourcecode:: csharp
 
@@ -136,9 +134,7 @@ If you need more flexibility over how your container is built or if you need to 
         var builder = new ContainerBuilder();
 
         // Register dependencies, populate the services from
-        // the collection, and build the container. If you want
-        // to dispose of the container at the end of the app,
-        // be sure to keep a reference to it as a property or field.
+        // the collection, and build the container.
         //
         // Note that Populate is basically a foreach to add things
         // into Autofac that are in the collection. If you register
@@ -167,11 +163,15 @@ If you need more flexibility over how your container is built or if you need to 
 
           app.UseMvc();
 
-          // If you want to dispose of resources that have been resolved in the
+          // As of Autofac.Extensions.DependencyInjection 4.3.0 the AutofacDependencyResolver
+          // implements IDisposable and will be disposed - along with the application container -
+          // when the app stops and the WebHost disposes it.
+          //
+          // Prior to 4.3.0, if you want to dispose of resources that have been resolved in the
           // application container, register for the "ApplicationStopped" event.
           // You can only do this if you have a direct reference to the container,
           // so it won't work with the above ConfigureContainer mechanism.
-          appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
+          // appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
       }
     }
 
