@@ -32,23 +32,41 @@ Here's a sample module that configures Autofac to inject ``ILog`` parameters bas
 
       private static void OnComponentPreparing(object sender, PreparingEventArgs e)
       {
-        e.Parameters = e.Parameters.Union(
-          new[]
-          {
-            new ResolvedParameter( 
-                (p, i) => p.ParameterType == typeof(ILog), 
-                (p, i) => LogManager.GetLogger(p.Member.DeclaringType)
-            ),
-          });
+        e.Parameters = e.Parameters.Union(new[]
+        {
+          new ResolvedParameter(
+            (p, i) => p.ParameterType == typeof(ILog),
+            (p, i) => LogManager.GetLogger(p.Member.DeclaringType))
+        });
+      }
+
+      protected override void Load(ContainerBuilder builder)
+      {
+        // Handle registrations in nested lifetime scopes.
+        builder.RegisterBuildCallback(c => c.ChildLifetimeScopeBeginning += OnChildLifetimeScopeBeginning);
       }
 
       protected override void AttachToComponentRegistration(IComponentRegistry componentRegistry, IComponentRegistration registration)
+      {
+        AttachToRegistration(registration);
+      }
+
+      private static void AttachToRegistration(IComponentRegistration registration)
       {
         // Handle constructor parameters.
         registration.Preparing += OnComponentPreparing;
 
         // Handle properties.
         registration.Activated += (sender, e) => InjectLoggerProperties(e.Instance);
+      }
+
+      private static void OnChildLifetimeScopeBeginning(object sender, LifetimeScopeBeginningEventArgs e)
+      {
+        e.LifetimeScope.ChildLifetimeScopeBeginning += OnChildLifetimeScopeBeginning;
+        foreach (var registration in e.LifetimeScope.ComponentRegistry.Registrations)
+        {
+          AttachToRegistration(registration);
+        }
       }
     }
 
