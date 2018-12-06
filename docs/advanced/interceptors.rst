@@ -223,4 +223,16 @@ One, you can remove your direct Castle.Core reference. The transitive references
 
 Two, if you can't remove your direct reference or removing it doesn't work... all of the direct dependencies you have will need to update to version 4.2.0 or higher of Castle.Core. You'll have to file issues with those projects; it's not something Autofac can fix for you.
 
+Three, register your types with a manual interfaceproxy instanciation like this:
+
+        builder.RegisterType<Implementation>().AsSelf();
+
+        builder.Register(c =>
+                {
+                  ProxyGenerator proxyGen = new ProxyGenerator(true);
+                  return proxyGen.CreateInterfaceProxyWithTargetInterface<IInterfaceOfImplementation>(c.Resolve<Implementation>(), c.Resolve<ExceptionCatcherInterceptor>());
+                }).As<IInterfaceOfImplementation>();
+        
+     ProxyGenerator(true) disables signed modules.
+
 `For reference, here's the Castle.Core issue discussing this challenge. <https://github.com/castleproject/Core/issues/288>`_
