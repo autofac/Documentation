@@ -2,7 +2,7 @@
 Debugging and Troubleshooting
 =============================
 
-If you're really having trouble and you haven't been able to get `an answer on StackOverflow <http://stackoverflow.com/questions/tagged/autofac>`_ you may want to try doing a little more in-depth debugging/troubleshooting on your own. Here are some tips on doing that.
+If you're really having trouble and you haven't been able to get `an answer on StackOverflow <https://stackoverflow.com/questions/tagged/autofac>`_ you may want to try doing a little more in-depth debugging/troubleshooting on your own. Here are some tips on doing that.
 
 Exceptions
 ----------

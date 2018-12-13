@@ -181,7 +181,7 @@ To get attributed metadata working in your solution, you need to perform the fol
 Create Your Metadata Attribute
 ------------------------------
 
-A metadata attribute is a ``System.Attribute`` implementation that has the `System.ComponentModel.Composition.MetadataAttributeAttribute <http://msdn.microsoft.com/en-us/library/system.componentmodel.composition.metadataattributeattribute.aspx>`_ applied.
+A metadata attribute is a ``System.Attribute`` implementation that has the `System.ComponentModel.Composition.MetadataAttributeAttribute <https://msdn.microsoft.com/en-us/library/system.componentmodel.composition.metadataattributeattribute.aspx>`_ applied.
 
 Any publicly-readable properties on the attribute will become name/value attribute pairs - the name of the metadata will be the property name and the value will be the property value.
 

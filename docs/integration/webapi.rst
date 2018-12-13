@@ -394,7 +394,7 @@ If you are using Web API :doc:`as part of an OWIN application <owin>`, you need 
 
 * Do all the stuff for standard Web API integration - register controllers, set the dependency resolver, etc.
 * Set up your app with the :doc:`base Autofac OWIN integration <owin>`.
-* Add a reference to the `Autofac.WebApi2.Owin <http://www.nuget.org/packages/Autofac.WebApi2.Owin/>`_ NuGet package.
+* Add a reference to the `Autofac.WebApi2.Owin <https://www.nuget.org/packages/Autofac.WebApi2.Owin/>`_ NuGet package.
 * In your application startup class, register the Autofac Web API middleware after registering the base Autofac middleware.
 
 .. sourcecode:: csharp

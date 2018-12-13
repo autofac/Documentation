@@ -2,7 +2,7 @@
 RIA / Domain Services
 =====================
 
-Domain Services integration requires the `Autofac.Extras.DomainServices NuGet package <http://www.nuget.org/packages/Autofac.Extras.DomainServices/>`_.
+Domain Services integration requires the `Autofac.Extras.DomainServices NuGet package <https://www.nuget.org/packages/Autofac.Extras.DomainServices/>`_.
 
 .. contents::
   :local:

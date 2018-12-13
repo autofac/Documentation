@@ -231,7 +231,7 @@ The sample app gives you an idea of how to use Autofac, but there's a lot more y
 Need Help?
 ==========
 
-- You can `ask questions on StackOverflow <http://stackoverflow.com/questions/tagged/autofac>`_.
+- You can `ask questions on StackOverflow <https://stackoverflow.com/questions/tagged/autofac>`_.
 - You can `participate in the Autofac Google Group <https://groups.google.com/forum/#forum/autofac>`_.
 - There's an introductory `Autofac tutorial <http://www.codeproject.com/KB/architecture/di-with-autofac.aspx>`_ on CodeProject.
 - We have :doc:`advanced debugging tips <../advanced/debugging>` if you want to dive deep.

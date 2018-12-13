@@ -2,7 +2,7 @@
 Best Practices and Recommendations
 ==================================
 
-You can always ask for Autofac usage guidance `on StackOverflow <http://stackoverflow.com/questions/tagged/autofac>`_ using the ``autofac`` tag or in `the discussion group <https://groups.google.com/forum/#forum/autofac>`_, but these quick tips can help get you going.
+You can always ask for Autofac usage guidance `on StackOverflow <https://stackoverflow.com/questions/tagged/autofac>`_ using the ``autofac`` tag or in `the discussion group <https://groups.google.com/forum/#forum/autofac>`_, but these quick tips can help get you going.
 
 Always Resolve Dependencies from Nested Lifetimes
 =================================================

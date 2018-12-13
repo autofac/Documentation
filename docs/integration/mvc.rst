@@ -4,7 +4,7 @@ MVC
 
 Autofac is always kept up to date to support the latest version of ASP.NET MVC, so documentation is also kept up with the latest. Generally speaking, the integration remains fairly consistent across versions.
 
-MVC integration requires the `Autofac.Mvc5 NuGet package <http://www.nuget.org/packages/Autofac.Mvc5/>`_.
+MVC integration requires the `Autofac.Mvc5 NuGet package <https://www.nuget.org/packages/Autofac.Mvc5/>`_.
 
 MVC integration provides dependency injection integration for controllers, model binders, action filters, and views. It also adds :doc:`per-request lifetime support <../faq/per-request-scope>`.
 
@@ -246,7 +246,7 @@ If you are using MVC :doc:`as part of an OWIN application <owin>`, you need to:
 
 * Do all the stuff for standard MVC integration - register controllers, set the dependency resolver, etc.
 * Set up your app with the :doc:`base Autofac OWIN integration <owin>`.
-* Add a reference to the `Autofac.Mvc5.Owin <http://www.nuget.org/packages/Autofac.Mvc5.Owin/>`_ NuGet package.
+* Add a reference to the `Autofac.Mvc5.Owin <https://www.nuget.org/packages/Autofac.Mvc5.Owin/>`_ NuGet package.
 * In your application startup class, register the Autofac MVC middleware after registering the base Autofac middleware.
 
 .. sourcecode:: csharp

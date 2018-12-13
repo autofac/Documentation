@@ -383,7 +383,7 @@ Whether or not you choose to use the provided ``Autofac.Multitenant.Wcf.TenantPr
 
 ``Autofac.Multitenant.Wcf`` provides the ``Autofac.Multitenant.Wcf.TenantIdentificationContextExtension`` as an extension to the WCF ``OperationContext`` for just this purpose.
 
-Early in the operation lifecycle (generally in a `System.ServiceModel.Dispatcher.IDispatchMessageInspector.AfterReceiveRequest() <http://msdn.microsoft.com/en-us/library/system.servicemodel.dispatcher.idispatchmessageinspector.afterreceiverequest.aspx>`_ implementation), you can add the ``TenantIdentificationContextExtension`` to the current ``OperationContext`` so the tenant can be easily identified. A sample ``AfterReceiveRequest()`` implementation below shows this in action:
+Early in the operation lifecycle (generally in a `System.ServiceModel.Dispatcher.IDispatchMessageInspector.AfterReceiveRequest() <https://msdn.microsoft.com/en-us/library/system.servicemodel.dispatcher.idispatchmessageinspector.afterreceiverequest.aspx>`_ implementation), you can add the ``TenantIdentificationContextExtension`` to the current ``OperationContext`` so the tenant can be easily identified. A sample ``AfterReceiveRequest()`` implementation below shows this in action:
 
 .. sourcecode:: csharp
 

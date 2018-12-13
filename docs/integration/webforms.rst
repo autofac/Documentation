@@ -2,7 +2,7 @@
 Web Forms
 =========
 
-ASP.NET web forms integration requires the `Autofac.Web NuGet package <http://www.nuget.org/packages/Autofac.Web/>`_.
+ASP.NET web forms integration requires the `Autofac.Web NuGet package <https://www.nuget.org/packages/Autofac.Web/>`_.
 
 Web forms integration provides dependency injection integration for code-behind classes. It also adds :doc:`per-request lifetime support <../faq/per-request-scope>`.
 
@@ -80,7 +80,7 @@ The sections below go into further detail about what each of these features do a
 Add Modules to Web.config
 =========================
 
-The way that Autofac manages component lifetimes and adds dependency injection into the ASP.NET pipeline is through the use of `IHttpModule <http://msdn.microsoft.com/en-us/library/system.web.ihttpmodule.aspx>`_ implementations. You need to configure these modules in ``web.config``.
+The way that Autofac manages component lifetimes and adds dependency injection into the ASP.NET pipeline is through the use of `IHttpModule <https://msdn.microsoft.com/en-us/library/system.web.ihttpmodule.aspx>`_ implementations. You need to configure these modules in ``web.config``.
 
 The following snippet config shows the modules configured.
 

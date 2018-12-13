@@ -28,7 +28,7 @@ Contributions have been accepted from:
 - Alex Ilyin - bug fixes
 - Alex Meyer-Gleaves - scanning improvements
 - Mark Crowley - WCF integration improvements
-- `Travis Illig <http://www.paraesthesia.com/>`_ - multitenant support
+- `Travis Illig <https://www.paraesthesia.com/>`_ - multitenant support
 - Steve Hebert - Autofac.Extras.Attributed project for metadata discovery
 
 This isn't a complete list; if you're missing, `file a pull request on this page <https://github.com/autofac/Documentation/blob/master/docs/contributors.rst>`_.

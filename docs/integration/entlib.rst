@@ -2,7 +2,7 @@
 Enterprise Library 5
 ====================
 
-`The Autofac.Extras.EnterpriseLibraryConfigurator package <http://www.nuget.org/packages/Autofac.Extras.EnterpriseLibraryConfigurator/>`_ provides a way to use Autofac as the backing store for dependency injection in `Microsoft Enterprise Library 5 <http://entlib.codeplex.com/releases/view/43135>`_ instead of using Unity. It does this in conjunction with :doc:`the Autofac Common Service Locator implementation <csl>`.
+`The Autofac.Extras.EnterpriseLibraryConfigurator package <https://www.nuget.org/packages/Autofac.Extras.EnterpriseLibraryConfigurator/>`_ provides a way to use Autofac as the backing store for dependency injection in `Microsoft Enterprise Library 5 <http://entlib.codeplex.com/releases/view/43135>`_ instead of using Unity. It does this in conjunction with :doc:`the Autofac Common Service Locator implementation <csl>`.
 
 **In Enterprise Library 6, Microsoft removed the tightly-coupled dependency resolution mechanisms from the application blocks so there's no more need for this configurator past Enterprise Library 5.**
 

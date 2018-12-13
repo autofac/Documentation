@@ -2,7 +2,7 @@
 Common Service Locator
 ======================
 
-The `Autofac.Extras.CommonServiceLocator <http://www.nuget.org/packages/Autofac.Extras.CommonServiceLocator/>`_ package allows you to use Autofac as the backing store for services in places where you require `Microsoft Common Service Locator <http://www.nuget.org/packages/CommonServiceLocator/>`_ integration.
+The `Autofac.Extras.CommonServiceLocator <https://www.nuget.org/packages/Autofac.Extras.CommonServiceLocator/>`_ package allows you to use Autofac as the backing store for services in places where you require `Microsoft Common Service Locator <https://www.nuget.org/packages/CommonServiceLocator/>`_ integration.
 
 The Autofac.Extras.CommonServiceLocator package will also work in conjunction with the :doc:`Autofac Microsoft Enterprise Library integration package <entlib>`.
 

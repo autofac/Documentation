@@ -22,7 +22,7 @@ Autofac is an addictive `IoC container <http://martinfowler.com/articles/injecti
    glossary.rst
    contributors.rst
    support.rst
-   API Documentation <http://autofac.org/apidoc/>
+   API Documentation <https://autofac.org/apidoc/>
 
 
 Indices and tables
