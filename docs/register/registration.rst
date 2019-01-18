@@ -288,8 +288,8 @@ If more than one component exposes the same service, **Autofac will use the last
 
 .. sourcecode:: csharp
 
-    builder.Register<ConsoleLogger>().As<ILogger>();
-    builder.Register<FileLogger>().As<ILogger>();
+    builder.RegisterType<ConsoleLogger>().As<ILogger>();
+    builder.RegisterType<FileLogger>().As<ILogger>();
 
 In this scenario, ``FileLogger`` will be the default for ``ILogger`` because it was the last one registered.
 
@@ -297,8 +297,8 @@ To override this behavior, use the ``PreserveExistingDefaults()`` modifier:
 
 .. sourcecode:: csharp
 
-    builder.Register<ConsoleLogger>().As<ILogger>();
-    builder.Register<FileLogger>().As<ILogger>().PreserveExistingDefaults();
+    builder.RegisterType<ConsoleLogger>().As<ILogger>();
+    builder.RegisterType<FileLogger>().As<ILogger>().PreserveExistingDefaults();
 
 In this scenario, ``ConsoleLogger`` will be the default for ``ILogger`` because the later registration for ``FileLogger`` used ``PreserveExistingDefaults()``.
 
