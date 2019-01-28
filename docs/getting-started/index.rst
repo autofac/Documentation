@@ -208,12 +208,17 @@ For our sample app, we'll implement the "WriteDate" method to get the writer fro
 
 Now when you run your program...
 
-- The "WriteDate" method asks Autofac for an ``IDateWriter``.
-- Autofac sees that ``IDateWriter`` maps to ``TodayWriter`` so starts creating a ``TodayWriter``.
-- Autofac sees that the ``TodayWriter`` needs an ``IOutput`` in its constructor.
-- Autofac sees that ``IOutput`` maps to ``ConsoleOutput`` so creates a new ``ConsoleOutput`` instance.
-- Autofac uses the new ``ConsoleOutput`` instance to finish constructing the ``TodayWriter``.
-- Autofac returns the fully-constructed ``TodayWriter`` for "WriteDate" to consume.
+- The ``WriteDate`` method creates a lifetime scope from which it can resolve dependencies. It does this to avoid any memory leaks - if ``IDateWriter`` or its dependencies are disposable, they will be automatcially disposed when the scope is disposed.
+- The ``WriteDate`` method manually resolves an ``IDateWriter`` from the lifetime scope. (This is "service location.") Internally...
+
+  + Autofac sees that ``IDateWriter`` maps to ``TodayWriter`` so starts creating a ``TodayWriter``.
+  + Autofac sees that the ``TodayWriter`` needs an ``IOutput`` in its constructor. (This is "constructor injection.")
+  + Autofac sees that ``IOutput`` maps to ``ConsoleOutput`` so creates a new ``ConsoleOutput`` instance.
+  + Autofac uses the new ``ConsoleOutput`` instance to finish constructing the ``TodayWriter``.
+  + Autofac returns the fully-constructed ``TodayWriter`` for ``WriteDate`` to consume.
+
+- The call to ``writer.WriteDate()`` goes to the brand new ``TodayWriter.WriteDate()`` since that's what was resolved.
+- The Autofac lifetime scope is disposed. Any disposable items that were resolved from that lifetime scope are also disposed.
 
 Later, if you want your application to write a different date, you could implement a different ``IDateWriter`` and then change the registration at app startup. You don't have to change any other classes. Yay, inversion of control!
 
