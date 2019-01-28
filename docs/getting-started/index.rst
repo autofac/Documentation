@@ -209,9 +209,9 @@ For our sample app, we'll implement the "WriteDate" method to get the writer fro
 Now when you run your program...
 
 - The "WriteDate" method asks Autofac for an ``IDateWriter``.
-- Autofac sees that ``IDateWriter`` maps to ``TodayWriter`` so starts creating a ``TodayWriter``.
+- Autofac sees that ``IDateWriter`` maps to ``TodayWriter`` so starts creating a ``TodayWriter``.   ``manually resolve``
 - Autofac sees that the ``TodayWriter`` needs an ``IOutput`` in its constructor.
-- Autofac sees that ``IOutput`` maps to ``ConsoleOutput`` so creates a new ``ConsoleOutput`` instance.
+- Autofac sees that ``IOutput`` maps to ``ConsoleOutput`` so creates a new ``ConsoleOutput`` instance.  ``automatically resolve(constructor injection)``
 - Autofac uses the new ``ConsoleOutput`` instance to finish constructing the ``TodayWriter``.
 - Autofac returns the fully-constructed ``TodayWriter`` for "WriteDate" to consume.
 
