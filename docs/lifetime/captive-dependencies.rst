@@ -121,7 +121,7 @@ Another code example shows how you may get an exception when creating a captive 
           public SingletonRule(InstancePerRequestDependency dep) { }
         }
 
-        public class InstancePerRequestDependency { }
+        public class InstancePerRequestDependency : IRule { }
 
 
         [Fact]
