@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build"
-         xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
-         ToolsVersion="4.0">
+<Project ToolsVersion="14.0"
+         DefaultTargets="Build"
+         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <!-- The configuration and platform will be used to determine which
          assemblies to include from solution and project documentation
@@ -10,14 +10,15 @@
         <Platform Condition=" '$(Platform)' == ''">AnyCPU</Platform>
         <SchemaVersion>2.0</SchemaVersion>
         <ProjectGuid>{be97c692-8e51-4279-8cad-332c37a52b26}</ProjectGuid>
-        <SHFBSchemaVersion>2015.6.5.0</SHFBSchemaVersion>
+        <SHFBSchemaVersion>2017.9.26.0</SHFBSchemaVersion>
         <!-- AssemblyName, Name, and RootNamespace are not used by SHFB but Visual Studio adds them anyway -->
         <AssemblyName>Documentation</AssemblyName>
         <RootNamespace>Documentation</RootNamespace>
         <Name>Documentation</Name>
         <!-- SHFB properties -->
-        <SHFBROOT Condition=" '$(SHFBROOT)' == ''">$(MSBuildThisFileDirectory)packages\EWSoftware.SHFB.2016.9.17.0\tools\</SHFBROOT>
-        <OutputPath>artifacts\doc\Website</OutputPath>
+        <SHFBROOT Condition=" '$(SHFBROOT)' == ''">$(MSBuildThisFileDirectory)packages\EWSoftware.SHFB.2018.12.10\tools\</SHFBROOT>
+        <FrameworkVersion>.NET Framework 4.7.2</FrameworkVersion>
+        <OutputPath>artifacts\doc\Website\</OutputPath>
         <HelpFileVersion>4.0.0.0</HelpFileVersion>
         <HtmlHelpName>Autofac</HtmlHelpName>
         <Language>en-US</Language>
@@ -25,14 +26,14 @@
         <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
         <HelpFileFormat>Website</HelpFileFormat>
         <IndentHtml>False</IndentHtml>
-        <FrameworkVersion>.NET Framework 4.6</FrameworkVersion>
         <KeepLogFile>True</KeepLogFile>
         <DisableCodeBlockComponent>False</DisableCodeBlockComponent>
         <CleanIntermediates>True</CleanIntermediates>
         <BuildLogFile>artifacts\log\DocumentationBuild.log</BuildLogFile>
+        <RootNamespaceTitle>Autofac</RootNamespaceTitle>
         <MaximumGroupParts>2</MaximumGroupParts>
         <NamespaceGrouping>False</NamespaceGrouping>
-        <SyntaxFilters>Standard</SyntaxFilters>
+        <SyntaxFilters>C#, Visual Basic</SyntaxFilters>
         <SdkLinkTarget>Blank</SdkLinkTarget>
         <RootNamespaceContainer>True</RootNamespaceContainer>
         <PresentationStyle>VS2013</PresentationStyle>
@@ -41,18 +42,12 @@
         <HelpTitle>Autofac .NET Inversion of Control Container</HelpTitle>
         <ContentPlacement>AboveNamespaces</ContentPlacement>
         <FeedbackEMailAddress>autofac%40googlegroups.com</FeedbackEMailAddress>
-        <CopyrightText>Copyright %28c%29 2007-2016 Autofac Contributors</CopyrightText>
-        <CopyrightHref>http://autofac.org</CopyrightHref>
-        <TocParentId>-1</TocParentId>
-        <TocParentVersion>100</TocParentVersion>
-        <TopicVersion>100</TopicVersion>
-        <TocOrder>-1</TocOrder>
+        <FeedbackEMailLinkText>Autofac Google Group</FeedbackEMailLinkText>
+        <CopyrightText>Copyright %28c%29 2007-2019 Autofac Contributors</CopyrightText>
+        <CopyrightHref>https://autofac.org</CopyrightHref>
         <ProductTitle>Autofac</ProductTitle>
         <VendorName>Autofac Contributors</VendorName>
-        <MSHelpViewerSdkLinkType>Msdn</MSHelpViewerSdkLinkType>
-        <CatalogVersion>100</CatalogVersion>
-        <CatalogProductId>VS</CatalogProductId>
-        <VisibleItems>Attributes, ExplicitInterfaceImplementations, InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected, ProtectedInternalAsProtected</VisibleItems>
+        <VisibleItems>Attributes, ExplicitInterfaceImplementations, InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected, ProtectedInternalAsProtected, NonBrowsable</VisibleItems>
         <MissingTags>Summary, Parameter, Returns, Value, AutoDocumentCtors, Namespace, TypeParameter, AutoDocumentDispose</MissingTags>
         <WarnOnMissingSourceContext>False</WarnOnMissingSourceContext>
         <WorkingPath>artifacts\doc\temp\</WorkingPath>
@@ -96,125 +91,153 @@
                           xmlns="">
                 <configuration useGAC="false">
                     <assemblyBinding>
-                      <dependentAssembly>
-                          <assemblyIdentity name="Autofac"
-                                            publicKeyToken="17863af14b0044da"
-                                            culture="neutral" />
-                          <bindingRedirect oldVersion="0.0.0.0-4.6.1.0"
-                                           newVersion="4.6.1.0" />
-                      </dependentAssembly>
-                      <dependentAssembly>
-                          <assemblyIdentity name="Autofac.Integration.Owin"
-                                            publicKeyToken="17863af14b0044da"
-                                            culture="neutral" />
-                          <bindingRedirect oldVersion="0.0.0.0-4.1.0.0"
-                                           newVersion="4.1.0.0" />
-                      </dependentAssembly>
-                      <dependentAssembly>
-                          <assemblyIdentity name="Autofac.Integration.Web"
-                                            publicKeyToken="17863af14b0044da"
-                                            culture="neutral" />
-                          <bindingRedirect oldVersion="0.0.0.0-4.0.0.0"
-                                           newVersion="4.0.0.0" />
-                      </dependentAssembly>
-                      <dependentAssembly>
-                          <assemblyIdentity name="Autofac.Integration.WebApi"
-                                            publicKeyToken="17863af14b0044da"
-                                            culture="neutral" />
-                          <bindingRedirect oldVersion="0.0.0.0-4.1.0.0"
-                                           newVersion="4.1.0.0" />
-                      </dependentAssembly>
-                      <dependentAssembly>
-                          <assemblyIdentity name="Microsoft.AspNet.SignalR.Core"
-                                            publicKeyToken="31bf3856ad364e35"
-                                            culture="neutral" />
-                          <bindingRedirect oldVersion="0.0.0.0-2.2.1.0"
-                                           newVersion="2.2.1.0" />
-                      </dependentAssembly>
-                      <dependentAssembly>
-                          <assemblyIdentity name="Microsoft.Owin"
-                                            publicKeyToken="31bf3856ad364e35"
-                                            culture="neutral" />
-                          <bindingRedirect oldVersion="0.0.0.0-3.0.0.0"
-                                           newVersion="3.0.0.0" />
-                      </dependentAssembly>
-                      <dependentAssembly>
-                          <assemblyIdentity name="Microsoft.Practices.ServiceLocation"
-                                            publicKeyToken="31bf3856ad364e35"
-                                            culture="neutral" />
-                          <bindingRedirect oldVersion="0.0.0.0-1.3.0.0"
-                                           newVersion="1.3.0.0" />
-                      </dependentAssembly>
-                      <dependentAssembly>
-                          <assemblyIdentity name="Microsoft.Win32.Primitives"
-                                            publicKeyToken="b03f5f7f11d50a3a"
-                                            culture="neutral" />
-                          <bindingRedirect oldVersion="0.0.0.0-4.0.1.0"
-                                           newVersion="4.0.1.0" />
-                      </dependentAssembly>
-                      <dependentAssembly>
-                          <assemblyIdentity name="Newtonsoft.Json"
-                                            publicKeyToken="30ad4fe6b2a6aeed"
-                                            culture="neutral" />
-                          <bindingRedirect oldVersion="0.0.0.0-6.0.0.0"
-                                           newVersion="6.0.0.0" />
-                      </dependentAssembly>
-                      <dependentAssembly>
-                          <assemblyIdentity name="System.IO.Compression"
-                                            publicKeyToken="b77a5c561934e089"
-                                            culture="neutral" />
-                          <bindingRedirect oldVersion="0.0.0.0-4.1.2.0"
-                                           newVersion="4.1.2.0" />
-                      </dependentAssembly>
-                      <dependentAssembly>
-                          <assemblyIdentity name="System.Net.Http"
-                                            publicKeyToken="b03f5f7f11d50a3a"
-                                            culture="neutral" />
-                          <bindingRedirect oldVersion="0.0.0.0-4.1.1.0"
-                                           newVersion="4.1.1.0" />
-                      </dependentAssembly>
-                      <dependentAssembly>
-                          <assemblyIdentity name="Autofac.Multitenant"
-                                            publicKeyToken="17863af14b0044da"
-                                            culture="neutral" />
-                          <bindingRedirect oldVersion="0.0.0.0-4.1.0.0"
-                                           newVersion="4.1.0.0" />
-                      </dependentAssembly>
-                      <dependentAssembly>
-                          <assemblyIdentity name="Castle.Core"
-                                            publicKeyToken="407dd0808d44fbdc"
-                                            culture="neutral" />
-                          <bindingRedirect oldVersion="0.0.0.0-4.0.0.0"
-                                           newVersion="4.0.0.0" />
-                      </dependentAssembly>
-                      <dependentAssembly>
-                          <assemblyIdentity name="System.Diagnostics.DiagnosticSource"
-                                            publicKeyToken="cc7b13ffcd2ddd51"
-                                            culture="neutral" />
-                          <bindingRedirect oldVersion="0.0.0.0-4.0.1.0"
-                                           newVersion="4.0.1.0" />
-                      </dependentAssembly>
-                      <dependentAssembly>
-                          <assemblyIdentity name="Microsoft.Extensions.Configuration.Abstractions"
-                                            publicKeyToken="adb9793829ddae60"
-                                            culture="neutral" />
-                          <bindingRedirect oldVersion="0.0.0.0-1.1.0.0"
-                                           newVersion="1.1.0.0" />
-                      </dependentAssembly>
-                      <dependentAssembly>
-                          <assemblyIdentity name="System.Collections.Immutable"
-                                            publicKeyToken="b03f5f7f11d50a3a"
-                                            culture="neutral" />
-                          <bindingRedirect oldVersion="0.0.0.0-1.2.1.0"
-                                           newVersion="1.2.1.0" />
-                      </dependentAssembly>
-                      <dependentAssembly>
-                          <assemblyIdentity name="System.Runtime"
-                                            publicKeyToken="b03f5f7f11d50a3a"
-                                            culture="neutral" />
-                          <bindingRedirect oldVersion="0.0.0.0-4.1.1.0"
-                                           newVersion="4.1.1.0" />
-                      </dependentAssembly>
+                        <dependentAssembly>
+                            <assemblyIdentity name="Autofac"
+                                              publicKeyToken="17863af14b0044da"
+                                              culture="neutral" />
+                            <bindingRedirect oldVersion="0.0.0.0-4.9.1.0"
+                                             newVersion="4.9.1.0" />
+                        </dependentAssembly>
+                        <dependentAssembly>
+                            <assemblyIdentity name="Autofac.Integration.Owin"
+                                              publicKeyToken="17863af14b0044da"
+                                              culture="neutral" />
+                            <bindingRedirect oldVersion="0.0.0.0-4.2.0.0"
+                                             newVersion="4.2.0.0" />
+                        </dependentAssembly>
+                        <dependentAssembly>
+                            <assemblyIdentity name="Autofac.Integration.Web"
+                                              publicKeyToken="17863af14b0044da"
+                                              culture="neutral" />
+                            <bindingRedirect oldVersion="0.0.0.0-4.0.0.0"
+                                             newVersion="4.0.0.0" />
+                        </dependentAssembly>
+                        <dependentAssembly>
+                            <assemblyIdentity name="Autofac.Integration.WebApi"
+                                              publicKeyToken="17863af14b0044da"
+                                              culture="neutral" />
+                            <bindingRedirect oldVersion="0.0.0.0-4.2.0.0"
+                                             newVersion="4.2.0.0" />
+                        </dependentAssembly>
+                        <dependentAssembly>
+                            <assemblyIdentity name="Microsoft.AspNet.SignalR.Core"
+                                              publicKeyToken="31bf3856ad364e35"
+                                              culture="neutral" />
+                            <bindingRedirect oldVersion="0.0.0.0-2.4.0.0"
+                                             newVersion="2.4.0.0" />
+                        </dependentAssembly>
+                        <dependentAssembly>
+                            <assemblyIdentity name="Microsoft.Owin"
+                                              publicKeyToken="31bf3856ad364e35"
+                                              culture="neutral" />
+                            <bindingRedirect oldVersion="0.0.0.0-3.0.0.0"
+                                             newVersion="3.0.0.0" />
+                        </dependentAssembly>
+                        <dependentAssembly>
+                            <assemblyIdentity name="Microsoft.Practices.ServiceLocation"
+                                              publicKeyToken="31bf3856ad364e35"
+                                              culture="neutral" />
+                            <bindingRedirect oldVersion="0.0.0.0-1.3.0.0"
+                                             newVersion="1.3.0.0" />
+                        </dependentAssembly>
+                        <dependentAssembly>
+                            <assemblyIdentity name="Microsoft.Win32.Primitives"
+                                              publicKeyToken="b03f5f7f11d50a3a"
+                                              culture="neutral" />
+                            <bindingRedirect oldVersion="0.0.0.0-4.0.1.0"
+                                             newVersion="4.0.1.0" />
+                        </dependentAssembly>
+                        <dependentAssembly>
+                            <assemblyIdentity name="Newtonsoft.Json"
+                                              publicKeyToken="30ad4fe6b2a6aeed"
+                                              culture="neutral" />
+                            <bindingRedirect oldVersion="0.0.0.0-6.0.0.0"
+                                             newVersion="6.0.0.0" />
+                        </dependentAssembly>
+                        <dependentAssembly>
+                            <assemblyIdentity name="System.IO.Compression"
+                                              publicKeyToken="b77a5c561934e089"
+                                              culture="neutral" />
+                            <bindingRedirect oldVersion="0.0.0.0-4.1.2.0"
+                                             newVersion="4.1.2.0" />
+                        </dependentAssembly>
+                        <dependentAssembly>
+                            <assemblyIdentity name="System.Net.Http"
+                                              publicKeyToken="b03f5f7f11d50a3a"
+                                              culture="neutral" />
+                            <bindingRedirect oldVersion="0.0.0.0-4.1.1.0"
+                                             newVersion="4.1.1.0" />
+                        </dependentAssembly>
+                        <dependentAssembly>
+                            <assemblyIdentity name="Autofac.Multitenant"
+                                              publicKeyToken="17863af14b0044da"
+                                              culture="neutral" />
+                            <bindingRedirect oldVersion="0.0.0.0-4.2.0.0"
+                                             newVersion="4.2.0.0" />
+                        </dependentAssembly>
+                        <dependentAssembly>
+                            <assemblyIdentity name="Castle.Core"
+                                              publicKeyToken="407dd0808d44fbdc"
+                                              culture="neutral" />
+                            <bindingRedirect oldVersion="0.0.0.0-4.0.0.0"
+                                             newVersion="4.0.0.0" />
+                        </dependentAssembly>
+                        <dependentAssembly>
+                            <assemblyIdentity name="System.Diagnostics.DiagnosticSource"
+                                              publicKeyToken="cc7b13ffcd2ddd51"
+                                              culture="neutral" />
+                            <bindingRedirect oldVersion="0.0.0.0-4.0.1.0"
+                                             newVersion="4.0.1.0" />
+                        </dependentAssembly>
+                        <dependentAssembly>
+                            <assemblyIdentity name="Microsoft.Extensions.Configuration.Abstractions"
+                                              publicKeyToken="adb9793829ddae60"
+                                              culture="neutral" />
+                            <bindingRedirect oldVersion="0.0.0.0-1.1.0.0"
+                                             newVersion="1.1.0.0" />
+                        </dependentAssembly>
+                        <dependentAssembly>
+                            <assemblyIdentity name="System.Collections.Immutable"
+                                              publicKeyToken="b03f5f7f11d50a3a"
+                                              culture="neutral" />
+                            <bindingRedirect oldVersion="0.0.0.0-1.2.1.0"
+                                             newVersion="1.2.1.0" />
+                        </dependentAssembly>
+                        <dependentAssembly>
+                            <assemblyIdentity name="Autofac.Integration.Wcf"
+                                              publicKeyToken="17863af14b0044da"
+                                              culture="neutral" />
+                            <bindingRedirect oldVersion="0.0.0.0-4.1.0.0"
+                                             newVersion="4.1.0.0" />
+                        </dependentAssembly>
+                        <dependentAssembly>
+                            <assemblyIdentity name="System.Web.Mvc"
+                                              publicKeyToken="31bf3856ad364e35"
+                                              culture="neutral" />
+                            <bindingRedirect oldVersion="0.0.0.0-5.2.7.0"
+                                             newVersion="5.2.7.0" />
+                        </dependentAssembly>
+                        <dependentAssembly>
+                            <assemblyIdentity name="System.Web.Http"
+                                              publicKeyToken="31bf3856ad364e35"
+                                              culture="neutral" />
+                            <bindingRedirect oldVersion="0.0.0.0-5.2.7.0"
+                                             newVersion="5.2.7.0" />
+                        </dependentAssembly>
+                        <dependentAssembly>
+                            <assemblyIdentity name="System.Web.Http.Owin"
+                                              publicKeyToken="31bf3856ad364e35"
+                                              culture="neutral" />
+                            <bindingRedirect oldVersion="0.0.0.0-5.2.7.0"
+                                             newVersion="5.2.7.0" />
+                        </dependentAssembly>
+                        <dependentAssembly>
+                            <assemblyIdentity name="System.Net.Http.Formatting"
+                                              publicKeyToken="31bf3856ad364e35"
+                                              culture="neutral" />
+                            <bindingRedirect oldVersion="0.0.0.0-5.2.7.0"
+                                             newVersion="5.2.7.0" />
+                        </dependentAssembly>
                     </assemblyBinding>
                     <ignoreIfUnresolved>
                         <assemblyIdentity name="BusinessObjects.Licensing.KeycodeDecoder" />
@@ -223,7 +246,6 @@
                 </configuration>
             </PlugInConfig>
         </PlugInConfigurations>
-        <RootNamespaceTitle>Autofac</RootNamespaceTitle>
     </PropertyGroup>
     <!-- DocumentationSources gets passed in as a parameter.
          Format is like this:
