@@ -1,14 +1,15 @@
 # Autofac Documentation
+
 Usage and API documentation for Autofac and integration libraries.
 
 [![Documentation Status](https://readthedocs.org/projects/autofac/badge/?version=latest)](https://readthedocs.org/projects/autofac/?badge=latest)
 
-**[Check out the Autofac documentation at docs.autofac.org!](https://autofac.readthedocs.io/)**
+**[Check out the Autofac documentation at docs.autofac.org!](https://docs.autofac.org/)**
 
 ## Updating the User Documentation Site
 
 User documentation is viewable at [https://docs.autofac.org](https://docs.autofac.org)
-(a CNAME to [https://autofac.readthedocs.org](https://autofac.readthedocs.org)).
+(a CNAME to [https://autofac.readthedocs.io](https://autofac.readthedocs.io)).
 It is stored in the `/docs` folder in this source repo.
 
 To build the docs and see them locally, you need to follow the
