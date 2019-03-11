@@ -94,7 +94,7 @@ To make managing your hub dependency lifetimes easier you can have the root life
 
       protected override void Dispose(bool disposing)
       {
-        // Dipose the hub lifetime scope when the hub is disposed.
+        // Dispose the hub lifetime scope when the hub is disposed.
         if (disposing && _hubLifetimeScope != null)
         {
           _hubLifetimeScope.Dispose();
