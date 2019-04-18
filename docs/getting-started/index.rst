@@ -208,7 +208,7 @@ For our sample app, we'll implement the "WriteDate" method to get the writer fro
 
 Now when you run your program...
 
-- The ``WriteDate`` method creates a lifetime scope from which it can resolve dependencies. It does this to avoid any memory leaks - if ``IDateWriter`` or its dependencies are disposable, they will be automatcially disposed when the scope is disposed.
+- The ``WriteDate`` method creates a lifetime scope from which it can resolve dependencies. It does this to avoid any memory leaks - if ``IDateWriter`` or its dependencies are disposable, they will be automatically disposed when the scope is disposed.
 - The ``WriteDate`` method manually resolves an ``IDateWriter`` from the lifetime scope. (This is "service location.") Internally...
 
   + Autofac sees that ``IDateWriter`` maps to ``TodayWriter`` so starts creating a ``TodayWriter``.
