@@ -174,7 +174,7 @@ From a general policy perspective, we should always be *compatible* with the lat
 Release Process
 ===============
 
-We follow the [Gitflow workflow process](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow/). Ongoing development should happen in the ``develop`` branch. Continuous integration builds get published to MyGet and can be consumed for testing purposes.
+We follow the `Gitflow workflow process <https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow/>`_. Ongoing development should happen in the ``develop`` branch. Continuous integration builds get published to MyGet and can be consumed for testing purposes.
 
 When it's time to cut a release, we'll:
 
