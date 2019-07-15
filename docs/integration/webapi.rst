@@ -228,6 +228,31 @@ Autofac introduces the new interfaces to allow you to concentrate on implementin
 
 Another reason for creating the internal attribute wrappers is to support the ``InstancePerRequest`` lifetime scope for filters. See below for more on that.
 
+Setting the Response in an Autofac Action Filter
+------------------------------------------------
+
+In the same way as with standard Web API filters,  you are able to set the ``HttpResponseMessage`` in the
+``OnActionExecutingAsync`` method of an action filter.
+
+.. sourcecode:: csharp
+
+  class RequestRejectionFilter : IAutofacActionFilter
+  {
+    public Task OnActionExecutingAsync(HttpActionContext actionContext, CancellationToken cancellationToken)
+    {
+      // Request is not valid for some reason.
+      actionContext.Response = actionContext.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Request not valid");
+      return Task.FromResult(0);
+    }
+
+    public void Task OnActionExecutedAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
+    {
+    }
+  }
+
+To match the standard Web API behaviour, if you set the ``Response`` property, then no subsequent action filters will be 
+invoked. However, any action filters already invoked will have ``OnActionExecutedAsync`` called with the appropriate response populated.
+
 Standard Web API Filter Attributes are Singletons
 -------------------------------------------------
 
