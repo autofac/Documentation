@@ -231,7 +231,7 @@ Another reason for creating the internal attribute wrappers is to support the ``
 Setting the Response in an Autofac Action Filter
 ------------------------------------------------
 
-In the same way as with standard Web API filters,  you are able to set the HttpResponse object in the
+In the same way as with standard Web API filters,  you are able to set the ``HttpResponseMessage`` in the
 ``OnActionExecutingAsync`` method of an action filter.
 
 .. sourcecode:: csharp
@@ -250,8 +250,8 @@ In the same way as with standard Web API filters,  you are able to set the HttpR
     }
   }
 
-To match the standard Web API behaviour, if you set the Response object, then no subsequent action filters will be 
-invoked. However, any action filters already invoked will have OnActionExecutedAsync called with the appropriate response populated.
+To match the standard Web API behaviour, if you set the ``Response`` property, then no subsequent action filters will be 
+invoked. However, any action filters already invoked will have ``OnActionExecutedAsync`` called with the appropriate response populated.
 
 Standard Web API Filter Attributes are Singletons
 -------------------------------------------------
