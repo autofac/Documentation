@@ -7,6 +7,24 @@ Autofac exposes events that can be hooked at various stages in instance lifecycl
 .. contents::
   :local:
 
+OnPreparing
+===========
+
+The ``OnPreparing`` event is raised when a new instance of a component is required, 
+before ``OnActivating`` is invoked.
+
+This event can be used to specify a custom set of parameter information that Autofac will consider
+when it creates a new instance of the component.
+
+The primary use case of this event is to mock or interecept the services that Autofac would normally
+pass as parameters to component activation, by setting the ``Parameters`` property of the provided
+``PreparingEventArgs`` argument with any custom parameters.
+
+.. tip:: 
+
+  Before you use this event to set parameters, consider whether it may be more appropriate
+  to define these at registration time, using :doc:`parameter registration <../register/parameters>`.
+
 OnActivating
 ============
 
