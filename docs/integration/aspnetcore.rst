@@ -235,7 +235,7 @@ This means you don't necessarily have to use :doc:`Autofac configuration <../con
       }
     }
 
-The `StartupLoader class in ASP.NET Core <https://github.com/aspnet/Hosting/blob/rel/1.1.0/src/Microsoft.AspNetCore.Hosting/Internal/StartupLoader.cs>`_ is what locates the methods to call during app startup. Check that class out if you want a more in-depth understanding of how this works.
+Extension methods off of the `WebHostBuilder class in ASP.NET Core <https://github.com/aspnet/AspNetCore/blob/master/src/Hosting/Abstractions/src/HostingAbstractionsWebHostBuilderExtensions.cs>`_ are available to override conventions during app startup. Check the HostingAbstractionsWebHostBuilderExtensions class out if you want a more in-depth understanding of how this works.
 
 Dependency Injection Hooks
 ==========================
