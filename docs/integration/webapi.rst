@@ -136,7 +136,15 @@ Implement the Filter Interface
 ------------------------------
 
 Instead of deriving from one of the existing Web API filter attributes your class implements the 
-appropriate filter interface defined in the integration. The filter below is an action filter and  
+appropriate filter interface defined in the integration. 
+
+Standard Action Filter Interface
+********************************
+
+The ``IAutofacActionFilter`` interface lets you define a filter that gets invoked before and after
+the execution of your action, in a similar way as if you derived from ``ActionFilterAttribute``.
+
+The filter below is an action filter and  
 implements ``IAutofacActionFilter`` instead of ``System.Web.Http.Filters.IActionFilter``.
 
 .. sourcecode:: csharp
@@ -201,7 +209,18 @@ Register the Filter
 -------------------
 
 For the filter to execute you need to register it with the container and inform it which controller (or controllers), and optionally action, should be targeted. 
-This is done using the following ``ContainerBuilder`` extension methods, which exist for each filter type:
+This is done using ``ContainerBuilder`` extension methods, which exist for each of the filter types:
+
+- ActionFilter
+- ActionFilterOverride
+- AuthenticationFilter
+- AuthenticationFilterOverride
+- AuthorizationFilter
+- AuthorizationFilterOverrideW
+- ExceptionFilter
+- ExceptionFilterOverride
+
+For each of the filter types, there are a couple of registration methods:
 
 ``AsWebApi{FilterType}ForAllControllers``
   Register this filter to run for all action methods on all controllers, in the same way as registering a global Web API filter.
@@ -255,17 +274,6 @@ This is done using the following ``ContainerBuilder`` extension methods, which e
   .. note:: 
 
     Filter predicates are invoked once for each action/filter combination; they are not invoked on every request.
-
-The available values for ``FilterType`` are:
-
-- ActionFilter
-- ActionFilterOverride
-- AuthenticationFilter
-- AuthenticationFilterOverride
-- AuthorizationFilter
-- AuthorizationFilterOverride
-- ExceptionFilter
-- ExceptionFilterOverride
 
 You can apply as many filters as you want. Registering a filter of one type does not remove or replace previously registered filters.
 
