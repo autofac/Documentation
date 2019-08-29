@@ -336,7 +336,7 @@ Using a Child Scope as a Root
 
 In a complex application you may want to keep services partitioned such that the root container is shared across different parts of the app, but a child lifetime scope is used for the hosted portion (e.g., the ASP.NET Core piece).
 
-In standard ASP.NET Core integration and generic hosted application support there's an ``AutofacChildLifetimeScopeServiceProviderFactory`` you can use instead of the standard ``AutofacServiceProviderFactory``. This allows you to provide configuration actions that will be attached to a specific nameed lifetime scope rather than a built container.
+In standard ASP.NET Core integration and generic hosted application support there's an ``AutofacChildLifetimeScopeServiceProviderFactory`` you can use instead of the standard ``AutofacServiceProviderFactory``. This allows you to provide configuration actions that will be attached to a specific named lifetime scope rather than a built container.
 
 .. sourcecode:: csharp
 
