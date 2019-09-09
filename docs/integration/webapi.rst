@@ -279,7 +279,7 @@ You can apply as many filters as you want. Registering a filter of one type does
 
 You can chain your filter registrations together to attach a filter against multiple controllers, like so:
 
-.. sourcecode::
+.. sourcecode:: csharp
 
   builder.Register(c => new LoggingActionFilter(c.Resolve<ILogger>()))
       .AsWebApiActionFilterFor<LoginController>()
