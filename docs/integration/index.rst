@@ -7,6 +7,7 @@ Application Integration
     aspnet.rst
     netcore.rst
     aspnetcore.rst
+    blazor.rst
     wcf.rst
     servicefabric.rst
     mef.rst

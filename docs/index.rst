@@ -3,7 +3,7 @@ Welcome to Autofac's documentation!
 
 .. image:: logo.png
 
-Autofac is an addictive `IoC container <http://martinfowler.com/articles/injection.html>`_ for Microsoft .NET 4.5, Silverlight 5, Windows Store apps, and Windows Phone 8 apps. It manages the dependencies between classes so that **applications stay easy to change as they grow** in size and complexity. This is achieved by treating regular .NET classes as :doc:`components <glossary>`.
+Autofac is an addictive `IoC container <http://martinfowler.com/articles/injection.html>`_ for .NET. It manages the dependencies between classes so that **applications stay easy to change as they grow** in size and complexity. This is achieved by treating regular .NET classes as :doc:`components <glossary>`.
 
 .. toctree::
    :maxdepth: 3
