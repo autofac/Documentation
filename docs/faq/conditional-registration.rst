@@ -42,8 +42,3 @@ You can :doc:`register components using lambda expressions <../register/registra
       })
       .As<IMyObject>()
       .SingleInstance();
-
-Avoid Updating the Container
-============================
-
-You may be tempted to start the application up and then change the contents of the application container based on some input. **Avoid doing this if possible.** You should :doc:`treat the container as immutable <../best-practices/index>` because once you've resolved things out of it, changing the contents of the container has a high potential to invalidate the previous objects resolved from the container, putting your application in an inconsistent state.

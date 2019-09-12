@@ -82,15 +82,13 @@ This can yield an improvement of up to 10x faster ``Resolve()`` calls, but only 
 Consider a Container as Immutable
 =================================
 
-While Autofac provides an ``Update()`` method to update registrations in an existing container, for the most part it's there for backwards-compatibility with Autofac 2.x. Where at all possible, you should avoid updating a container and instead register everything up front before building the container.
-
-If you modify a container after being built, you run several risks, especially if you've started using the container. This is not an all-inclusive risk list, but examples include:
+Starting from Autofac 5.x the container is immutable. There are several potential risks associated with updating a container after it has been built. Some examples include:
 
 - :doc:`Auto-start components <../lifetime/startup>` will have already run and potentially used registrations you've overridden during update. These auto-start components will not re-run.
 - Services that have already been resolved may have references to incorrect dependencies based on the additions made.
 - Disposable components may have already been resolved and will stick around until their owning lifetime scope is disposed - even if the new registrations would imply the disposable component shouldn't be used.
 - Component registrations that subscribe to lifetime events may be subscribed to the wrong events after the update - events don't all get re-initialized during update.
 
-If there's absolutely no way around it, you very well may need to ``Update()`` a container, but really try to avoid it if possible.
+In order to prevent any of these risks to become a problem, it is no longer an option to update the container after construction.
 
 **Instead of updating the container, consider registering updates or changes in a child lifetime scope.** :doc:`There are examples of this in the lifetime scope documentation. <../lifetime/working-with-scopes>`
