@@ -4,24 +4,29 @@ ASP.NET Core
 
 ASP.NET Core (previously ASP.NET 5) changes the way dependency injection frameworks have previously integrated into ASP.NET execution. Previously, each functionality - MVC, Web API, etc. - had its own "dependency resolver" mechanism and just slightly different ways to hook in. ASP.NET Core introduces a `conforming container <http://blog.ploeh.dk/2014/05/19/conforming-container/>`_ mechanism via `Microsoft.Extensions.DependencyInjection <https://github.com/aspnet/DependencyInjection>`_, including a unified notion of request lifetime scope, service registration, and so forth.
 
-**This page explains ASP.NET Core integration.** If you are using ASP.NET classic, :doc:`see the ASP.NET classic integration page <aspnet>`.
+Further, as of ASP.NET Core 3.0, there's a "generic app hosting" mechanism in play that can be used in non-ASP.NET Core apps.
 
-If you're using .NET Core without ASP.NET Core, :doc:`there's a simpler example here <netcore>` showing that integration.
+**This page explains ASP.NET Core and generic .NET Core hosting integration.** If you are using ASP.NET classic, :doc:`see the ASP.NET classic integration page <aspnet>`.
+
+If you're using .NET Core without ASP.NET Core (and/or without the generic hosting), :doc:`there's a simpler example here <netcore>` showing that integration.
 
 .. contents::
   :local:
 
-Quick Start (With ConfigureContainer)
-=====================================
-
-ASP.NET Core 1.1 introduced the ability to have strongly-typed container configuration. It provides a ``ConfigureContainer`` method where you register things with Autofac separately from registering things with the ``ServiceCollection``.
+Quick Start
+===========
 
 * Reference the ``Autofac.Extensions.DependencyInjection`` package from NuGet.
-* In your ``Program.Main`` method, where you configure the ``WebHostBuilder``, call ``AddAutofac`` to hook Autofac into the startup pipeline.
+* In your ``Program.Main`` method, attach the hosting mechanism to Autofac. (See the examples below.)
 * In the ``ConfigureServices`` method of your ``Startup`` class register things into the ``IServiceCollection`` using extension methods provided by other libraries.
 * In the ``ConfigureContainer`` method of your ``Startup`` class register things directly into an Autofac ``ContainerBuilder``.
 
 The ``IServiceProvider`` will automatically be created for you, so there's nothing you have to do but *register things*.
+
+ASP.NET Core 1.1 - 2.0
+----------------------
+
+This example shows **ASP.NET Core 1.1 - 2.0** usage, where you call ``services.AddAutofac()`` on the ``WebHostBuilder``. **This is not for ASP.NET Core 3+** or the .NET Core 3+ generic hosting support.
 
 .. sourcecode:: csharp
 
@@ -29,9 +34,12 @@ The ``IServiceProvider`` will automatically be created for you, so there's nothi
     {
       public static void Main(string[] args)
       {
+        // ASP.NET Core 1.1 - 2.0:
         // The ConfigureServices call here allows for
         // ConfigureContainer to be supported in Startup with
         // a strongly-typed ContainerBuilder.
+        // AddAutofac() is a convenience method for
+        // services.AddSingleton<IServiceProviderFactory<ContainerBuilder>>(new AutofacServiceProviderFactory())
         var host = new WebHostBuilder()
             .UseKestrel()
             .ConfigureServices(services => services.AddAutofac())
@@ -44,10 +52,46 @@ The ``IServiceProvider`` will automatically be created for you, so there's nothi
       }
     }
 
+ASP.NET Core 3.0+ and Generic Hosting
+-------------------------------------
+
+**Hosting changed in ASP.NET Core 3.0** and requires a slightly different integration. This is for ASP.NET Core 3+ and the .NET Core 3+ generic hosting support:
+
+.. sourcecode:: csharp
+
+    public class Program
+    {
+      public static void Main(string[] args)
+      {
+        // ASP.NET Core 3.0+:
+        // The UseServiceProviderFactory call attaches the
+        // Autofac provider to the generic hosting mechanism.
+        var host = Host.CreateDefaultBuilder(args)
+            .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+            .ConfigureWebHostDefaults(webHostBuilder => {
+              webHostBuilder
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseIISIntegration()
+                .UseStartup<Startup>();
+            })
+            .Build();
+
+        host.Run();
+      }
+    }
+
+Startup Class
+-------------
+
+In your Startup class (which is basically the same across all the versions of ASP.NET Core) you then use ``ConfigureContainer`` to access the Autofac container builder and register things directly with Autofac.
+
+.. sourcecode:: csharp
+
     public class Startup
     {
       public Startup(IHostingEnvironment env)
       {
+        // In ASP.NET Core 3.0 env will be an IWebHostingEnvironment, not IHostingEnvironment.
         var builder = new ConfigurationBuilder()
             .SetBasePath(env.ContentRootPath)
             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -58,6 +102,8 @@ The ``IServiceProvider`` will automatically be created for you, so there's nothi
 
       public IConfigurationRoot Configuration { get; private set; }
 
+      public ILifetimeScope AutofacContainer { get; private set; }
+
       // ConfigureServices is where you register dependencies. This gets
       // called by the runtime before the ConfigureContainer method, below.
       public void ConfigureServices(IServiceCollection services)
@@ -65,7 +111,7 @@ The ``IServiceProvider`` will automatically be created for you, so there's nothi
         // Add services to the collection. Don't build or return
         // any IServiceProvider or the ConfigureContainer method
         // won't get called.
-        services.AddMvc();
+        services.AddOptions();
       }
 
       // ConfigureContainer is where you can register things directly
@@ -86,92 +132,13 @@ The ``IServiceProvider`` will automatically be created for you, so there's nothi
         IApplicationBuilder app,
         ILoggerFactory loggerFactory)
       {
-          loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
-          loggerFactory.AddDebug();
-          app.UseMvc();
-      }
-    }
+        // If, for some reason, you need a reference to the built container, you
+        // can use the convenience extension method GetAutofacRoot.
+        this.AutofacContainer = app.ApplicationServices.GetAutofacRoot();
 
-Quick Start (Without ConfigureContainer)
-========================================
-
-If you need more flexibility over how your container is built or if you need to actually store a reference to the built container you will need to skip using ``ConfigureContainer`` and register everything during ``ConfigureServices``. This is also the path you'd take for ASP.NET Core 1.0.
-
-* Reference the ``Autofac.Extensions.DependencyInjection`` package from NuGet.
-* In the ``ConfigureServices`` method of your ``Startup`` class...
-
-  - Register services from the ``IServiceCollection`` into the ``ContainerBuilder`` via ``Populate``.
-  - Register services into the ``ContainerBuilder`` directly.
-  - Build your container.
-  - Create an ``AutofacServiceProvider`` using the container and return it.
-
-.. sourcecode:: csharp
-
-    public class Startup
-    {
-      public Startup(IHostingEnvironment env)
-      {
-        var builder = new ConfigurationBuilder()
-            .SetBasePath(env.ContentRootPath)
-            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-            .AddEnvironmentVariables();
-        this.Configuration = builder.Build();
-      }
-
-      public IContainer ApplicationContainer { get; private set; }
-
-      public IConfigurationRoot Configuration { get; private set; }
-
-      // ConfigureServices is where you register dependencies. This gets
-      // called by the runtime before the Configure method, below.
-      public IServiceProvider ConfigureServices(IServiceCollection services)
-      {
-        // Add services to the collection.
-        services.AddMvc();
-
-        // Create the container builder.
-        var builder = new ContainerBuilder();
-
-        // Register dependencies, populate the services from
-        // the collection, and build the container.
-        //
-        // Note that Populate is basically a foreach to add things
-        // into Autofac that are in the collection. If you register
-        // things in Autofac BEFORE Populate then the stuff in the
-        // ServiceCollection can override those things; if you register
-        // AFTER Populate those registrations can override things
-        // in the ServiceCollection. Mix and match as needed.
-        builder.Populate(services);
-        builder.RegisterType<MyType>().As<IMyType>();
-        this.ApplicationContainer = builder.Build();
-
-        // Create the IServiceProvider based on the container.
-        return new AutofacServiceProvider(this.ApplicationContainer);
-      }
-
-      // Configure is where you add middleware. This is called after
-      // ConfigureServices. You can use IApplicationBuilder.ApplicationServices
-      // here if you need to resolve things from the container.
-      public void Configure(
-        IApplicationBuilder app,
-        ILoggerFactory loggerFactory,
-        IApplicationLifetime appLifetime)
-      {
-          loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
-          loggerFactory.AddDebug();
-
-          app.UseMvc();
-
-          // As of Autofac.Extensions.DependencyInjection 4.3.0 the AutofacDependencyResolver
-          // implements IDisposable and will be disposed - along with the application container -
-          // when the app stops and the WebHost disposes it.
-          //
-          // Prior to 4.3.0, if you want to dispose of resources that have been resolved in the
-          // application container, register for the "ApplicationStopped" event.
-          // You can only do this if you have a direct reference to the container,
-          // so it won't work with the above ConfigureContainer mechanism.
-          // appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
+        loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
+        loggerFactory.AddDebug();
+        app.UseMvc();
       }
     }
 
@@ -313,12 +280,9 @@ Due to the way ASP.NET Core is eager about generating the request lifetime scope
 To enable multitenant support:
 
 * Add a reference to the ``Autofac.AspNetCore.Multitenant`` NuGet package.
-* In your ``Program.Main`` when building the web host...
-
-  * Include a call to the ``UseAutofacMultitenantRequestServices`` extension and let Autofac know how to locate your multitenant container.
-  * **Do not use** the ``ConfigureContainer`` support listed above. You can't do that because it won't give you a chance to create your multitenant container.
-
-* Change your ``Startup.ConfigureServices`` method to return ``IServiceProvider``, create your multitenant container, and return an ``AutofacServiceProvider`` using that container.
+* In your ``Program.Main`` when building the web host include a call to the ``UseServiceProviderFactory`` extension and use the ``AutofacMultitenantServiceProviderFactory``. Provide a callback that will configure your tenants.
+* In ``Startup.ConfigureServices`` and ``Startup.ConfigureContainer`` register things that go in the **root container** that aren't tenant-specific.
+* In the callback (e.g., ``Startup.ConfigureMultitenantContainer``) is where you build your multitenant container.
 
 Here's an example of what you do in ``Program.Main``:
 
@@ -326,22 +290,15 @@ Here's an example of what you do in ``Program.Main``:
 
     public class Program
     {
-      public static void Main(string[] args)
+      public static async Task Main(string[] args)
       {
-        var host = new WebHostBuilder()
-          .UseKestrel()
-          .UseContentRoot(Directory.GetCurrentDirectory())
-
-          // This enables the request lifetime scope to be properly spawned from
-          // the container rather than be a child of the default tenant scope.
-          // The ApplicationContainer static property is where the multitenant container
-          // will be stored once it's built.
-          .UseAutofacMultitenantRequestServices(() => Startup.ApplicationContainer)
-          .UseIISIntegration()
-          .UseStartup<Startup>()
+        var host = Host
+          .CreateDefaultBuilder(args)
+          .UseServiceProviderFactory(new AutofacMultitenantServiceProviderFactory(Startup.ConfigureMultitenantContainer))
+          .ConfigureWebHostDefaults(webHostBuilder => webHostBuilder.UseStartup<Startup>())
           .Build();
 
-        host.Run();
+        await host.RunAsync();
       }
     }
 
@@ -352,34 +309,97 @@ Here's an example of what you do in ``Program.Main``:
     public class Startup
     {
       // Omitting extra stuff so you can see the important part...
-      public IServiceProvider ConfigureServices(IServiceCollection services)
+      public void ConfigureServices(IServiceCollection services)
       {
+        // This will all go in the ROOT CONTAINER and is NOT TENANT SPECIFIC.
         services.AddMvc();
-        var builder = new ContainerBuilder();
-        builder.Populate(services);
 
-        var container = builder.Build();
-        var strategy = new MyTenantIdentificationStrategy();
-        var mtc = new MultitenantContainer(strategy, container);
-        Startup.ApplicationContainer = mtc;
-        return new AutofacServiceProvider(mtc);
+        // This adds the required middleware to the ROOT CONTAINER and is required for multitenancy to work.
+        services.AddAutofacMultitenantRequestServices();
       }
 
-      // This is what the middleware will use to create your request lifetime scope.
-      public static MultitenantContainer ApplicationContainer { get; set; }
-    }
+      public void ConfigureContainer(ContainerBuilder builder)
+      {
+        // This will all go in the ROOT CONTAINER and is NOT TENANT SPECIFIC.
+        builder.RegisterType<Dependency>().As<IDependency>();
+      }
 
+      public static MultitenantContainer ConfigureMultitenantContainer(IContainer container)
+      {
+        // This is the MULTITENANT PART. Set up your tenant-specific stuff here.
+        var strategy = new MyTenantIdentificationStrategy();
+        var mtc = new MultitenantContainer(strategy, container);
+        mtc.ConfigureTenant("a", cb => cb.RegisterType<TenantDependency>().As<IDependency>());
+        return mtc;
+      }
+    }
 
 Using a Child Scope as a Root
 =============================
 
-In a complex application you may want to keep services registered using ``Populate()`` in a child lifetime scope. For example, an application that does some self-hosting of ASP.NET Core components may want to keep the MVC registrations and such isolated from the main container. The ``Populate()`` method offers an overload to allow you to specify a tagged child lifetime scope that should serve as the "container" for items.
+In a complex application you may want to keep services partitioned such that the root container is shared across different parts of the app, but a child lifetime scope is used for the hosted portion (e.g., the ASP.NET Core piece).
 
-.. note::
+In standard ASP.NET Core integration and generic hosted application support there's an ``AutofacChildLifetimeScopeServiceProviderFactory`` you can use instead of the standard ``AutofacServiceProviderFactory``. This allows you to provide configuration actions that will be attached to a specific named lifetime scope rather than a built container.
 
-   If you use this, you will not be able to use the ASP.NET Core support for ``IServiceProviderFactory{TContainerBuilder}`` (the ``ConfigureContainer`` support). This is because ``IServiceProviderFactory{TContainerBuilder}`` assumes it's working at the root level.
+.. sourcecode:: csharp
 
-:doc:`The .NET Core integration documentation shows an example of using a child lifetime scope as a root. <netcore>`
+    public class Program
+    {
+      public static void Main(string[] args)
+      {
+        // The UseServiceProviderFactory call attaches the
+        // Autofac provider to the generic hosting mechanism.
+        var host = Host.CreateDefaultBuilder(args)
+            .UseServiceProviderFactory(new AutofacChildLifetimeScopeServiceProviderFactory())
+            .ConfigureWebHostDefaults(webHostBuilder => {
+              webHostBuilder
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseIISIntegration()
+                .UseStartup<Startup>();
+            })
+            .Build();
+
+        host.Run();
+      }
+    }
+
+This will change how your ``Startup`` class works - you won't use a ``ContainerBuilder`` directly in ``ConfigureContainer``, now it's an ``AutofacChildLifetimeScopeConfigurationAdapter``:
+
+.. sourcecode:: csharp
+
+    public class Startup
+    {
+      public Startup(IHostingEnvironment env)
+      {
+        // Fill this in if needed...
+      }
+
+      public void ConfigureServices(IServiceCollection services)
+      {
+        // The usual ConfigureServices registrations on the service collection...
+      }
+
+      // Here's the change for child lifetime scope usage! Register your "root"
+      // child lifetime scope things with the adapter.
+      public void ConfigureContainer(AutofacChildLifetimeScopeConfigurationAdapter config)
+      {
+          config.Add(builder => builder.RegisterModule(new AutofacModule()));
+      }
+
+      public void Configure(
+        IApplicationBuilder app,
+        ILoggerFactory loggerFactory)
+      {
+          // The usual app configuration stuff...
+      }
+    }
+
+
+If you're not using the service provider factory, the ``Populate()`` method offers an overload to allow you to specify a tagged child lifetime scope that should serve as the "container" for items.
+
+:doc:`The .NET Core integration documentation also shows an example of using a child lifetime scope as a root. <netcore>`
+
+Using a child lifetime scope as the root is not compatible with multitenant support. You must choose one or the other, not both.
 
 Example
 =======
