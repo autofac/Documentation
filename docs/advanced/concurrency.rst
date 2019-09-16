@@ -7,7 +7,7 @@ Autofac is designed for use in highly-concurrent applications. The guidance belo
 Component Registration
 ----------------------
 
-``ContainerBuilder`` and ``ComponentRegistryBuilder`` **are not thread-safe** and is designed to be used only on a single thread at the time the application starts up. This is the most common scenario and works for almost all applications.
+``ContainerBuilder`` and ``ComponentRegistryBuilder`` **are not thread-safe** and are designed to be used only on a single thread at the time the application starts up. This is the most common scenario and works for almost all applications.
 
 Service Resolution
 ------------------
