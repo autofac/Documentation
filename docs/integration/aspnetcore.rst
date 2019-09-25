@@ -23,10 +23,11 @@ Quick Start
 
 The ``IServiceProvider`` will automatically be created for you, so there's nothing you have to do but *register things*.
 
-ASP.NET Core 1.1 - 2.0
+ASP.NET Core 1.1 - 2.2
 ----------------------
 
-This example shows **ASP.NET Core 1.1 - 2.0** usage, where you call ``services.AddAutofac()`` on the ``WebHostBuilder``. **This is not for ASP.NET Core 3+** or the .NET Core 3+ generic hosting support.
+This example shows **ASP.NET Core 1.1 - 2.2** usage, where you call ``services.AddAutofac()`` on the ``WebHostBuilder``. 
+**This is not for ASP.NET Core 3+** or the .NET Core 3+ generic hosting support.
 
 .. sourcecode:: csharp
 
@@ -34,7 +35,7 @@ This example shows **ASP.NET Core 1.1 - 2.0** usage, where you call ``services.A
     {
       public static void Main(string[] args)
       {
-        // ASP.NET Core 1.1 - 2.0:
+        // ASP.NET Core 1.1 - 2.2:
         // The ConfigureServices call here allows for
         // ConfigureContainer to be supported in Startup with
         // a strongly-typed ContainerBuilder.
@@ -49,6 +50,63 @@ This example shows **ASP.NET Core 1.1 - 2.0** usage, where you call ``services.A
             .Build();
 
         host.Run();
+      }
+    }
+
+This example shows **ASP.NET Core 1.1 - 2.2** usage, where you return an ``IServiceProvider`` from the ``ConfigureServices(IServiceCollection services)`` delegate. 
+**This is not for ASP.NET Core 3+** or the .NET Core 3+ generic hosting support.
+
+.. sourcecode:: csharp
+
+    public class Startup
+    {
+      public Startup(IHostingEnvironment env)
+      {
+        // In ASP.NET Core 3.0 env will be an IWebHostingEnvironment, not IHostingEnvironment.
+        var builder = new ConfigurationBuilder()
+            .SetBasePath(env.ContentRootPath)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+            .AddEnvironmentVariables();
+        this.Configuration = builder.Build();
+      }
+
+      public IConfigurationRoot Configuration { get; private set; }
+
+      public ILifetimeScope AutofacContainer { get; private set; }
+
+      // ConfigureServices is where you register dependencies and return an `IServiceProvider` implemented by `AutofacServiceProvider`.
+      // This is the old, not recommended way.
+      public IServiceProvider ConfigureServices(IServiceCollection services)
+      {
+        // Add services to the collection
+        services.AddOptions();
+
+        // create a container-builder and register dependencies
+        var builder = new ContainerBuilder();
+
+        builder.RegisterModule(new AutofacModule());
+
+        // populate the service-descriptors added to `IServiceCollection`
+
+        builder.Populate(services);
+
+        AutofacContainer = builder.Build();
+
+        // this will be used as the service-provider for the application!
+        return new AutofacServiceProvider(AutofacContainer);
+      }
+
+      // Configure is where you add middleware. 
+      // You can use IApplicationBuilder.ApplicationServices
+      // here if you need to resolve things from the container.
+      public void Configure(
+        IApplicationBuilder app,
+        ILoggerFactory loggerFactory)
+      {
+        loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
+        loggerFactory.AddDebug();
+        app.UseMvc();
       }
     }
 
@@ -119,7 +177,7 @@ In your Startup class (which is basically the same across all the versions of AS
       // here will override registrations made in ConfigureServices.
       // Don't build the container; that gets done for you. If you
       // need a reference to the container, you need to use the
-      // "Without ConfigureContainer" mechanism shown later.
+      // "Without ConfigureContainer" mechanism shown earlier.
       public void ConfigureContainer(ContainerBuilder builder)
       {
           builder.RegisterModule(new AutofacModule());
