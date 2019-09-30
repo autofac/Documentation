@@ -26,8 +26,7 @@ The ``IServiceProvider`` will automatically be created for you, so there's nothi
 ASP.NET Core 1.1 - 2.2
 ----------------------
 
-This example shows **ASP.NET Core 1.1 - 2.2** usage, where you call ``services.AddAutofac()`` on the ``WebHostBuilder``. 
-**This is not for ASP.NET Core 3+** or the .NET Core 3+ generic hosting support.
+This example shows **ASP.NET Core 1.1 - 2.2** usage, where you call ``services.AddAutofac()`` on the ``WebHostBuilder``. **This is not for ASP.NET Core 3+** or the .NET Core 3+ generic hosting support - ASP.NET Core 3 requires you to specify a service provider factory directly rather than adding it to the service collection.
 
 .. sourcecode:: csharp
 
@@ -53,8 +52,7 @@ This example shows **ASP.NET Core 1.1 - 2.2** usage, where you call ``services.A
       }
     }
 
-This example shows **ASP.NET Core 1.1 - 2.2** usage, where you return an ``IServiceProvider`` from the ``ConfigureServices(IServiceCollection services)`` delegate. 
-**This is not for ASP.NET Core 3+** or the .NET Core 3+ generic hosting support.
+This example shows **ASP.NET Core 1.1 - 2.2** usage, where you return an ``IServiceProvider`` from the ``ConfigureServices(IServiceCollection services)`` delegate. **This is not for ASP.NET Core 3+** or the .NET Core 3+ generic hosting support - ASP.NET Core 3 has deprecated the ability to return a service provider from ``ConfigureSerivces``.
 
 .. sourcecode:: csharp
 
@@ -76,7 +74,7 @@ This example shows **ASP.NET Core 1.1 - 2.2** usage, where you return an ``IServ
       public ILifetimeScope AutofacContainer { get; private set; }
 
       // ConfigureServices is where you register dependencies and return an `IServiceProvider` implemented by `AutofacServiceProvider`.
-      // This is the old, not recommended way.
+      // This is the old, not recommended way, and is NOT SUPPORTED in ASP.NET Core 3.0+.
       public IServiceProvider ConfigureServices(IServiceCollection services)
       {
         // Add services to the collection
@@ -113,7 +111,9 @@ This example shows **ASP.NET Core 1.1 - 2.2** usage, where you return an ``IServ
 ASP.NET Core 3.0+ and Generic Hosting
 -------------------------------------
 
-**Hosting changed in ASP.NET Core 3.0** and requires a slightly different integration. This is for ASP.NET Core 3+ and the .NET Core 3+ generic hosting support:
+**Hosting changed in ASP.NET Core 3.0** and requires a different integration. You can no longer return ``IServiceProvider`` from ``ConfigureServices``, nor can you add your service provider factory to the service collection.
+
+This is for ASP.NET Core 3+ and the .NET Core 3+ generic hosting support:
 
 .. sourcecode:: csharp
 
@@ -149,7 +149,7 @@ In your Startup class (which is basically the same across all the versions of AS
     {
       public Startup(IHostingEnvironment env)
       {
-        // In ASP.NET Core 3.0 env will be an IWebHostingEnvironment, not IHostingEnvironment.
+        // In ASP.NET Core 3.0 `env` will be an IWebHostingEnvironment, not IHostingEnvironment.
         var builder = new ConfigurationBuilder()
             .SetBasePath(env.ContentRootPath)
             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -175,9 +175,7 @@ In your Startup class (which is basically the same across all the versions of AS
       // ConfigureContainer is where you can register things directly
       // with Autofac. This runs after ConfigureServices so the things
       // here will override registrations made in ConfigureServices.
-      // Don't build the container; that gets done for you. If you
-      // need a reference to the container, you need to use the
-      // "Without ConfigureContainer" mechanism shown earlier.
+      // Don't build the container; that gets done for you by the factory.
       public void ConfigureContainer(ContainerBuilder builder)
       {
           builder.RegisterModule(new AutofacModule());
@@ -260,7 +258,7 @@ This means you don't necessarily have to use :doc:`Autofac configuration <../con
       }
     }
 
-The `StartupLoader class in ASP.NET Core <https://github.com/aspnet/Hosting/blob/rel/1.1.0/src/Microsoft.AspNetCore.Hosting/Internal/StartupLoader.cs>`_ is what locates the methods to call during app startup. Check that class out if you want a more in-depth understanding of how this works.
+This is a feature of the application hosting in ASP.NET Core - it is not an Autofac behavior. The `StartupLoader class in ASP.NET Core <https://github.com/aspnet/Hosting/blob/rel/1.1.0/src/Microsoft.AspNetCore.Hosting/Internal/StartupLoader.cs>`_ is what locates the methods to call during app startup. Check that class out if you want a more in-depth understanding of how this works.
 
 Dependency Injection Hooks
 ==========================
@@ -301,30 +299,24 @@ By default, ASP.NET Core will resolve the controller *parameters* from the conta
 * The lifecycle of *controller constructor parameters* is handled by the request lifetime.
 * Special wiring that you may have done during registration of the controller (like setting up property injection) won't work.
 
-You can change this by specifying ``AddControllersAsServices()`` when you register MVC with the service collection. Doing that will automatically register controller types into the ``IServiceCollection`` when you call ``builder.Populate(services)``.
+You can change this by specifying ``AddControllersAsServices()`` when you register MVC with the service collection. Doing that will automatically register controller types into the ``IServiceCollection`` when the service provider factory calls ``builder.Populate(services)``.
 
 .. sourcecode:: csharp
 
     public class Startup
     {
       // Omitting extra stuff so you can see the important part...
-      public IServiceProvider ConfigureServices(IServiceCollection services)
+      public void ConfigureServices(IServiceCollection services)
       {
         // Add controllers as services so they'll be resolved.
         services.AddMvc().AddControllersAsServices();
-
-        var builder = new ContainerBuilder();
-
-        // When you do service population, it will include your controller
-        // types automatically.
-        builder.Populate(services);
-
+      }
+      
+      public void ConfigureContainer(ContainerBuilder builder)
+      {
         // If you want to set up a controller for, say, property injection
         // you can override the controller registration after populating services.
         builder.RegisterType<MyController>().PropertiesAutowired();
-
-        this.ApplicationContainer = builder.Build();
-        return new AutofacServiceProvider(this.ApplicationContainer);
       }
     }
 
