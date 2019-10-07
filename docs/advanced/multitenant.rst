@@ -640,7 +640,7 @@ In the example below, **we are using the Autofac.Multitenant.Wcf.AutofacHostFact
 .. _tenant_id_strategy_tips:
 
 Tenant ID Strategy Tips
------------------------
+=======================
 
 - **Performance is key.** The tenant ID strategy will execute on every resolve operation and every lifetime scope creation in the multitenant container. Do everything you can to make it efficient - cache things instead of database lookups every time, reduce memory allocations, etc.
 - **Handle errors well.** If the tenant ID strategy blows up for any reason, it's going to be potentially difficult to troubleshoot. Make sure you check for nulls and handle exceptions. From a performance perspective, make sure you use ``TryGet`` or ``TryParse`` sorts of operations rather than ``try/catch`` and letting exceptions control flow.
