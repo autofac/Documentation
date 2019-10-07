@@ -178,6 +178,8 @@ In your custom strategy implementation, you may choose to represent your tenant 
 
 **Be sure to handle errors well in tenant identification.** Especially in situations like ASP.NET application startup, you may use some contextual mechanism (like ``HttpContext.Current.Request``) to determine your tenant ID, but if your tenant ID strategy gets called when that contextual information isn't available, you need to be able to handle that. You'll see in the above example that not only does it check for the current ``HttpContext``, but also the ``Request``. Check everything and handle exceptions (e.g., parsing exceptions) or you may get some odd or hard-to-troubleshoot behavior.
 
+**There are additional tips for your tenant ID strategy** in the :ref:`tenant_id_strategy_tips` section.
+
 .. _resolve_dependencies:
 
 Resolve Tenant-Specific Dependencies
@@ -633,6 +635,18 @@ In the example below, **we are using the Autofac.Multitenant.Wcf.AutofacHostFact
         }
       }
     }
+
+
+.. _tenant_id_strategy_tips:
+
+Tenant ID Strategy Tips
+-----------------------
+
+- **Performance is key.** The tenant ID strategy will execute on every resolve operation and every lifetime scope creation in the multitenant container. Do everything you can to make it efficient - cache things instead of database lookups every time, reduce memory allocations, etc.
+- **Handle errors well.** If the tenant ID strategy blows up for any reason, it's going to be potentially difficult to troubleshoot. Make sure you check for nulls and handle exceptions. From a performance perspective, make sure you use ``TryGet`` or ``TryParse`` sorts of operations rather than ``try/catch`` and letting exceptions control flow.
+- **Make your tenant ID strategy a singleton.** The multitenant container stores an instance of the tenant ID strategy. If you are registering the strategy in your base (non-multitenant) container, make sure you register it as a singleton. Further, make sure dependencies that the tenant ID strategy might consume are also singletons... or are allowed to have individual instances cached.
+- **If you can, create the tenant ID strategy and then register it** rather than simply registering a type with Autofac and letting it resolve. It's tempting to "over-DI" things. The tenant ID strategy is pretty foundational and you want to make sure it works; troubleshooting why something didn't inject into the strategy can be painful. Further, it can be easy to "accidentally" make the tenant ID strategy a factory scoped or per-lifetime-scope thing and that won't work. It can also be easy to lose sight of the fact that things going into the tenant ID strategy are cached for the lifetime of the app, not something that gets populated per request. If you actually "new-up" the strategy and register the instance with Autofac rather than registering a singleton type, it can drive home that discipline and help you avoid issues.
+- **Watch for threading issues!** The tenant ID strategy is held by the multitenant container and used across all operations. It's a singleton! If you cache things, make the cache operations threadsafe. If you store state, make sure it's in a structure like a dictionary where you can store state for every tenant in the system (or cache lookups in a non-tenant-specific way). If you have an instance variable called "tenant," you're going to have trouble - that "tenant" isn't the same across every thread and every resolve operation.
 
 Example
 =======
