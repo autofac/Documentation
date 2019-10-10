@@ -83,11 +83,13 @@ This example shows **ASP.NET Core 1.1 - 2.2** usage, where you return an ``IServ
         // create a container-builder and register dependencies
         var builder = new ContainerBuilder();
 
-        builder.RegisterModule(new AutofacModule());
-
         // populate the service-descriptors added to `IServiceCollection`
-
+        // BEFORE you add things to Autofac so that the Autofac
+        // registrations can override stuff in the `IServiceCollection`
+        // as needed
         builder.Populate(services);
+
+        builder.RegisterModule(new AutofacModule());
 
         AutofacContainer = builder.Build();
 
