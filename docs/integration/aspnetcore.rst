@@ -80,16 +80,17 @@ This example shows **ASP.NET Core 1.1 - 2.2** usage, where you return an ``IServ
         // Add services to the collection
         services.AddOptions();
 
-        // create a container-builder and register dependencies
+        // Create a container-builder and register dependencies
         var builder = new ContainerBuilder();
 
-        // populate the service-descriptors added to `IServiceCollection`
+        // Populate the service-descriptors added to `IServiceCollection`
         // BEFORE you add things to Autofac so that the Autofac
         // registrations can override stuff in the `IServiceCollection`
         // as needed
         builder.Populate(services);
 
-        builder.RegisterModule(new AutofacModule());
+        // Register your own things directly with Autofac
+        builder.RegisterModule(new MyApplicationModule());
 
         AutofacContainer = builder.Build();
 
@@ -97,7 +98,7 @@ This example shows **ASP.NET Core 1.1 - 2.2** usage, where you return an ``IServ
         return new AutofacServiceProvider(AutofacContainer);
       }
 
-      // Configure is where you add middleware. 
+      // Configure is where you add middleware.
       // You can use IApplicationBuilder.ApplicationServices
       // here if you need to resolve things from the container.
       public void Configure(
@@ -180,7 +181,8 @@ In your Startup class (which is basically the same across all the versions of AS
       // Don't build the container; that gets done for you by the factory.
       public void ConfigureContainer(ContainerBuilder builder)
       {
-          builder.RegisterModule(new AutofacModule());
+        // Register your own things directly with Autofac, like:
+        builder.RegisterModule(new MyApplicationModule());
       }
 
       // Configure is where you add middleware. This is called after
@@ -313,7 +315,7 @@ You can change this by specifying ``AddControllersAsServices()`` when you regist
         // Add controllers as services so they'll be resolved.
         services.AddMvc().AddControllersAsServices();
       }
-      
+
       public void ConfigureContainer(ContainerBuilder builder)
       {
         // If you want to set up a controller for, say, property injection
