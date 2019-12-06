@@ -142,7 +142,7 @@ This is by design because you wouldn't want one component to dispose the ``B`` o
 If you would rather control ``B`` disposal yourself all the time, :doc:`register B as ExternallyOwned() <../lifetime/disposal>`.
 
 
-Dynamic Instantiation (`Func<B>`)
+Dynamic Instantiation (Func<B>)
 -------------------------------
 Using an *auto-generated factory* can let you effectively call ``Resolve<B>()`` without tying your component to Autofac. Use this relationship type if you need to create more than one instance of a given service, or if you're not sure if you're going to need a service and want to make the decision at runtime. This relationship is also useful in cases like :doc:`WCF integration <../integration/wcf>` where you need to create a new service proxy after faulting the channel.
 
