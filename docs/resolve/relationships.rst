@@ -159,6 +159,7 @@ Further, lifetime scopes are respected. If you register an object as ``InstanceP
 An example of this relationship looks like:
 
 .. sourcecode:: csharp
+
     public class B
     {
       public B() {}
@@ -185,6 +186,7 @@ Parameterized Instantiation (Func<X, Y, B>)
 You can also use an *auto-generated factory* to provide parameters when creating an new instance of the object, where the constructor of the object calls for some additional parameters. While the ``Func<B>`` relationship is similar to ``Resolve<B>()``, the ``Func<X, Y, B>`` relationship is like calling ``Resolve<B>(TypedParameter.From<X>(x), TypedParameter.From<Y>(y))`` - a resolve operation that has typed parameters. This is an alternative to :doc:`passing parameters during registration <../register/parameters>` or :doc:`passing during manual resolution <../resolve/parameters>`:
 
 .. sourcecode:: csharp
+
     public class B
     {
       public B(string someString, int id) {}
@@ -210,7 +212,9 @@ Note that since we're resolving the instance rather than directly calling the co
 Alternatively, you can use this approach to override a constructor parameter that *would* otherwise have been resolved from the container, with a concrete instance already in hand.
 
 Example:
+
 .. sourcecode:: csharp
+
     //Suppose that P, Q & R are all registered with the Autofac Container.
     public class B
     {
