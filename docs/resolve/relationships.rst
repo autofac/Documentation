@@ -221,7 +221,8 @@ Example:
 
         public void M(P existingPea)
         {
-            var b = _newB(42, existingPea); //the needed Q and R will be resolved by Autofac, but not the P since the existingPea will be used.
+            // The Q and R will be resolved by Autofac, but P will be existingPea instead.
+            var b = _newB(42, existingPea);
             b.DoSomething();
         }
     }
