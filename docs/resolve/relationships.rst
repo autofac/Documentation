@@ -199,7 +199,7 @@ You can also use an *auto-generated factory* to provide parameters when creating
         }
     }
 
-Note that since we're ``.Resolve()``ing the instantiation, rather than actually directly calling the constructor we don't need to declare the parameters in the same order as they appear in the ctor, nor do we necessarily need to provide *all* the parameters listed in that constructor. If some of the constructor's parameters could have been resolved by the Autofac Container already, then those parameters can be omitted from the ``Func`` signature being declared, so you only need to list the types that the Container can't resolve.
+Note that since we're resolving the instance rather than directly calling the constructor we don't need to declare the parameters in the same order as they appear in the constructor definition, nor do we need to provide *all* the parameters listed in the constructor. If some of the constructor's parameters can be resolved by the lifetime scope, then those parameters can be omitted from the ``Func<X, Y, B>`` signature being declared. You only *need* to list the types that the scope can't resolve.
 
 Alternatively, you can use this approach to override a constructor parameter that *would* otherwise have been resolved from the container, with a concrete instance already in hand.
 
