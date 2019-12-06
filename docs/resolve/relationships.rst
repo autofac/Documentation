@@ -144,7 +144,13 @@ If you would rather control ``B`` disposal yourself all the time, :doc:`register
 
 Dynamic Instantiation (Func<B>)
 -------------------------------
-Using an *auto-generated factory* can let you effectively call ``Resolve<B>()`` without tying your component to Autofac. Use this relationship type if you need to create more than one instance of a given service, or if you're not sure if you're going to need a service and want to make the decision at runtime. This relationship is also useful in cases like :doc:`WCF integration <../integration/wcf>` where you need to create a new service proxy after faulting the channel.
+Using an *auto-generated factory* can let you resolve a new `B` programmatically within the control flow of your program, without requiring a direct dependency on the Autofac library. Use this relationship type if:
+
+* You need to create more than one instance of a given service.
+* You want to specifically control when the setup of the service occurs.
+* You're not sure if you're going to need a service and want to make the decision at runtime.
+
+This relationship is also useful in cases like :doc:`WCF integration <../integration/wcf>` where you need to create a new service proxy after faulting the channel.
 
 Note that whilst this could be used to simply invoke a parameterless constructor of the target type ``B``, that isn't all it's limited to. As stated above, invoking the ``Func<B>`` is more akin to calling ``Resolve<B>``, and hence Autofac can wire up other types passed into the constructor, as long as it knows how to provide those types. Hence this calling format can be used for any type where all the ctor dependencies can be resolved by the container.
 
