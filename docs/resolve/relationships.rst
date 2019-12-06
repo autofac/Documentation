@@ -152,7 +152,7 @@ Using an *auto-generated factory* can let you resolve a new `B` programmatically
 
 This relationship is also useful in cases like :doc:`WCF integration <../integration/wcf>` where you need to create a new service proxy after faulting the channel.
 
-Note that whilst this could be used to simply invoke a parameterless constructor of the target type ``B``, that isn't all it's limited to. As stated above, invoking the ``Func<B>`` is more akin to calling ``Resolve<B>``, and hence Autofac can wire up other types passed into the constructor, as long as it knows how to provide those types. Hence this calling format can be used for any type where all the ctor dependencies can be resolved by the container.
+``Func<B>`` behaves just like calling ``Resolve<B>()``. That means it's not limited to acting on parameterless constructors on objects - it will wire up constructor parameters, do property injection, and follow the whole lifecycle that ``Resolve<B>()`` does.
 
 Further, lifetime scopes are respected. If you register an object as ``InstancePerDependency()`` and call the ``Func<B>`` multiple times, you'll get a new instance each time; if you register an object as ``SingleInstance()`` and call the ``Func<B>`` to resolve the object more than once, you will get *the same object instance every time*.
 
