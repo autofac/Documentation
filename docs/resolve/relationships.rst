@@ -237,7 +237,7 @@ Internally, Autofac determines what values to use for the constructor args solel
 
 **Lifetime scopes are respected** using this relationship type, just as they are when using :doc:`delegate factories <../advanced/delegate-factories>`. If you register an object as ``InstancePerDependency()`` and call the ``Func<X, Y, B>`` multiple times, you'll get a new instance each time. However, if you register an object as ``SingleInstance()`` and call the ``Func<X, Y, B>`` to resolve the object more than once, you will get *the same object instance every time regardless of the different parameters you pass in.* Just passing different parameters will not break the respect for the lifetime scope.
 
-As noted above, a consequence of Parameterised Instantiation treating its args as TypedParameters is that **you cannot effectively use auto-generated function factories to invoke constructors which have duplicate types in their parameter list.** For example, say you have a type like this:
+As noted above, ``Func<X, Y, B>`` treats arguments as ``TypedParameter`` so you can't have duplicate types in the parameter list. For example, say you have a type like this:
 
 .. sourcecode:: csharp
 
