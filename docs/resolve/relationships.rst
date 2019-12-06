@@ -230,7 +230,7 @@ Example:
 Internally, Autofac determines what values to use for the constructor args, solely based on the types, and behaves as though we've temporarily defined the input values as the objects that should be used to resolve those types. A direct consequence of this is that  **auto-generated function factories cannot have duplicate types in the input parameter list.** See below for further notes on this.
 
 
-**Lifetime scopes are respected** using this relationship type, just as they are when using delegate factories. If you register an object as ``InstancePerDependency()`` and call the ``Func<X, Y, B>`` multiple times, you'll get a new instance each time. However, if you register an object as ``SingleInstance()`` and call the ``Func<X, Y, B>`` to resolve the object more than once, you will get *the same object instance every time regardless of the different parameters you pass in.* Just passing different parameters will not break the respect for the lifetime scope.
+**Lifetime scopes are respected** using this relationship type, just as they are when using :doc:`delegate factories <../advanced/delegate-factories>`. If you register an object as ``InstancePerDependency()`` and call the ``Func<X, Y, B>`` multiple times, you'll get a new instance each time. However, if you register an object as ``SingleInstance()`` and call the ``Func<X, Y, B>`` to resolve the object more than once, you will get *the same object instance every time regardless of the different parameters you pass in.* Just passing different parameters will not break the respect for the lifetime scope.
 
 Parameterized Instantiation on types with duplicate Types in their constructor args.
 -------------------------------------------
