@@ -144,23 +144,37 @@ If you would rather control ``B`` disposal yourself all the time, :doc:`register
 
 Dynamic Instantiation (Func<B>)
 -------------------------------
-Using an *auto-generated factory* can let you effectively call ``Resolve<T>()`` without tying your component to Autofac. Use this relationship type if you need to create more than one instance of a given service, or if you're not sure if you're going to need a service and want to make the decision at runtime. This relationship is also useful in cases like :doc:`WCF integration <../integration/wcf>` where you need to create a new service proxy after faulting the channel.
+Using an *auto-generated factory* can let you resolve a new `B` programmatically within the control flow of your program, without requiring a direct dependency on the Autofac library. Use this relationship type if:
 
-**Lifetime scopes are respected** using this relationship type. If you register an object as ``InstancePerDependency()`` and call the ``Func<B>`` multiple times, you'll get a new instance each time. However, if you register an object as ``SingleInstance()`` and call the ``Func<B>`` to resolve the object more than once, you will get *the same object instance every time*.
+* You need to create more than one instance of a given service.
+* You want to specifically control when the setup of the service occurs.
+* You're not sure if you're going to need a service and want to make the decision at runtime.
+
+This relationship is also useful in cases like :doc:`WCF integration <../integration/wcf>` where you need to create a new service proxy after faulting the channel.
+
+``Func<B>`` behaves just like calling ``Resolve<B>()``. That means it's not limited to acting on parameterless constructors on objects - it will wire up constructor parameters, do property injection, and follow the whole lifecycle that ``Resolve<B>()`` does.
+
+Further, lifetime scopes are respected. If you register an object as ``InstancePerDependency()`` and call the ``Func<B>`` multiple times, you'll get a new instance each time; if you register an object as ``SingleInstance()`` and call the ``Func<B>`` to resolve the object more than once, you will get *the same object instance every time*.
 
 An example of this relationship looks like:
 
 .. sourcecode:: csharp
+    public class B
+    {
+      public B() {}
+      
+      public void DoSomething() {}
+    }
 
     public class A
     {
-      Func<B> _b;
+      Func<B> _newB;
 
-      public A(Func<B> b) { _b = b; }
+      public A(Func<B> b) { _newB = b; }
 
       public void M()
       {
-          var b = _b();
+          var b = _newB();
           b.DoSomething();
       }
     }
@@ -168,24 +182,62 @@ An example of this relationship looks like:
 
 Parameterized Instantiation (Func<X, Y, B>)
 -------------------------------------------
-You can also use an *auto-generated factory* to pass strongly-typed parameters to the resolution function. This is an alternative to :doc:`passing parameters during registration <../register/parameters>` or :doc:`passing during manual resolution <../resolve/parameters>`:
+You can also use an *auto-generated factory* to provide parameters when creating an new instance of the object, where the constructor of the object calls for some additional parameters. While the ``Func<B>`` relationship is similar to ``Resolve<B>()``, the ``Func<X, Y, B>`` relationship is like calling ``Resolve<B>(TypedParameter.From<X>(x), TypedParameter.From<Y>(y))`` - a resolve operation that has typed parameters. This is an alternative to :doc:`passing parameters during registration <../register/parameters>` or :doc:`passing during manual resolution <../resolve/parameters>`:
 
 .. sourcecode:: csharp
+    public class B
+    {
+      public B(string someString, int id) {}
+      
+      public void DoSomething() {}
+    }
 
     public class A
     {
-        Func<int, string, B> _b;
+        Func<int, string, B> _newB;
 
-        public A(Func<int, string, B> b) { _b = b }
+        public A(Func<int, string, B> b) { _newB = b }
 
         public void M()
         {
-            var b = _b(42, "http://hel.owr.ld");
+            var b = _newB(42, "http://hell.owor.ld");
             b.DoSomething();
         }
     }
 
-Internally, Autofac treats these as typed parameters. What that means is that **auto-generated function factories cannot have duplicate types in the input parameter list.** For example, say you have a type like this:
+Note that since we're resolving the instance rather than directly calling the constructor we don't need to declare the parameters in the same order as they appear in the constructor definition, nor do we need to provide *all* the parameters listed in the constructor. If some of the constructor's parameters can be resolved by the lifetime scope, then those parameters can be omitted from the ``Func<X, Y, B>`` signature being declared. You only *need* to list the types that the scope can't resolve.
+
+Alternatively, you can use this approach to override a constructor parameter that *would* otherwise have been resolved from the container, with a concrete instance already in hand.
+
+Example:
+.. sourcecode:: csharp
+    //Suppose that P, Q & R are all registered with the Autofac Container.
+    public class B
+    {
+      public B(int id, P peaDependency, Q queueDependency, R ourDependency) {}
+      
+      public void DoSomething() {}
+    }
+
+    public class A
+    {
+        Func<int, P, B> _newB;
+
+        public A(Func<int, P, B> bFactory) { _newB = bFactory }
+
+        public void M(P existingPea)
+        {
+            // The Q and R will be resolved by Autofac, but P will be existingPea instead.
+            var b = _newB(42, existingPea);
+            b.DoSomething();
+        }
+    }
+
+Internally, Autofac determines what values to use for the constructor args solely based on the type and behaves as though we've temporarily defined the input values for resolution. A consequence of this is that  **auto-generated function factories cannot have duplicate types in the input parameter list.** See below for further notes on this.
+
+**Lifetime scopes are respected** using this relationship type, just as they are when using :doc:`delegate factories <../advanced/delegate-factories>`. If you register an object as ``InstancePerDependency()`` and call the ``Func<X, Y, B>`` multiple times, you'll get a new instance each time. However, if you register an object as ``SingleInstance()`` and call the ``Func<X, Y, B>`` to resolve the object more than once, you will get *the same object instance every time regardless of the different parameters you pass in.* Just passing different parameters will not break the respect for the lifetime scope.
+
+As noted above, ``Func<X, Y, B>`` treats arguments as ``TypedParameter`` so you can't have duplicate types in the parameter list. For example, say you have a type like this:
 
 .. sourcecode:: csharp
 
@@ -239,9 +291,6 @@ Should you decide to use the built-in auto-generated factory behavior (``Func<X,
     var obj = func(1, "three");
 
 You can read more about delegate factories and the ``RegisterGeneratedFactory()`` method :doc:`in the advanced topics section <../advanced/delegate-factories>`.
-
-**Lifetime scopes are respected** using this relationship type as well as when using delegate factories. If you register an object as ``InstancePerDependency()`` and call the ``Func<X, Y, B>`` multiple times, you'll get a new instance each time. However, if you register an object as ``SingleInstance()`` and call the ``Func<X, Y, B>`` to resolve the object more than once, you will get *the same object instance every time regardless of the different parameters you pass in.* Just passing different parameters will not break the respect for the lifetime scope.
-
 
 Enumeration (IEnumerable<B>, IList<B>, ICollection<B>)
 ------------------------------------------------------
