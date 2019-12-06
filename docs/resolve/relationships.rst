@@ -176,7 +176,7 @@ An example of this relationship looks like:
 
 Parameterized Instantiation (Func<X, Y, B>)
 -------------------------------------------
-You can also use an *auto-generated factory* to provide parameters when creating an new instance of the object, where the constructor of the object calls for some additional parameters. As in the case of Dynamic Instantiation above, we're still doing something equivalent to calling ``.Resolve<B>()``, but in this case we're passing strongly-typed parameters to the resolution function. This is an alternative to :doc:`passing parameters during registration <../register/parameters>` or :doc:`passing during manual resolution <../resolve/parameters>`:
+You can also use an *auto-generated factory* to provide parameters when creating an new instance of the object, where the constructor of the object calls for some additional parameters. While the ``Func<B>`` relationship is similar to ``Resolve<B>()``, the ``Func<X, Y, B>`` relationship is like calling ``Resolve<B>(TypedParameter.From<X>(x), TypedParameter.From<Y>(y))`` - a resolve operation that has typed parameters. This is an alternative to :doc:`passing parameters during registration <../register/parameters>` or :doc:`passing during manual resolution <../resolve/parameters>`:
 
 .. sourcecode:: csharp
     public class B
