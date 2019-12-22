@@ -51,7 +51,7 @@ is resolved, the ``Dispose()`` method on the component will be called.
 Asynchronous Disposal Support
 -----------------------------
 
-If your services' disposal behaviour requires some I/O activity, such as flushing a buffer to a file,
+If your components' disposal behaviour requires some I/O activity, such as flushing a buffer to a file,
 or sending a packet over the network to close a connection, then you may want to consider implementing
 the new .NET `IAsyncDisposable <https://docs.microsoft.com/en-us/dotnet/api/system.iasyncdisposable?view=netstandard-2.1>`_
 interface.
@@ -61,7 +61,7 @@ asynchronously:
 
 .. code-block:: csharp
 
-  class MyService : IDisposable, IAsyncDisposable 
+  class MyComponent : IDisposable, IAsyncDisposable 
   {
     INetworkResource myResource;
 
@@ -80,16 +80,16 @@ asynchronously:
 
   await using (var scope = container.BeginLifetimeScope())
   {
-      var service = scope.Resolve<MyService>():
+      var service = scope.Resolve<MyComponent>():
 
-      // DisposeAsync will be called on MyService
+      // DisposeAsync will be called on MyComponent
       // when the using block exits.
   }
 
-When a lifetime scope is disposed of asynchronously, any registered services that implement ``IAsyncDisposable``
+When a lifetime scope is disposed of asynchronously, any registered components that implement ``IAsyncDisposable``
 in addition to ``IDisposable`` will have their ``DisposeAsync()`` method invoked, **instead** of the ``Dispose()`` method.
 
-If a service only implements the synchronous ``Dispose()`` method, 
+If a component only implements the synchronous ``Dispose()`` method, 
 then it will still be invoked when the lifetime scope is disposed asynchronously.
 
 When using Autofac with the ASP.NET Core Integration, all per-request lifetime scopes are disposed of asynchronously.
@@ -99,8 +99,8 @@ When using Autofac with the ASP.NET Core Integration, all per-request lifetime s
   While you do not *have* to implement ``IDisposable`` if you implement ``IAsyncDisposable``, we strongly 
   recommend you do so.
 
-  If your service only implements ``IAsyncDisposable``, but someone disposes of the scope synchronously,
-  then Autofac will throw an exception, because it does not know how to dispose of your service.
+  If your component only implements ``IAsyncDisposable``, but someone disposes of the scope synchronously,
+  then Autofac will throw an exception, because it does not know how to dispose of your component.
 
 Specified Disposal
 ------------------
