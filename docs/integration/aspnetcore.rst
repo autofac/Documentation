@@ -399,21 +399,51 @@ In standard ASP.NET Core integration and generic hosted application support ther
 
     public class Program
     {
-      public static void Main(string[] args)
+      public static async Task Main(string[] args)
       {
+        // create the root-container and register global dependencies
+        var containerBuilder = new ContainerBuilder();
+
+        builder.RegisterType<SomeGlobalDependency>()
+          .As<ISomeGlobalDependency>()
+          .InstancePerLifetimeScope();
+
+        var container = containerBuilder.Build();
+
         // The UseServiceProviderFactory call attaches the
         // Autofac provider to the generic hosting mechanism.
-        var host = Host.CreateDefaultBuilder(args)
-            .UseServiceProviderFactory(new AutofacChildLifetimeScopeServiceProviderFactory())
+          var hostOne = Host
+            .CreateDefaultBuilder(args)
+            .UseServiceProviderFactory(new AutofacChildLifetimeScopeServiceProviderFactory(container.BeginLifetimeScope("root-one")))
             .ConfigureWebHostDefaults(webHostBuilder => {
               webHostBuilder
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
-                .UseStartup<Startup>();
+                .UseContentRoot(AppContext.BaseDirectory)
+                // Each host listens to a different URL, they have the same root container to share SingleInstance
+                // things, but they each have  their own logical root lifetime scope. Registering things
+                // as `InstancePerMatchingLifetimeScope("root-one")` (the name of the scope given above)
+                // will result in a singleton that's ONLY used by this first host.
+                .UseUrls("http://localhost:5000")
+                .UseStartup<StartupOne>();
             })
             .Build();
 
-        host.Run();
+        // The UseServiceProviderFactory call attaches the
+        // Autofac provider to the generic hosting mechanism.
+          var hostTwo = Host
+            .CreateDefaultBuilder(args)
+            .UseServiceProviderFactory(new AutofacChildLifetimeScopeServiceProviderFactory(container.BeginLifetimeScope("root-two")))
+            .ConfigureWebHostDefaults(webHostBuilder => {
+              webHostBuilder
+                .UseContentRoot(AppContext.BaseDirectory)
+                // As with the first host, the second host will share the root container but have its own
+                // root lifetime scope `root-two`. Things registered `InstancePerMatchingLifetimeScope("root-two")`
+                // will be singletons ONLY used by this second host.
+                .UseUrls("http://localhost:5001")
+                .UseStartup<StartupTwo>();
+            })
+            .Build();
+
+        await Task.WhenAll(hostOne.RunAsync(), hostTwo.RunAsync())
       }
     }
 
@@ -421,9 +451,10 @@ This will change how your ``Startup`` class works - you won't use a ``ContainerB
 
 .. sourcecode:: csharp
 
-    public class Startup
+    public class StartupOne
     {
-      public Startup(IHostingEnvironment env)
+      // IHostingEnvironment when running applications below ASP.NET Core 3.0
+      public Startup(IWebHostEnvironment env)
       {
         // Fill this in if needed...
       }
@@ -437,7 +468,35 @@ This will change how your ``Startup`` class works - you won't use a ``ContainerB
       // child lifetime scope things with the adapter.
       public void ConfigureContainer(AutofacChildLifetimeScopeConfigurationAdapter config)
       {
-          config.Add(builder => builder.RegisterModule(new AutofacModule()));
+          config.Add(builder => builder.RegisterModule(new AutofacHostOneModule()));
+      }
+
+      public void Configure(
+        IApplicationBuilder app,
+        ILoggerFactory loggerFactory)
+      {
+          // The usual app configuration stuff...
+      }
+    }
+
+    public class StartupTwo
+    {
+      // IHostingEnvironment when running applications below ASP.NET Core 3.0
+      public Startup(IWebHostEnvironment env)
+      {
+        // Fill this in if needed...
+      }
+
+      public void ConfigureServices(IServiceCollection services)
+      {
+        // The usual ConfigureServices registrations on the service collection...
+      }
+
+      // Here's the change for child lifetime scope usage! Register your "root"
+      // child lifetime scope things with the adapter.
+      public void ConfigureContainer(AutofacChildLifetimeScopeConfigurationAdapter config)
+      {
+          config.Add(builder => builder.RegisterModule(new AutofacHostTwoModule()));
       }
 
       public void Configure(
