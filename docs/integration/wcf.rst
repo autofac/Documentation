@@ -278,7 +278,7 @@ The alternative approach is to place a code file in your ``App_Code`` folder tha
       }
     }
 
-You can read more about ``AppInitialize()`` in "`How to Initialize Hosted WCF Services <http://blogs.msdn.com/b/wenlong/archive/2006/01/11/511514.aspx>`_".
+You can read more about ``AppInitialize()`` in "`How to Initialize Hosted WCF Services <https://docs.microsoft.com/en-us/archive/blogs/wenlong/how-to-initialize-hosted-wcf-services>`_".
 
 Self-Hosting
 ------------
