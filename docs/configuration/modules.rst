@@ -126,8 +126,6 @@ It is a 'best practice' when using Autofac to add any XML configuration *after* 
 
 In this way, 'emergency' overrides can be made in :doc:`a configuration file <xml>`:
 
-.. sourcecode:: xml
-
 .. sourcecode:: json
 
     {
