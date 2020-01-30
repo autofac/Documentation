@@ -7,9 +7,7 @@ Autofac is designed for use in highly-concurrent applications. The guidance belo
 Component Registration
 ----------------------
 
-``ContainerBuilder`` **is not thread-safe** and is designed to be used only on a single thread at the time the application starts up. This is the most common scenario and works for almost all applications.
-
-**Registration into a container** *after* **is is built, using** ``ContainerBuilder.Update()``, **also is not thread-safe.** For applications that register components after the container has been built (which should be very uncommon) additional locking to protect the container from concurrent access during an ``Update()`` operation is necessary.
+``ContainerBuilder`` and ``ComponentRegistryBuilder`` **are not thread-safe** and are designed to be used only on a single thread at the time the application starts up. This is the most common scenario and works for almost all applications.
 
 Service Resolution
 ------------------
@@ -64,7 +62,6 @@ Thread-Safe Types
 The following types are safe for concurrent access by multiple threads:
 
  * ``Container``
- * ``ComponentRegistry``
  * ``Disposer`` (default implementation of ``IDisposer``)
  * ``LifetimeScope`` (default implementation of ``ILifetimeScope``)
 
@@ -73,6 +70,7 @@ These types cover practically all of the runtime/resolution scenarios.
 The following types are designed for single-threaded access at configuration time:
 
  * ``ContainerBuilder``
+ * ``ComponentRegistryBuilder`` (default implementation of ``IComponentRegistryBuilder``)
 
 So, a correct Autofac application will use a ``ContainerBuilder`` on a single thread to create the container at startup. Subsequent use of the container can occur on any thread.
 
@@ -85,7 +83,6 @@ Locks may be acquired in the following order:
 
  * A thread holding a lock for any of the following may not acquire any further locks:
 
-   * ``ComponentRegistry``
    * ``Disposer``
 
  * A thread holding the lock for a ``LifetimeScope`` may subsequently acquire the lock for:

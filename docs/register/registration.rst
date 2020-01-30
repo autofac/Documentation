@@ -316,7 +316,7 @@ There can be a few scenarios where this may not be the way you want to go:
 
 There are two registration extensions that can help in these cases:
 
-- ``OnlyIf()`` - Provide a lambda that uses an ``IComponentRegistry`` to determine if a registration should happen.
+- ``OnlyIf()`` - Provide a lambda that uses an ``IComponentRegistryBuilder`` to determine if a registration should happen.
 - ``IfNotRegistered()`` - Shortcut to stop a registration from happening if some other service is already registered.
 
 These extensions run at the time of ``ContainerBuilder.Build()`` and will execute in the order of the actual component registrations. Here are some examples showing how they work:

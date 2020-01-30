@@ -42,7 +42,7 @@ Here's a sample module that configures Autofac to inject ``ILog`` parameters bas
           });
       }
 
-      protected override void AttachToComponentRegistration(IComponentRegistry componentRegistry, IComponentRegistration registration)
+      protected override void AttachToComponentRegistration(IComponentRegistryBuilder componentRegistryBuilder, IComponentRegistration registration)
       {
         // Handle constructor parameters.
         registration.Preparing += OnComponentPreparing;
