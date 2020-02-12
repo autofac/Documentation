@@ -52,7 +52,7 @@ This example shows **ASP.NET Core 1.1 - 2.2** usage, where you call ``services.A
       }
     }
 
-This example shows **ASP.NET Core 1.1 - 2.2** usage, where you return an ``IServiceProvider`` from the ``ConfigureServices(IServiceCollection services)`` delegate. **This is not for ASP.NET Core 3+** or the .NET Core 3+ generic hosting support - ASP.NET Core 3 has deprecated the ability to return a service provider from ``ConfigureSerivces``.
+This example shows **ASP.NET Core 1.1 - 2.2** usage, where you return an ``IServiceProvider`` from the ``ConfigureServices(IServiceCollection services)`` delegate. **This is not for ASP.NET Core 3+** or the .NET Core 3+ generic hosting support - ASP.NET Core 3 has deprecated the ability to return a service provider from ``ConfigureServices``.
 
 .. sourcecode:: csharp
 
