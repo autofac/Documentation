@@ -89,42 +89,47 @@ You can configure the automatic mocks and/or assert calls on them as you would n
 Configuring Specific Dependencies
 =================================
 
-You can configure the ``AutoMock`` to provide a specific instance for a given service type:
+You can configure the ``AutoMock`` to provide a specific instance for a given service type (or apply any other registration behaviour),
+by using the ``beforeBuild`` callback argument to GetLoose, GetStrict or GetFromRepository, in the same way as if you 
+were configuring a new Lifetime Scope:
 
 .. sourcecode:: csharp
 
     [Test]
     public void Test()
     {
-      using (var mock = AutoMock.GetLoose())
+      var dependency = new Dependency();
+      using (var mock = AutoMock.GetLoose(cfg => cfg.RegisterInstance(dependency).As<IDependency>())
       {
-        var dependency = new Dependency();
-        mock.Provide<IDependency>(dependency);
+        // Returns your registered instance.
+        var dep = mock.Create<IDependency>();
 
+        // If SystemUnderTest depends on IDependency, it will get your dependency instance.
+        var underTest = mock.Create<SystemUnderTest>();
+        
         // ...and the rest of the test.
       }
     }
 
-You can also configure the ``AutoMock`` to provide a specific implementation type for a given service type:
+The ``cfg`` argument passed to your callback is a regular Autofac ``ContainerBuilder`` instance, so you can
+do any of the registration behaviour you're used to in a normal set up.
+
+You can also configure the ``AutoMock`` to use any existing mock, through the ``RegisterMock`` extension method:
 
 .. sourcecode:: csharp
 
     [Test]
     public void Test()
     {
-      using (var mock = AutoMock.GetLoose())
+      var mockA = new Mock<IServiceA>();
+      mockA.Setup(x => x.RunA());
+    
+      // mockA is automatically registered as providing IServiceA
+      using (var mock = AutoMock.GetLoose(cfg => cfg.RegisterMock(mockA)))
       {
-        // Configure a component type that doesn't require
-        // constructor parameters.
-        mock.Provide<IDependency, Dependency>();
+        // mockA will be injected into TestComponent as IServiceA
+        var component = mock.Create<TestComponent>();
 
-        // Configure a component type that has some
-        // constructor parameters passed in. Use Autofac
-        // parameters in the list.
-        mock.Provide<IOtherDependency, OtherDependency>(
-                    new NamedParameter("id", "service-identifier"),
-                    new TypedParameter(typeof(Guid), Guid.NewGuid()));
-
-        // ...and the rest of the test.
+        // ...and the rest of the test
       }
     }
