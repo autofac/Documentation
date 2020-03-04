@@ -90,8 +90,8 @@ Configuring Specific Dependencies
 =================================
 
 You can configure the ``AutoMock`` to provide a specific instance for a given service type (or apply any other registration behaviour),
-by using the ``beforeBuild`` callback argument to GetLoose, GetStrict or GetFromRepository, in the same way as if you 
-were configuring a new Lifetime Scope:
+by using the ``beforeBuild`` callback argument to ``GetLoose``, ``GetStrict`` or ``GetFromRepository``, in a similar manner
+to configuring a new Lifetime Scope:
 
 .. sourcecode:: csharp
 
