@@ -27,11 +27,22 @@ A simple link description file looks like this:
         <namespace fullname="My.Own.Namespace" />
         <type fullname="My.Other*" />
       </assembly>
+      <assembly fullname="Autofac" preserve="all"/>
     </linker>
 
 Autofac makes use of the ``System.Convert.ChangeType`` method in lambda expressions to convert types so including it in the linker definition is needed. See `issue #842 <https://github.com/autofac/Autofac/issues/842>`_ for further discussion.
 
 For additional details on how to structure your Xamarin custom linker configuration file and how to include it in your build, `check out the Xamarin documentation <https://developer.xamarin.com/guides/cross-platform/advanced/custom_linking/>`_.
+
+Autofac may not be seen as "linker safe" by the Xamarin linker. If the linker gets too aggressive, you may see an exception like::
+
+    The type 'Autofac.Features.Indexed.KeyedServiceIndex'2' does not implement the interface 'Autofac.Features.Indexed.IIndex'2'
+
+[This StackOverflow answer](https://stackoverflow.com/questions/58114288/autofac-build-throws-exception-on-latest-xamarin-ios-when-linker-configured-to) indicates that you can do one of the following things:
+
+  * Set the linker to ``Don't link`` or ``Link Framework SDKs Only`` (which will increase your application size)
+  * Add the ``--linkskip=Autofac`` argument to the ``Additional mtouch arguments in iOS Build`` found in the iOS project properties.
+  * Use a linker XML like the one above and make sure the ``Autofac`` line with ``preserve="all"`` is included.
 
 .NET Native
 ===========
