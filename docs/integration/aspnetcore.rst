@@ -152,7 +152,7 @@ In your Startup class (which is basically the same across all the versions of AS
     {
       public Startup(IHostingEnvironment env)
       {
-        // In ASP.NET Core 3.0 `env` will be an IWebHostingEnvironment, not IHostingEnvironment.
+        // In ASP.NET Core 3.0 `env` will be an IWebHostEnvironment, not IHostingEnvironment.
         var builder = new ConfigurationBuilder()
             .SetBasePath(env.ContentRootPath)
             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
