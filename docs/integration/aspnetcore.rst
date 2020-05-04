@@ -201,6 +201,9 @@ In your Startup class (which is basically the same across all the versions of AS
         app.UseMvc();
       }
     }
+No need to call Populate()
+--------------------------
+The new ``AutofacServiceProvider`` for ASP.NET Core 3.0 takes care of calling ``builder.Populate(services);`` on your behalf.  This means that you can still take advantage of, e.g. the new `IHttpClientFactory <https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests>`_ that relies heavily on Microsoft DI for configuring ``HttpClient`` instances.
 
 Configuration Method Naming Conventions
 =======================================
