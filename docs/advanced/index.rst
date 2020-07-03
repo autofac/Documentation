@@ -6,6 +6,7 @@ Advanced Topics
 
     registration-sources.rst
     adapters-decorators.rst
+    composites.rst
     circular-dependencies.rst
     metadata.rst
     keyed-services.rst
