@@ -11,7 +11,7 @@ but should be exposed through a single wrapper class.
 You can register a **composite wrapper** registration for a service, that will be returned when a consuming class resolves 
 that service, and can take a collection of the same service as a constructor parameter.
 
-This functionality is particularly useful if you find yourself needing to add an additional provider for a service, but you
+This functionality is particularly useful if you find yourself needing to add a provider for a service, but you
 don't want the consuming code of the original provider to a) have to change, or b) know that there are multiple providers.
 
 .. sourcecode:: csharp
@@ -138,7 +138,7 @@ Lifetime
 --------
 
 Composite wrappers can have their own lifetime, much like any other registration. However, you should consider the 
-implications of making composite registration's long-living; a `SingleInstance` composite would ignore any additional registrations
+implications of making composite registrations long-living; a ``SingleInstance`` composite would ignore any additional registrations
 for the wrapped service made in nested lifetime scopes (for example).
 
 Decorators
