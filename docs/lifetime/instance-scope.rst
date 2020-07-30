@@ -84,6 +84,8 @@ When you resolve a single instance component, you always get the same instance n
       }
     }
 
+.. _lifetime-instance-scope-per-lifetime-scope:
+
 Instance Per Lifetime Scope
 ===========================
 
