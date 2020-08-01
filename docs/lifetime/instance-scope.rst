@@ -124,6 +124,8 @@ When you resolve the instance per lifetime scope component, you get a single ins
       }
     }
 
+.. _lifetime-instance-scope-per-matching-lifetime-scope:
+
 Instance Per Matching Lifetime Scope
 ====================================
 
