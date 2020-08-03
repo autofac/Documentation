@@ -91,7 +91,7 @@ By default types that implement ``IHttpController`` and have a name with the suf
     // You can register controllers all at once using assembly scanning...
     builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
-    // ...or you can register individual controlllers manually.
+    // ...or you can register individual controllers manually.
     builder.RegisterType<ValuesController>().InstancePerRequest();
 
 If your controllers do not follow the standard naming convention you may choose to provide a custom suffix using an overload of the ``RegisterApiControllers`` method.
