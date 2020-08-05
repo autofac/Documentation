@@ -74,7 +74,7 @@ the pooled instance:
         }
     }
 
-When the current :ref:`Lifetime Scope <lifetime-instance-scope-per-lifetime-scope>` ends, the retrieved instance is returned to the pool.
+When the current :ref:`lifetime scope <lifetime-instance-scope-per-lifetime-scope>` ends, the retrieved instance is returned to the pool.
 
 Resetting Pooled Instances Between Resolves
 -------------------------------------------
@@ -111,7 +111,7 @@ operation, plus any parameters passed to the resolve.
     should be discarded in ``OnReturnToPool`` to prevent memory leaks.
 
 If you cannot modify the component you are pooling, but need to have custom behaviour similar to this,
-you can implement a custom :ref:`Pool Policy <pooled-instances-policies>`.
+you can :ref:`implement a custom pool policy <pooled-instances-policies>`.
 
 Pool Capacity
 -------------
@@ -126,16 +126,14 @@ but can easily be customised using overloads of the extension methods:
             .As<ICustomConnection>()
             .PooledInstancePerLifetimeScope(100);
 
-It's important to understand that the capacity of a pool does not place a limit on the number of instances it allocates/activates,
+It's important to understand that **the capacity of a pool does not place a limit on the number of instances it allocates/activates**,
 or can be in use at any one time; instead it limits how many instances are **retained** by the pool.
 
 In practical terms, this means that if your pool capacity is 100, and you currently have 100 instances in use, then
 resolving another instance will just activate a brand new instance of the component, rather than blocking/failing. 
 
-However, if you have 101 instances of the component in use, the next instance that is returned to the pool will be discarded,
-rather than retained. 
-
-In this situation, the ``OnReturnToPool`` method on ``IPooledComponent`` would still be called, but the instance will then immediately be thrown away.
+However, if you have 101 instances of the component in use, the next instance that is returned to the pool will be discarded
+rather than retained. In this situation, the ``OnReturnToPool`` method on ``IPooledComponent`` would still be called, but the instance will then immediately be thrown away.
 
 When an instance is discarded by the pool, if the object implements ``IDisposable``, ``Dispose`` will be called.
 
@@ -145,14 +143,14 @@ a custom :ref:`Pool Policy <pooled-instances-policies>`.
 .. note:: 
 
     The Autofac Pooling behaviour is built on top of the `Object Pool <https://docs.microsoft.com/en-us/aspnet/core/performance/objectpool>`_ implementation
-    available from the Microsoft.Extensions.ObjectPool package.
+    available from `the Microsoft.Extensions.ObjectPool package <https://www.nuget.org/packages/Microsoft.Extensions.ObjectPool/>`_.
 
     The behaviour of that pool informs a lot of the behaviour of Autofac.Pooling.
 
 Matching Lifetime Scopes
 ------------------------
 
-In the same way that you can configure a normal registration to be scoped to a :ref:`Matching Lifetime Scope <lifetime-instance-scope-per-matching-lifetime-scope>`,
+In the same way that you can configure a normal registration to be scoped to a :ref:`matching lifetime scope <lifetime-instance-scope-per-matching-lifetime-scope>`,
 you can configure a pooled registration to be scoped in the same way:
 
 .. sourcecode:: csharp
@@ -161,10 +159,10 @@ you can configure a pooled registration to be scoped in the same way:
            .As<ICustomConnection>()
            .PooledInstancePerMatchingLifetimeScope("tag");
 
-Pooled registrations with a Matching Lifetime Scope result in each tagged scope retrieving its own instance from the pool, and child scopes
+Pooled registrations with a matching lifetime scope result in each tagged scope retrieving its own instance from the pool, and child scopes
 sharing the same pooled instance.
 
-When the tagged Lifetime Scope is disposed, the instance is returned to the pool.
+When the tagged lifetime scope is disposed, the instance is returned to the pool.
 
 .. _pooled-instances-policies:
 
