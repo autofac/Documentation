@@ -12,6 +12,7 @@ Advanced Topics
     keyed-services.rst
     delegate-factories.rst
     owned-instances.rst
+    pooled-instances.rst
     concurrency.rst
     multitenant.rst
     aggregate-services.rst
