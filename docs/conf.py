@@ -44,7 +44,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Autofac'
-copyright = u'Copyright (c) Autofac Project. All rights reserved.'
+copyright = u'Autofac Project. All rights reserved.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -198,7 +198,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
   ('index', 'Autofac.tex', u'Autofac Documentation',
-   u'Autofac Contributors', 'manual'),
+   u'Autofac Project', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -228,7 +228,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'autofac', u'Autofac Documentation',
-     [u'Autofac Contributors'], 1)
+     [u'Autofac Project'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -242,7 +242,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'Autofac', u'Autofac Documentation',
-   u'Autofac Contributors', 'Autofac', 'Autofac is an IoC container for Microsoft .NET. It manages the dependencies between classes so that applications stay easy to change as they grow in size and complexity.',
+   u'Autofac Project', 'Autofac', 'Autofac is an IoC container for Microsoft .NET. It manages the dependencies between classes so that applications stay easy to change as they grow in size and complexity.',
    'Miscellaneous'),
 ]
 
