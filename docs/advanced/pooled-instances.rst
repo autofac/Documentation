@@ -137,8 +137,8 @@ rather than retained. In this situation, the ``OnReturnToPool`` method on ``IPoo
 
 When an instance is discarded by the pool, if the object implements ``IDisposable``, ``Dispose`` will be called.
 
-If you in fact do want your pool to have custom behaviour like blocking until a resource is available, you can implement 
-a custom :ref:`Pool Policy <pooled-instances-policies>`. 
+If you, in fact, do want your pool to have custom behaviour like blocking until a resource is available, you can :ref:`implement 
+a custom pool policy <pooled-instances-policies>`. 
 
 .. note:: 
 
