@@ -125,7 +125,7 @@ Here's the code for the registration source.
     {
       public IEnumerable<IComponentRegistration> RegistrationsFor(
         Service service,
-        Func<Service, IEnumerable<IComponentRegistration>> registrationAccessor)
+        Func<Service, IEnumerable<ServiceRegistration>> registrationAccessor)
       {
         var swt = service as IServiceWithType;
         if(swt == null || !typeof(BaseHandler).IsAssignableFrom(swt.ServiceType))
