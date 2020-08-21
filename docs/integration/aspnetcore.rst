@@ -171,7 +171,9 @@ In your Startup class (which is basically the same across all the versions of AS
       {
         // Add services to the collection. Don't build or return
         // any IServiceProvider or the ConfigureContainer method
-        // won't get called.
+        // won't get called. Don't create a ContainerBuilder
+        // for Autofac here, and don't call builder.Populate() - that
+        // happens in the AutofacServiceProviderFactory for you.
         services.AddOptions();
       }
 
@@ -181,7 +183,9 @@ In your Startup class (which is basically the same across all the versions of AS
       // Don't build the container; that gets done for you by the factory.
       public void ConfigureContainer(ContainerBuilder builder)
       {
-        // Register your own things directly with Autofac, like:
+        // Register your own things directly with Autofac here. Don't
+        // call builder.Populate(), that happens in AutofacServiceProviderFactory
+        // for you.
         builder.RegisterModule(new MyApplicationModule());
       }
 
