@@ -15,6 +15,7 @@ Advanced Topics
     pooled-instances.rst
     concurrency.rst
     multitenant.rst
+    pipelines.rst
     aggregate-services.rst
     interceptors.rst
     cross-platform-apps.rst
