@@ -219,6 +219,8 @@ When a matching service type is requested from the container, Autofac will map t
 
 Registration of a specialized service type (e.g. ``IRepository<Person>``) will override the open generic version.
 
+.. _registration-services-vs-components:
+
 Services vs. Components
 =======================
 

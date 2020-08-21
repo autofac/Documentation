@@ -12,7 +12,7 @@ Service Pipelines vs Registration Pipelines
 
 An individual resolve request actually ends up invoking two different pipelines. The Service Pipeline, and the Registration Pipeline.  
 
-Each service has its own Service Pipeline, and each registration has its own Registration Pipeline.
+Each :doc:`service <../glossary>` has its own Service Pipeline, and each :doc:`registration <../glossary>` has its own Registration Pipeline.
 
 Lets take a look at the 'default' execution pipeline for a typical service:
 
@@ -214,7 +214,7 @@ Just like with registration middleware, you can register middleware classes inst
     builder.RegisterServiceMiddleware<IMyService>(new MyServiceMiddleware());
 
 Service Middleware Sources
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------
 
 In a similar way to :doc:`registration sources <registration-sources>`, you can add a **service middleware source**
 if you want to add service middleware dynamically at runtime.
