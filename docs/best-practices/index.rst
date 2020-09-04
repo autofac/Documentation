@@ -92,3 +92,10 @@ Starting from Autofac 5.x the container is immutable. There are several potentia
 In order to prevent any of these risks to become a problem, it is no longer an option to update the container after construction.
 
 **Instead of updating the container, consider registering updates or changes in a child lifetime scope.** :doc:`There are examples of this in the lifetime scope documentation. <../lifetime/working-with-scopes>`
+
+Optimize or Avoid Diagnostics
+=============================
+
+The ``System.Diagnostics.DiagnosticSource`` diagnostics integration is reasonably performant, but tracers attached may affect overall performance. For example, any tracer (e.g., ``DefaultDiagnosticTracer``) that tracks full resolve operation chains will be allocating memory and using resources to keep the operation data until the full resolve operation is complete.
+
+The overall performance will be better if you don't have any listeners for diagnostics, but if you do, consider using diagnostics listeners that are very fast and low allocation. For example, no additional memory or tracking needs to happen to log a message when an operation occurs. That might be lower overhead than a listener that builds a robust trace before completing.
