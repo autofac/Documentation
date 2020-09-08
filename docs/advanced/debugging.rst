@@ -168,7 +168,7 @@ An error trace will include where the error occurred and indicate failure::
     }
     Operation FAILED
 
-See how the return trip through the middleware changed to a ``X-`` in there? We know the error happened during executing the lambda. You can use these hints to see exactly where in the pipeline things are failing.
+See how the return trip through the middleware changed to a ``X-`` in there? We know the error happened while executing the lambda. You can use these hints to see exactly where in the pipeline things are failing.
 
 DOT Graph Tracer
 ================
