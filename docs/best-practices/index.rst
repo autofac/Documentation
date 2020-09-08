@@ -89,7 +89,7 @@ Starting from Autofac 5.x the container is immutable. There are several potentia
 - Disposable components may have already been resolved and will stick around until their owning lifetime scope is disposed - even if the new registrations would imply the disposable component shouldn't be used.
 - Component registrations that subscribe to lifetime events may be subscribed to the wrong events after the update - events don't all get re-initialized during update.
 
-In order to prevent any of these risks to become a problem, it is no longer an option to update the container after construction.
+In order to prevent any of these risks from becoming a problem, it is no longer an option to update the container after construction.
 
 **Instead of updating the container, consider registering updates or changes in a child lifetime scope.** :doc:`There are examples of this in the lifetime scope documentation. <../lifetime/working-with-scopes>`
 
