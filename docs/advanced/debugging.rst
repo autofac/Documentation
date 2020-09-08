@@ -24,20 +24,6 @@ Also, take a look at your exception stack traces. It may look like Autofac is th
 
 And, of course, if you're hitting that ever-challenging ``No scope with a Tag matching 'AutofacWebRequest'`` exception, :doc:`we have a whole FAQ on that <../faq/per-request-scope>`.
 
-Symbols and Sources
--------------------
-
-Autofac packages have been updated `to use Source Link <https://github.com/dotnet/sourcelink>`_ so the debugging experience right to the source should feel native.
-
-Older packages and packages that haven't been updated yet have symbols published to MyGet and SymbolSource.
-
-You can set up Visual Studio to debug/step *right into Autofac source* using the following symbol servers:
-
-- ``https://www.myget.org/F/autofac/symbols/``
-- ``http://srv.symbolsource.org/pdb/Public/``
-
-`There is documentation on MyGet explaining how to configure Visual Studio to make symbol servers work work. <http://docs.myget.org/docs/reference/symbolsource>`_
-
 Diagnostics
 -----------
 
@@ -124,7 +110,7 @@ If you resolve a string from that container, the trace will look like this::
     }
     Operation Succeeded; result instance was HelloWorld
 
-As you can see, the trace is very detailed - you can see the full middleware pipeline that the resolve operation went through, you'll see the activator (a delegate, in this case), and you'll see the resulting instance.
+As you can see, the trace is very detailed - you can see the :doc:`full middleware pipeline <pipelines>` that the resolve operation went through, you'll see the activator (a delegate, in this case), and you'll see the resulting instance.
 
 This can really help when trying to troubleshoot complex resolve issues, though the amount of information can be overwhelming the more complex the trace gets.
 
@@ -188,10 +174,16 @@ First, just like with the ``DefaultDiagnosticTracer``, register it with your con
 
     // Create a DOT graph tracer instance. The
     // trace content will be DOT graph format.
-    var tracer = new DefaultDiagnosticTracer();
+    var tracer = new DotDiagnosticTracer();
     tracer.OperationCompleted += (sender, args) =>
     {
-        Trace.WriteLine(args.TraceContent);
+        // Writing the DOT trace to a file will let you render
+        // it to a graph with Graphviz later, but this is
+        // NOT A GOOD COPY/PASTE EXAMPLE. You'll want to do
+        // things in an async fashion with good error handling.
+        var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.dot");
+        using var file = new StreamWriter(path);
+        file.WriteLine(args.TraceContent);
     };
 
     // Subscribe to the diagnostics with your tracer.
@@ -283,7 +275,7 @@ Events in the overall pipeline happen in this order:
 
 Middleware may start additional resolve requests; and there's more than one middleware item in the pipeline. You can dig deeper on this in the :doc:`Pipelines <pipelines>` page.
 
-If you want to trace an *entire operation* from end to end, similar to the ``DefaultDiagnosticTracer``, you can start with the ``Autofac.Diagnostics.OperationDiagnosticTracerBase<TContent>`` class. This is the class on which the ``DefaultDiagnosticTracer`` is based. It is intentionally wired up to listen to all resolve events, from start to end, and track a full operation at a time. Your best example of this is to look at the source code for ``DefaultDiagnosticTracer``. Given there are a lot of events to handle, there's a lot of data to capture.
+If you want to trace an *entire operation* from end to end, similar to the ``DefaultDiagnosticTracer``, you can start with the ``Autofac.Diagnostics.OperationDiagnosticTracerBase<TContent>`` class. This is the class on which the ``DefaultDiagnosticTracer`` is based. It is intentionally wired up to listen to all resolve events, from start to end, and track a full operation at a time. Your best example of this is to `look at the source code for DefaultDiagnosticTracer <https://github.com/autofac/Autofac/blob/dca791ca0dbd1aa1cb0ad821539381df403d6d52/src/Autofac/Diagnostics/DefaultDiagnosticTracer.cs>`_. Given there are a lot of events to handle, there's a lot of data to capture.
 
 You can take a little more control and trace *only certain events* by using ``Autofac.Diagnostics.DiagnosticTracerBase``. This is a ``DiagnosticListener`` that adds some strongly-typed parsing to the events to help you write a little less code. Here's a tracer that logs to console when a resolve operation starts:
 
@@ -354,6 +346,20 @@ When you get this low, you can control the subscriptions for your events separat
     // the tracer shold get an event.
     var tracer = new ConsoleOperationTracer();
     container.DiagnosticSource.Subscribe(tracer, e => e == "Autofac.Operation.Start");
+
+Symbols and Sources
+-------------------
+
+Autofac packages have been updated `to use Source Link <https://github.com/dotnet/sourcelink>`_ so the debugging experience right to the source should feel native.
+
+Older packages and packages that haven't been updated yet have symbols published to MyGet and SymbolSource.
+
+You can set up Visual Studio to debug/step *right into Autofac source* using the following symbol servers:
+
+- ``https://www.myget.org/F/autofac/symbols/``
+- ``http://srv.symbolsource.org/pdb/Public/``
+
+`There is documentation on MyGet explaining how to configure Visual Studio to make symbol servers work work. <http://docs.myget.org/docs/reference/symbolsource>`_
 
 Support
 -------
