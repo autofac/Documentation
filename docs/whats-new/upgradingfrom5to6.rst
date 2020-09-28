@@ -10,7 +10,7 @@ We have gone out of our way to try and reduce the number of breaking changes, so
 that most users shouldn't run into.
 
 - If you have implemented a custom ``IConstructorSelector`` to pass to the ``UsingConstructor`` registration method, 
-  you will need to update your implementation to use ``BoundConstructor`` instead of ``ConstructorParameterBinding``. the
+  you will need to update your implementation to use ``BoundConstructor`` instead of ``ConstructorParameterBinding``. The
   new ``BoundConstructor`` type exposes similar properties (including the ``TargetConstructor``):
 
   .. code-block:: csharp

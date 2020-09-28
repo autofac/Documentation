@@ -71,6 +71,7 @@ The quick start above shows how you can get going with the ``Autofac.Diagnostics
 When the ``OperationCompleted`` event gets raised, you'll get event arguments that provide:
 
 * ``Operation`` - the actual resolve operation that completed so you can inspect it if needed.
+* ``OperationSucceeded`` - a Boolean value indicating whether the contained trace is for a successful or failed operation.
 * ``TraceContent`` - the built string that has the full trace of the resolve operation.
 
 Let's say you have a simple lambda that registers a string.
