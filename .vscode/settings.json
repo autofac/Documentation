@@ -1,8 +1,8 @@
 {
-  "restructuredtext.builtDocumentationPath": "${workspaceRoot}\\docs\\_build\\html",
+  "restructuredtext.builtDocumentationPath": "${workspaceRoot}/docs/_build/html",
   "restructuredtext.linter.extraArgs": [
     "--config",
-    "\"${workspaceFolder}\\doc8.ini\""
+    "\"${workspaceFolder}/doc8.ini\""
   ],
-  "restructuredtext.confPath": "${workspaceFolder}\\docs"
+  "restructuredtext.confPath": "${workspaceFolder}/docs"
 }

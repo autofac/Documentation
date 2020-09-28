@@ -219,6 +219,30 @@ When a matching service type is requested from the container, Autofac will map t
 
 Registration of a specialized service type (e.g. ``IRepository<Person>``) will override the open generic version.
 
+You can also use delegates to provide the closed generic type, if you have some custom behaviour for choosing the closed generic implementation:
+
+.. sourcecode:: csharp
+
+    var builder = new ContainerBuilder();
+
+    builder.RegisterGeneric((ctxt, types, parameters) =>
+    {
+        // Make decisions about what closed type to use.
+        if (types.Contains(typeof(string)))
+        {
+            return new StringSpecializedImplementation();
+        }
+
+        return Activator.CreateInstance(typeof(GeneralImplementation<>).MakeGenericType(types));
+    }).As(typeof(IService<>));
+
+.. note:: 
+
+    Be aware that the delegate form of ``RegisterGeneric`` will usually be slightly less performant than the reflection-based version,
+    because the closed generic type cannot be cached in the same way.
+
+.. _registration-services-vs-components:
+
 Services vs. Components
 =======================
 

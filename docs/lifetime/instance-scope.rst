@@ -84,6 +84,8 @@ When you resolve a single instance component, you always get the same instance n
       }
     }
 
+.. _lifetime-instance-scope-per-lifetime-scope:
+
 Instance Per Lifetime Scope
 ===========================
 
@@ -121,6 +123,8 @@ When you resolve the instance per lifetime scope component, you get a single ins
         var w2 = scope2.Resolve<Worker>();
       }
     }
+
+.. _lifetime-instance-scope-per-matching-lifetime-scope:
 
 Instance Per Matching Lifetime Scope
 ====================================

@@ -18,10 +18,12 @@ Term           Meaning
 *Parameter*    Non-*Service* objects used to configure a *Component*
 *Registration* The act of adding and configuring a *Component* for use in a *Container*, and the information associated with this process
 *Scope*        The specific *Context* in which *Instances* of a *Component* will be shared by other *Components* that depend on their *Services*
-*Service*      A well-defined behavioural contract shared between a providing and a consuming *Component*
+*Service*      A well-defined behavioural contract shared between a providing and a consuming *Component*; generally these are interfaces, or some abstraction of a *Component*
 ============== =======
 
 Admittedly this seems a bit low-level to fit with the typical idea of a 'universal language', but within the domain of IoC containers and specifically Autofac these can be viewed as concepts rather than implementation details.
+
+Some more detail on the relationship between a *Service* and a *Component Registration* in Autofac terms can be found in the :ref:`registration documentation <registration-services-vs-components>`.
 
 Wild deviations from these terms in the API or code should be fixed or raised as issues to fix in a future version.
 
