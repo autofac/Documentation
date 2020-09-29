@@ -1,57 +1,83 @@
-==========================
-log4net Integration Module
-==========================
+==============================
+log4net Integration Middleware
+==============================
 
-While there is no specific assembly for log4net support, you can easily inject ``log4net.ILog`` values using a very small custom module.
+While there is no specific assembly for log4net support, you can easily inject ``log4net.ILog`` values using a simple piece of middleware, and a very small custom module to
+add that middleware to all your registrations.
 
-This module is also a good example of how to use :doc:`Autofac modules <../configuration/modules>` for more than simple configuration - they're also helpful for doing some more advanced extensions.
+The ``Log4NetMiddleware`` is also a good example of how to use :doc:`pipeline middleware <../advanced/pipelines>`.
 
-Here's a sample module that configures Autofac to inject ``ILog`` parameters based on the type of the component being activated. This sample module will handle both constructor and property injection.
+Here's the sample middleware that injects ``ILog`` parameters based on the type of the component being activated. 
+This sample middleware handles both constructor and property injection.
 
 .. sourcecode:: csharp
-
-    public class LoggingModule : Autofac.Module
+    
+    public class Log4NetMiddleware : IResolveMiddleware
     {
-      private static void InjectLoggerProperties(object instance)
-      {
-        var instanceType = instance.GetType();
+        public PipelinePhase Phase => PipelinePhase.ParameterSelection;
 
-        // Get all the injectable properties to set.
-        // If you wanted to ensure the properties were only UNSET properties,
-        // here's where you'd do it.
-        var properties = instanceType
-          .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-          .Where(p => p.PropertyType == typeof(ILog) && p.CanWrite && p.GetIndexParameters().Length == 0);
-
-        // Set the properties located.
-        foreach (var propToSet in properties)
+        public void Execute(ResolveRequestContext context, Action<ResolveRequestContext> next)
         {
-          propToSet.SetValue(instance, LogManager.GetLogger(instanceType), null);
+            // Add our parameters.
+            context.ChangeParameters(context.Parameters.Union(
+                new[]
+                {
+                  new ResolvedParameter(
+                      (p, i) => p.ParameterType == typeof(ILog),
+                      (p, i) => LogManager.GetLogger(p.Member.DeclaringType)
+                  ),
+                }));
+
+            // Continue the resolve.
+            next(context);
+
+            // Has an instance been activated?
+            if (context.NewInstanceActivated)
+            {
+                var instanceType = context.Instance.GetType();
+
+                // Get all the injectable properties to set.
+                // If you wanted to ensure the properties were only UNSET properties,
+                // here's where you'd do it.
+                var properties = instanceType
+                    .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                    .Where(p => p.PropertyType == typeof(ILog) && p.CanWrite && p.GetIndexParameters().Length == 0);
+
+                // Set the properties located.
+                foreach (var propToSet in properties)
+                {
+                    propToSet.SetValue(context.Instance, LogManager.GetLogger(instanceType), null);
+                }
+            }
         }
-      }
-
-      private static void OnComponentPreparing(object sender, PreparingEventArgs e)
-      {
-        e.Parameters = e.Parameters.Union(
-          new[]
-          {
-            new ResolvedParameter( 
-                (p, i) => p.ParameterType == typeof(ILog), 
-                (p, i) => LogManager.GetLogger(p.Member.DeclaringType)
-            ),
-          });
-      }
-
-      protected override void AttachToComponentRegistration(IComponentRegistryBuilder componentRegistryBuilder, IComponentRegistration registration)
-      {
-        // Handle constructor parameters.
-        registration.Preparing += OnComponentPreparing;
-
-        // Handle properties.
-        registration.Activated += (sender, e) => InjectLoggerProperties(e.Instance);
-      }
     }
 
-**Performance Note**: At the time of this writing, calling ``LogManager.GetLogger(type)`` has a slight performance hit as the internal log manager locks the collection of loggers to retrieve the appropriate logger. An enhancement to the module would be to add caching around logger instances so you can reuse them without the lock hit in the ``LogManager`` call.
+**Performance Note**: At the time of this writing, calling ``LogManager.GetLogger(type)`` has a slight performance hit as the internal log manager locks the collection of loggers to retrieve the appropriate logger. An enhancement to the middleware would be to add caching around logger instances so you can reuse them without the lock hit in the ``LogManager`` call.
+
+Here's the simple ``MiddlewareModule`` (not specific to Logging), that adds a single middleware instance to the
+pipeline for every registration.
+
+.. sourcecode:: csharp
+    
+    // Adds a piece of middleware to every registration.
+    public class MiddlewareModule : Autofac.Module
+    {
+        private readonly IResolveMiddleware middleware;
+
+        public MiddlewareModule(IResolveMiddleware middleware)
+        {
+            this.middleware = middleware;
+        }
+
+        protected override void AttachToComponentRegistration(IComponentRegistryBuilder componentRegistryBuilder, IComponentRegistration registration)
+        {
+            // Attach to the registration's pipeline build.
+            registration.PipelineBuilding += (sender, pipeline) =>
+            {
+                // Add our middleware to the pipeline.
+                pipeline.Use(middleware);
+            };
+        }
+    }
 
 Thanks for the original idea/contribution by Rich Tebb/Bailey Ling where the idea was posted `on the Autofac newsgroup <https://groups.google.com/forum/#!msg/autofac/Qb-dVPMbna0/s-jLeWeST3AJ>`_.
