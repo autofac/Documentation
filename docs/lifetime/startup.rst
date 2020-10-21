@@ -1,6 +1,6 @@
-=======================
-Running Code at Startup
-=======================
+===============================
+Running Code at Container Build
+===============================
 
 Autofac provides the ability for components to be notified or automatically activated when the container is built.
 
@@ -11,7 +11,9 @@ There are three automatic activation mechanisms available:
 
 In all cases, **at the time the container is built, the component will be activated**.
 
-**Use startup code sparingly.** You can get yourself into some traps by overusing it. See the "Tips" section for more.
+.. note::
+
+    **Avoid overusing startup logic**: The ability to run startup logic on container build may feel like it's also a good fit for orchestrating general application startup logic. **Application startup is a separate concern from dependency management.** Given the ordering and other challenges you may run into, it is recommended you keep *application startup* logic separate from *dependency management* logic.
 
 .. contents::
   :local:
@@ -266,10 +268,10 @@ Note if you don't use ``SingleInstance`` then ``OnActivated`` will be called for
 Tips
 ====
 
+**Where possible, try to get away from startup logic**: The ability to run startup logic on container build is really convenient, but a DI container is about wiring up your objects, not orchestrating application startup. It's a good idea to keep these concerns separate whenever possible.
+
 **Order**: In general, startup logic happens in the order ``IStartable.Start()``, ``AutoActivate``, build callbacks. That said, it is *not guaranteed*. For example, as noted in the ``IStartable`` docs above, things will happen in dependency order rather than registration order. Further, Autofac reserves the right to change this order (e.g., refactor the calls to ``IStartable.Start()`` and ``AutoActivate`` into build callbacks). If you need to control the specific order in which initialization logic runs, it's better to write your own initialization logic where you can control the order.
 
 **Avoid creating lifetime scopes during IStartable.Start or AutoActivate**: If your startup logic includes the creation of a lifetime scope from which components will be resolved, this scope won't have all the startables executed yet. By creating the scope, you're forcing a race condition. This sort of logic would be better to execute in custom logic after the container is built rather than as part of an ``IStartable``.
-
-**Avoid overusing startup logic**: The ability to run startup logic on container build may feel like it's also a good fit for orchestrating general application startup logic. Given the ordering and other challenges you may run into, it is recommended you keep *application startup* logic separate from *dependency startup* logic.
 
 **Consider OnActivated and SingleInstance for lazy initialization**: Instead of using build callbacks or startup logic, consider using :doc:`the lifetime event OnActivated <events>` with a ``SingleInstance`` registration so the initialization can happen on an object but not be tied to the order of container build.
