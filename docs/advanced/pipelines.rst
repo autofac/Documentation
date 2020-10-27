@@ -158,7 +158,7 @@ in the same way you would have added other shared registration behaviour:
     {
         // The PipelineBuilding event fires just before the pipeline is built, and 
         // middleware can be added inside it.
-        args.ComponentRegistration.PipelineBuilding += (sender, pipeline) =>
+        args.ComponentRegistration.PipelineBuilding += (sender2 , pipeline) =>
         {
             pipeline.Use(new MyCustomMiddleware());
         };
