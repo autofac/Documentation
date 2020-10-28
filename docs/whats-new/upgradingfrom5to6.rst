@@ -63,6 +63,38 @@ that most users shouldn't run into.
   no longer exposes ``Preparing``, ``Activating`` or ``Activated`` events.
   
   All Autofac events are now implemented as ``CoreEventMiddleware`` added to the resolve pipeline.
+ 
+  .. code-block:: csharp
+
+     // 5.x
+     builder.RegisterCallback(x =>
+     {
+         x.Registered += (sender, args) =>
+         {
+             args.ComponentRegistration.Activated += (o, c) =>
+             {
+                 // Do something with the component instance
+                 var instance = c.Instance;
+             };
+         };
+     });
+     
+     // 6.x
+     builder.ComponentRegistryBuilder.Registered += (sender, args) =>
+     {
+         args.ComponentRegistration.PipelineBuilding += (sender2, pipeline) =>
+         {
+             pipeline.Use(PipelinePhase.Activation, MiddlewareInsertionMode.EndOfPhase, (c, next) =>
+             {
+                 next(c);
+                 
+                 // Do something with the component instance
+                 var instance = c.Instance;
+                 
+             });
+         };
+     };
+  
 
   If you need to inspect the set of event handlers added to the registration, you can inspect the registered middleware for instances of ``CoreEventMiddleware``:
 
