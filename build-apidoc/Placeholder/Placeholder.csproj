@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
+    <!-- PlatformTarget required for ServiceFabric so it doesn't complain about processor architecture mismatch. -->
+    <PlatformTarget>x64</PlatformTarget>
     <VersionPrefix>0.0.1</VersionPrefix>
     <Authors>Autofac Contributors</Authors>
     <Company>Autofac</Company>
     <Product>Autofac</Product>
     <Description>Placeholder used only for generating documentation.</Description>
   </PropertyGroup>
-  <ItemGroup>
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.0.0" />
     <PackageReference Include="Autofac.AspNetCore.Multitenant" Version="4.0.1" />
