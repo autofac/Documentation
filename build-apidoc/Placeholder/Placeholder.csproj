@@ -8,6 +8,7 @@
     <Company>Autofac</Company>
     <Product>Autofac</Product>
     <Description>Placeholder used only for generating documentation.</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.0.0" />
@@ -33,4 +34,15 @@
     <PackageReference Include="Autofac.WebApi2" Version="6.0.0" />
     <PackageReference Include="Autofac.WebApi2.Owin" Version="6.0.0" />
   </ItemGroup>
+  <!-- Copy the XML doc files from the NuGet packages into the publish folder on dotnet publish -->
+  <Target Name="_ResolvePublishXml" AfterTargets="ComputeResolvedFilesToPublishList">
+    <ItemGroup>
+        <ResolvedFileToPublish
+          Include="@(ResolvedFileToPublish->'%(RootDir)%(Directory)%(Filename).xml')"
+          Condition="Exists(@(ResolvedFileToPublish->'%(RootDir)%(Directory)%(Filename).xml'))">
+          <RelativePath>%(Filename).xml</RelativePath>
+          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
 </Project>
