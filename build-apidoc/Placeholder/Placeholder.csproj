@@ -8,29 +8,29 @@
     <Description>Placeholder used only for generating documentation.</Description>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.9.1" />
-    <PackageReference Include="Autofac.AspNetCore.Multitenant" Version="1.0.2" />
-    <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
-    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.3.1" />
-    <PackageReference Include="Autofac.Extras.AggregateService" Version="4.1.0" />
-    <PackageReference Include="Autofac.Extras.AttributeMetadata" Version="4.0.1" />
-    <PackageReference Include="Autofac.Extras.CommonServiceLocator" Version="5.0.0" />
-    <PackageReference Include="Autofac.Extras.DomainServices" Version="4.0.0" />
-    <PackageReference Include="Autofac.Extras.DynamicProxy" Version="4.5.0" />
-    <PackageReference Include="Autofac.Extras.EnterpriseLibraryConfigurator" Version="4.0.0" />
-    <PackageReference Include="Autofac.Extras.FakeItEasy" Version="5.0.1" />
-    <PackageReference Include="Autofac.Extras.Moq" Version="4.3.0" />
-    <PackageReference Include="Autofac.Extras.NHibernate" Version="4.0.0" />
-    <PackageReference Include="Autofac.Mef" Version="4.0.0" />
-    <PackageReference Include="Autofac.Multitenant" Version="4.2.0" />
-    <PackageReference Include="Autofac.Multitenant.Wcf" Version="4.0.0" />
-    <PackageReference Include="Autofac.Mvc5" Version="4.0.2" />
-    <PackageReference Include="Autofac.Mvc5.Owin" Version="4.0.1" />
-    <PackageReference Include="Autofac.Owin" Version="4.2.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.0.0" />
+    <PackageReference Include="Autofac.AspNetCore.Multitenant" Version="4.0.1" />
+    <PackageReference Include="Autofac.Configuration" Version="6.0.0" />
+    <PackageReference Include="Autofac.Diagnostics.DotGraph" Version="1.0.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
+    <PackageReference Include="Autofac.Extras.AggregateService" Version="6.0.0" />
+    <PackageReference Include="Autofac.Extras.AttributeMetadata" Version="6.0.0" />
+    <PackageReference Include="Autofac.Extras.CommonServiceLocator" Version="6.0.1" />
+    <PackageReference Include="Autofac.Extras.DynamicProxy" Version="6.0.0" />
+    <PackageReference Include="Autofac.Extras.FakeItEasy" Version="7.0.0" />
+    <PackageReference Include="Autofac.Extras.Moq" Version="6.0.0" />
+    <PackageReference Include="Autofac.Multitenant" Version="6.0.0" />
+    <PackageReference Include="Autofac.Mvc5" Version="6.0.0" />
+    <PackageReference Include="Autofac.Mvc5.Owin" Version="6.0.0" />
+    <PackageReference Include="Autofac.Owin" Version="6.0.0" />
+    <PackageReference Include="Autofac.Pooling" Version="1.0.1" />
+    <PackageReference Include="Autofac.ServiceFabric" Version="4.0.0" />
     <PackageReference Include="Autofac.SignalR" Version="3.0.2" />
-    <PackageReference Include="Autofac.Wcf" Version="4.1.0" />
-    <PackageReference Include="Autofac.Web" Version="4.0.0" />
-    <PackageReference Include="Autofac.WebApi2" Version="4.2.0" />
-    <PackageReference Include="Autofac.WebApi2.Owin" Version="4.0.0" />
+    <PackageReference Include="Autofac.Wcf" Version="6.0.0" />
+    <PackageReference Include="Autofac.Web" Version="6.0.0" />
+    <PackageReference Include="Autofac.WebApi2" Version="6.0.0" />
+    <PackageReference Include="Autofac.WebApi2.Owin" Version="6.0.0" />
   </ItemGroup>
 </Project>
