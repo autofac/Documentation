@@ -52,7 +52,7 @@ If you can't use a registration lambda, you can add an :doc:`activating event ha
 .. sourcecode:: csharp
 
     builder
-      .Register<MyObjectType>()
+      .RegisterType<MyObjectType>()
       .OnActivating(e => {
         var dep = e.Context.Resolve<TheDependency>();
         e.Instance.SetTheDependency(dep);
