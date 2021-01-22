@@ -50,7 +50,7 @@ The `Placeholder` project holds references to the various Autofac packages to do
 
 ### Building the Documentation
 
-Run `msbuild Documentation.proj` to kick off the build. This will restore required NuGet packages, build the `Placeholder` project, and run documentation on the Autofac referenced assemblies.
+Run `msbuild Documentation.proj` to kick off the build. This will restore required NuGet packages, build the `Placeholder` project, and run documentation on the Autofac referenced assemblies. [**You may need to install the Visual Studio 2017 build tools**](https://download.visualstudio.microsoft.com/download/pr/3e542575-929e-4297-b6c6-bef34d0ee648/639c868e1219c651793aff537a1d3b77/vs_buildtools.exe) to get this to work. If you see errors/failing about unrecognized `ToolsVersion` - that's the missing build tools.
 
 The build generates a lot of warnings. These indicate where we're missing documentation. (If you're looking to submit a PR, better API docs is a good thing...)
 
