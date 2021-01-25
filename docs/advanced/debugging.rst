@@ -63,6 +63,34 @@ The easiest way to get started with diagnostics is to use the ``Autofac.Diagnost
     using var scope = container.BeginLifetimeScope();
     scope.Resolve<IService>();
 
+If you don't have direct access to the container (e.g., in ASP.NET Core) you can use a build callback to register the tracer.
+
+.. sourcecode:: csharp
+
+    public void ConfigureContainer(ContainerBuilder builder)
+    {
+        // Register Autofac things as you normally would.
+        builder.RegisterModule(new AutofacModule());
+
+        // Create a tracer instance and figure out
+        // what you want to do when a trace is ready
+        // to be viewed. Note: since you're diagnosing
+        // the container you probably shouldn't ALSO
+        // resolve the logger to which the diagnostics
+        // get written.
+        var tracer = new DefaultDiagnosticTracer();
+        tracer.OperationCompleted += (sender, args) =>
+        {
+            Console.WriteLine(args.TraceContent);
+        };
+
+        builder.RegisterBuildCallback(c =>
+        {
+            var container = c as IContainer;
+            container.SubscribeToDiagnostics(tracer);
+        });
+    }
+
 Default Diagnostic Tracer
 =========================
 
