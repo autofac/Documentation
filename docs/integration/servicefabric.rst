@@ -90,9 +90,9 @@ For example, say you have a user service that is stateless and it needs to read 
 
       public async Task<string> GetNameAsync(int id)
       {
-        using (var userStore = _userStoreFactory().Value)
+        using (var userStore = _userStoreFactory())
         {
-          return await userStore.GetNameAsync(id);
+          return await userStore.Value.GetNameAsync(id);
         }
       }
     }
