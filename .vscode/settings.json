@@ -1,8 +1,12 @@
 {
   "restructuredtext.builtDocumentationPath": "${workspaceRoot}/docs/_build/html",
+  "restructuredtext.confPath": "${workspaceFolder}/docs",
+  "restructuredtext.languageServer.disabled": true,
   "restructuredtext.linter.extraArgs": [
     "--config",
     "\"${workspaceFolder}/doc8.ini\""
   ],
-  "restructuredtext.confPath": "${workspaceFolder}/docs"
+  "cSpell.words": [
+    "sourcecode"
+  ]
 }
