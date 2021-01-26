@@ -99,7 +99,7 @@ In the ``SwitchOn()`` method, the index is used to find the implementation of ``
 
 Resolving with Attributes
 -------------------------
-The :doc:`metadata feature of Autofac provides a KeyFilterAttribute <metadata>` that allows you to mark constructor parameters with an attribute specfying which keyed service should be used. The attribute usage looks like this:
+The :doc:`metadata feature of Autofac provides a KeyFilterAttribute <metadata>` that allows you to mark constructor parameters with an attribute specifying which keyed service should be used. The attribute usage looks like this:
 
 .. sourcecode:: csharp
 
@@ -108,4 +108,12 @@ The :doc:`metadata feature of Autofac provides a KeyFilterAttribute <metadata>` 
       public ArtDisplay([KeyFilter("Painting")] IArtwork art) { ... }
     }
 
-:doc:`See the metadata documentation <metadata>` for more info on how to get this set up.
+When you register a component that needs attribute filtering, you need to make sure to opt in. There's a minor but non-zero performance hit to query for the attributes and do the filtering so it doesn't just automatically happen.
+
+..sourcecode:: csharp
+
+    var builder = new ContainerBuilder();
+    builder.RegisterType<Painting>().Keyed<IArtwork>("Painting");
+    builder.RegisterType<ArtDisplay>().As<IDisplay>().WithAttributeFiltering();
+
+:doc:`See the metadata documentation <metadata>` for more info on working with attributes and filtering.
