@@ -7,6 +7,10 @@
     "\"${workspaceFolder}/doc8.ini\""
   ],
   "cSpell.words": [
-    "sourcecode"
+    "Autofac",
+    "Xunit",
+    "sourcecode",
+    "startable",
+    "startables"
   ]
 }

@@ -5,6 +5,7 @@ Running Code at Container Build
 Autofac provides the ability for components to be notified or automatically activated when the container is built.
 
 There are three automatic activation mechanisms available:
+
 - Startable components
 - Auto-activated components
 - Container build callbacks
@@ -59,7 +60,6 @@ The order in which components are started is not defined, however, as of Autofac
 
     static void Main(string[] args)
     {
-
         var builder = new ContainerBuilder();
         builder.RegisterType<Startable1>().AsSelf().As<IStartable>().SingleInstance();
         builder.RegisterType<Startable2>().As<IStartable>().SingleInstance();
@@ -118,10 +118,10 @@ To register an auto-activated component, use the ``AutoActivate()`` registration
 
 Note: If you *omit* the ``AsSelf()`` or ``As<T>()`` service registration calls when you register an ``AutoActivate()`` component, the component will *only* be registered to auto-activate and won't necessarily be resolvable "as itself" after container build.
 
-Container Build Callbacks
-=========================
+Build Callbacks
+===============
 
-You can register any arbitrary action to happen at container build time by registering a build callback. A build callback is an ``Action<IContainer>`` and will get the built container prior to that container being returned from ``ContainerBuilder.Build``. Build callbacks execute in the order they are registered:
+You can register any arbitrary action to happen at container or lifetime scope build time by registering a build callback. A build callback is an ``Action<IContainer>`` and will get the built container prior to that container being returned from ``ContainerBuilder.Build``. Build callbacks execute in the order they are registered:
 
 .. sourcecode:: csharp
 
@@ -264,6 +264,56 @@ This sample unit test will generate this output:
 You'll see from the output that the callbacks and ``OnActivated`` methods executed in dependency order. If you must have the activations *and* the startups all happen in dependency order (not just the activations/resolutions), this is the workaround.
 
 Note if you don't use ``SingleInstance`` then ``OnActivated`` will be called for *every new instance of the dependency*. Since "warm start" objects are usually singletons and are expensive to create, this is generally what you want anyway.
+
+Lifetime Scopes
+===============
+
+Registering an ``IStartable`` or ``AutoActivate`` item with something other than ``SingleInstance`` or ``InstancePerDependency`` may not work the way you expect.
+
+For example, if you register using ``InstancePerLifetimeScope``, **this does not result in a new startable running in every lifetime scope you create**. The startable will instead run on container build only.
+
+Further, **you can't use IStartable or AutoActivate with named lifetime scopes.** Registering with a named lifetime scope won't start the component when the named scope is created; instead it will yield an exception on container build because the named scope doesn't exist.
+
+.. sourcecode:: csharp
+
+    static void Main(string[] args)
+    {
+        var builder = new ContainerBuilder();
+
+        // This WON'T WORK. You'll get a DependencyResolutionException when
+        // the container tries to start the component because the named lifetime
+        // scope doesn't exist.
+        builder.RegisterType<Startable1>()
+               .As<IStartable>()
+               .InstancePerMatchingLifetimeScope("unitofwork");
+        builder.Build();
+    }
+
+If you need to start something in a particular lifetime scope, you need to register it with that lifetime scope at you create the scope (i.e., in the ``BeginLifetimeScope`` call).
+
+.. sourcecode:: csharp
+
+    static void Main(string[] args)
+    {
+        var builder = new ContainerBuilder();
+        var container = builder.Build();
+        using(var uow = container.BeginLifetimeScope("unitofwork", b => b.RegisterType<Startable1>().As<IStartable>()))
+        {
+          // The startable will have run.
+        }
+    }
+
+Build callbacks will work both at the container level and scope level. They'll run at the level in which they're specified.
+
+.. sourcecode:: csharp
+
+    var builder = new ContainerBuilder();
+    builder.RegisterBuildCallback(
+      c => Console.WriteLine("This happens when the container is built."));
+    using var container = builder.Build();
+    using var scope = container.BeginLifetimeScope(
+      b => b.RegisterBuildCallback(
+        c => Console.WriteLine("This happens when the scope is built."));
 
 Tips
 ====
