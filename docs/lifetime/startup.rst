@@ -289,7 +289,7 @@ Further, **you can't use IStartable or AutoActivate with named lifetime scopes.*
         builder.Build();
     }
 
-If you need to start something in a particular lifetime scope, you need to register it with that lifetime scope at the time of creation.
+If you need to start something in a particular lifetime scope, you need to register it with that lifetime scope at you create the scope (i.e., in the ``BeginLifetimeScope`` call).
 
 .. sourcecode:: csharp
 
