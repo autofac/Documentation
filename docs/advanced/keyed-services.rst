@@ -110,7 +110,7 @@ The :doc:`metadata feature of Autofac provides a KeyFilterAttribute <metadata>` 
 
 When you register a component that needs attribute filtering, you need to make sure to opt in. There's a minor but non-zero performance hit to query for the attributes and do the filtering so it doesn't just automatically happen.
 
-..sourcecode:: csharp
+.. sourcecode:: csharp
 
     var builder = new ContainerBuilder();
     builder.RegisterType<Painting>().Keyed<IArtwork>("Painting");
