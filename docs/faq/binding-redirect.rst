@@ -8,7 +8,7 @@ Autofac has a lot of :doc:`integration packages <../integration/index>` and exte
 
 We do this because, generally speaking, we don't want to force anyone to update their version of Autofac core unless they absolutely must. This is a fairly good practice for any library set - if a person doesn't *have* to take an update, you shouldn't *force* them to do so.
 
-**The simple solution is to just add a direct reference in your app/project to your desired Auotfac core version.**
+**The simple solution is to just add a direct reference in your app/project to your desired Autofac core version.**
 
 **In .NET Core this "just works."** The project system figures out the latest version of Autofac in the project (i.e., your direct reference) and redirects all bindings to that. No extra cruft, no work. Like magic.
 

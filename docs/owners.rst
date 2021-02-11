@@ -169,7 +169,7 @@ Compatibility
 
 As you maintain Autofac, it's up to you as an owner to determine when it's a good time to make a change that will potentially break the thousands of projects consuming the library you're working on. These are hard decisions. It's OK to ask for help.
 
-From a general policy perspective, we should always be *compatible* with the latest release of a third party framework with which we integrate. That doesn't always mean we *require* the latest version, but that we're *compatbile* with it. If there is a choice where the two are mutually exclusive - we can *either* be compatible with the older stuff *or* we have to move forward... we'll choose to move forward.
+From a general policy perspective, we should always be *compatible* with the latest release of a third party framework with which we integrate. That doesn't always mean we *require* the latest version, but that we're *compatible* with it. If there is a choice where the two are mutually exclusive - we can *either* be compatible with the older stuff *or* we have to move forward... we'll choose to move forward.
 
 Release Process
 ===============

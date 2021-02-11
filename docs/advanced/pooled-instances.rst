@@ -2,7 +2,7 @@
 Pooled Instances
 ================
 
-Frequently, applications find that they have components that are expensive to initialise 
+Frequently, applications find that they have components that are expensive to initialize
 (like a database or external service connection of some kind), and you'd like to re-use instances
 if you can rather than have to create new ones each time.
 
@@ -12,7 +12,7 @@ you get one from the pool, and when you are done with it, you return it to the p
 Autofac can help you implement a pool of components in your application without you having to write your
 own pooling implementation, and making these pooled components feel more natural in the world of DI.
 
-.. note:: 
+.. note::
 
     It's worth mentioning before we continue that a number of common .NET types, such as ``HttpClient``
     or the ADO.NET ``SqlConnection``, already implement pooling for you behind-the-scenes, so there is
@@ -50,17 +50,17 @@ methods, ``PooledInstancePerLifetimeScope`` and ``PooledInstancePerMatchingLifet
 
     using (var scope2 = container.BeginLifetimeScope())
     {
-        // Does **not** create a new instance, but instead gets the 
+        // Does **not** create a new instance, but instead gets the
         // previous instance from the pool.
         var instance = scope.Resolve<ICustomConnection>();
 
         instance.DoSomething();
     }
 
-    // Instance gets returned back to the pool again at the 
+    // Instance gets returned back to the pool again at the
     // end of the lifetime scope.
 
-Like any other dependency, you can use these services in your constructors to inject 
+Like any other dependency, you can use these services in your constructors to inject
 the pooled instance:
 
 .. sourcecode:: csharp
@@ -104,20 +104,20 @@ implementing the ``IPooledComponent`` interface:
 The ``OnGetFromPool`` method is passed the temporary ``IComponentContext`` of the current resolve
 operation, plus any parameters passed to the resolve.
 
-.. warning:: 
+.. warning::
 
-    Any services resolved from the provided ``IComponentContext`` are taken from the **current scope** 
-    accessing the pooled component. This means that any instances you resolve from that ``IComponentContext`` 
+    Any services resolved from the provided ``IComponentContext`` are taken from the **current scope**
+    accessing the pooled component. This means that any instances you resolve from that ``IComponentContext``
     should be discarded in ``OnReturnToPool`` to prevent memory leaks.
 
-If you cannot modify the component you are pooling, but need to have custom behaviour similar to this,
+If you cannot modify the component you are pooling, but need to have custom behavior similar to this,
 you can :ref:`implement a custom pool policy <pooled-instances-policies>`.
 
 Pool Capacity
 -------------
 
 Each pooled registration has the notion of a pool capacity.  This capacity defaults to ``Environment.ProcessorCount * 2``,
-but can easily be customised using overloads of the extension methods:
+but can easily be customized using overloads of the extension methods:
 
 .. sourcecode:: csharp
 
@@ -130,22 +130,22 @@ It's important to understand that **the capacity of a pool does not place a limi
 or can be in use at any one time; instead it limits how many instances are **retained** by the pool.
 
 In practical terms, this means that if your pool capacity is 100, and you currently have 100 instances in use, then
-resolving another instance will just activate a brand new instance of the component, rather than blocking/failing. 
+resolving another instance will just activate a brand new instance of the component, rather than blocking/failing.
 
 However, if you have 101 instances of the component in use, the next instance that is returned to the pool will be discarded
 rather than retained. In this situation, the ``OnReturnToPool`` method on ``IPooledComponent`` would still be called, but the instance will then immediately be thrown away.
 
 When an instance is discarded by the pool, if the object implements ``IDisposable``, ``Dispose`` will be called.
 
-If you, in fact, do want your pool to have custom behaviour like blocking until a resource is available, you can :ref:`implement 
-a custom pool policy <pooled-instances-policies>`. 
+If you, in fact, do want your pool to have custom behavior like blocking until a resource is available, you can :ref:`implement
+a custom pool policy <pooled-instances-policies>`.
 
-.. note:: 
+.. note::
 
-    The Autofac Pooling behaviour is built on top of the `Object Pool <https://docs.microsoft.com/en-us/aspnet/core/performance/objectpool>`_ implementation
+    The Autofac Pooling behavior is built on top of the `Object Pool <https://docs.microsoft.com/en-us/aspnet/core/performance/objectpool>`_ implementation
     available from `the Microsoft.Extensions.ObjectPool package <https://www.nuget.org/packages/Microsoft.Extensions.ObjectPool/>`_.
 
-    The behaviour of that pool informs a lot of the behaviour of Autofac.Pooling.
+    The behavior of that pool informs a lot of the behavior of Autofac.Pooling.
 
 Matching Lifetime Scopes
 ------------------------
@@ -169,7 +169,7 @@ When the tagged lifetime scope is disposed, the instance is returned to the pool
 Pool Policies
 -------------
 
-If you need some custom behaviour that is invoked when instances are retrieved from, or returned to, the pool, you can implement
+If you need some custom behavior that is invoked when instances are retrieved from, or returned to, the pool, you can implement
 ``IPooledRegistrationPolicy<TPooledObject>`` or override ``DefaultPooledRegistrationPolicy<TPooledObject>``.
 
 Here's an example of a simple policy that will block any further requests for pooled instances once the available capacity is used up:
@@ -191,7 +191,7 @@ Here's an example of a simple policy that will block any further requests for po
         }
 
         /// <summary>
-        /// Gets a value indicating the maximum number of items that will be retained in the pool. 
+        /// Gets a value indicating the maximum number of items that will be retained in the pool.
         /// </summary>
         public int MaximumRetained { get; }
 
@@ -212,7 +212,7 @@ Here's an example of a simple policy that will block any further requests for po
         }
 
         /// <summary>
-        /// Invoked when an object is about to be returned into the pool. 
+        /// Invoked when an object is about to be returned into the pool.
         /// </summary>
         /// <param name="pooledObject">The pooled object.</param>
         /// <returns>

@@ -285,7 +285,7 @@ Further, **you can't use IStartable or AutoActivate with named lifetime scopes.*
         // scope doesn't exist.
         builder.RegisterType<Startable1>()
                .As<IStartable>()
-               .InstancePerMatchingLifetimeScope("unitofwork");
+               .InstancePerMatchingLifetimeScope("unitOfWork");
         builder.Build();
     }
 
@@ -297,7 +297,7 @@ If you need to start something in a particular lifetime scope, you need to regis
     {
         var builder = new ContainerBuilder();
         var container = builder.Build();
-        using(var uow = container.BeginLifetimeScope("unitofwork", b => b.RegisterType<Startable1>().As<IStartable>()))
+        using(var uow = container.BeginLifetimeScope("unitOfWork", b => b.RegisterType<Startable1>().As<IStartable>()))
         {
           // The startable will have run.
         }

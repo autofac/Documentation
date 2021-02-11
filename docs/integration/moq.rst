@@ -89,7 +89,7 @@ You can configure the automatic mocks and/or assert calls on them as you would n
 Configuring Specific Dependencies
 =================================
 
-You can configure the ``AutoMock`` to provide a specific instance for a given service type (or apply any other registration behaviour),
+You can configure the ``AutoMock`` to provide a specific instance for a given service type (or apply any other registration behavior),
 by using the ``beforeBuild`` callback argument to ``GetLoose``, ``GetStrict`` or ``GetFromRepository``, in a similar manner
 to configuring a new Lifetime Scope:
 
@@ -106,13 +106,13 @@ to configuring a new Lifetime Scope:
 
         // If SystemUnderTest depends on IDependency, it will get your dependency instance.
         var underTest = mock.Create<SystemUnderTest>();
-        
+
         // ...and the rest of the test.
       }
     }
 
 The ``cfg`` argument passed to your callback is a regular Autofac ``ContainerBuilder`` instance, so you can
-do any of the registration behaviour you're used to in a normal set up.
+do any of the registration behavior you're used to in a normal set up.
 
 You can also configure the ``AutoMock`` to use any existing mock, through the ``RegisterMock`` extension method:
 
@@ -123,7 +123,7 @@ You can also configure the ``AutoMock`` to use any existing mock, through the ``
     {
       var mockA = new Mock<IServiceA>();
       mockA.Setup(x => x.RunA());
-    
+
       // mockA is automatically registered as providing IServiceA
       using (var mock = AutoMock.GetLoose(cfg => cfg.RegisterMock(mockA)))
       {

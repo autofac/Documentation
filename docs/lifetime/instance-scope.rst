@@ -164,14 +164,14 @@ In most applications, only one level of container nesting will be sufficient for
 .. sourcecode:: csharp
 
     var builder = new ContainerBuilder();
-    builder.RegisterType<Worker>().InstancePerMatchingLifetimeScope("myrequest");
+    builder.RegisterType<Worker>().InstancePerMatchingLifetimeScope("my-request");
 
 The supplied tag value is associated with a lifetime scope when you start it. **You will get an exception if you try to resolve a per-matching-lifetime-scope component when there's no correctly named lifetime scope.**
 
 .. sourcecode:: csharp
 
     // Create the lifetime scope using the tag.
-    using(var scope1 = container.BeginLifetimeScope("myrequest"))
+    using(var scope1 = container.BeginLifetimeScope("my-request"))
     {
       for(var i = 0; i < 100; i++)
       {
@@ -189,7 +189,7 @@ The supplied tag value is associated with a lifetime scope when you start it. **
     }
 
     // Create another lifetime scope using the tag.
-    using(var scope3 = container.BeginLifetimeScope("myrequest"))
+    using(var scope3 = container.BeginLifetimeScope("my-request"))
     {
       for(var i = 0; i < 100; i++)
       {
@@ -312,6 +312,6 @@ You can inject a parent lifetime scope into the code that spawns the thread by t
 
 If you would like to enforce this even more heavily, use instance per matching lifetime scope (see above) to associate the thread-scoped components with the inner lifetime (they'll still have dependencies from the factory/singleton components in the outer container injected.) The result of this approach looks something like:
 
-.. image:: threadedcontainers.png
+.. image:: threaded-containers.png
 
 The 'contexts' in the diagram are the containers created with ``BeginLifetimeScope()``.

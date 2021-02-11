@@ -4,7 +4,7 @@ How do I create a session-based lifetime scope in a web application?
 
 In ASP.NET the notion of "instance per request" is inherently supported, but you may have a desire to create an "instance per session" for some objects.
 
-**This road is frought with peril and is totally unsupported.** It's a question asked often enough that we've provided some information about the possible way to get it to work `based on this StackOverflow answer <https://stackoverflow.com/questions/11721919/managing-autofac-lifetime-scopes-per-session-and-request-in-asp-net-mvc-3/11726210#11726210>`_ but if it's not working for you or you need additional support to get it to happen, **you're on your own**.
+**This road is fraught with peril and is totally unsupported.** It's a question asked often enough that we've provided some information about the possible way to get it to work `based on this StackOverflow answer <https://stackoverflow.com/questions/11721919/managing-autofac-lifetime-scopes-per-session-and-request-in-asp-net-mvc-3/11726210#11726210>`_ but if it's not working for you or you need additional support to get it to happen, **you're on your own**.
 
 Also, **this information is for ASP.NET MVC classic, not ASP.NET Core** but the same challenges will apply. Most likely this will not be updated for ASP.NET Core. It will probably also not be updated for Web API, web forms, or any other integration. You will need to take the ideas here and adapt them as needed.
 

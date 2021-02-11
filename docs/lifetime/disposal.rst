@@ -35,8 +35,8 @@ If you have singleton components (registered as ``SingleInstance()``) **they wil
 Automatic Disposal
 ------------------
 
-To take advantage of automatic deterministic disposal, your component must implement ``IDisposable``. 
-You can then register your component as needed and at the end of each lifetime scope in which the component 
+To take advantage of automatic deterministic disposal, your component must implement ``IDisposable``.
+You can then register your component as needed and at the end of each lifetime scope in which the component
 is resolved, the ``Dispose()`` method on the component will be called.
 
 .. sourcecode:: csharp
@@ -51,17 +51,17 @@ is resolved, the ``Dispose()`` method on the component will be called.
 Asynchronous Disposal Support
 -----------------------------
 
-If your components' disposal behaviour requires some I/O activity, such as flushing a buffer to a file,
+If your components' disposal behavior requires some I/O activity, such as flushing a buffer to a file,
 or sending a packet over the network to close a connection, then you may want to consider implementing
 the new .NET `IAsyncDisposable <https://docs.microsoft.com/en-us/dotnet/api/system.iasyncdisposable?view=netstandard-2.1>`_
 interface.
 
-In Autofac 5.0, support was added for the ``IAsyncDisposable`` interface, so lifetime scopes can now be disposed of 
+In Autofac 5.0, support was added for the ``IAsyncDisposable`` interface, so lifetime scopes can now be disposed of
 asynchronously:
 
 .. code-block:: csharp
 
-  class MyComponent : IDisposable, IAsyncDisposable 
+  class MyComponent : IDisposable, IAsyncDisposable
   {
     INetworkResource myResource;
 
@@ -89,14 +89,14 @@ asynchronously:
 When a lifetime scope is disposed of asynchronously, any registered components that implement ``IAsyncDisposable``
 in addition to ``IDisposable`` will have their ``DisposeAsync()`` method invoked, **instead** of the ``Dispose()`` method.
 
-If a component only implements the synchronous ``Dispose()`` method, 
+If a component only implements the synchronous ``Dispose()`` method,
 then it will still be invoked when the lifetime scope is disposed asynchronously.
 
 When using Autofac with the ASP.NET Core Integration, all per-request lifetime scopes are disposed of asynchronously.
 
-.. important:: 
+.. important::
 
-  While you do not *have* to implement ``IDisposable`` if you implement ``IAsyncDisposable``, we strongly 
+  While you do not *have* to implement ``IDisposable`` if you implement ``IAsyncDisposable``, we strongly
   recommend you do so.
 
   If your component only implements ``IAsyncDisposable``, but someone disposes of the scope synchronously,
@@ -123,14 +123,14 @@ Note that ``OnRelease()`` overrides the default handling of ``IDisposable.Dispos
 Disabling Disposal
 ------------------
 
-Components are owned by the container by default and will be disposed by it when appropriate. 
+Components are owned by the container by default and will be disposed by it when appropriate.
 To disable this, register a component as having external ownership:
 
 .. sourcecode:: csharp
 
     builder.RegisterType<SomeComponent>().ExternallyOwned();
 
-The container will never call ``Dispose()`` or ``DisposeAsync()`` on an object registered with external ownership. 
+The container will never call ``Dispose()`` or ``DisposeAsync()`` on an object registered with external ownership.
 It is up to you to dispose of components registered in this fashion.
 
 Another alternative for disabling disposal is to use the :doc:`implicit relationship <../resolve/relationships>` ``Owned<T>`` and :doc:`owned instances <../advanced/owned-instances>`. In this case, rather than putting a dependency ``T`` in your consuming code, you put a dependency on ``Owned<T>``. Your consuming code will then be responsible for disposal.

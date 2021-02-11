@@ -247,7 +247,7 @@ The output from the DOT graph tracer will look like this (and, yes, it's messy):
 
 However, let's say you save that to a file and then convert it to a PNG with Graphviz::
 
-    dot -Tpng -O mytrace.dot
+    dot -Tpng -O my-trace.dot
 
 The graphic output looks like this:
 
@@ -269,7 +269,7 @@ But what about something more complex? Here's an example of what a complex resol
 
 Looking at this graph, it tells us a lot of things:
 
-* Both the ``IHandler<string>`` and the ``IService1`` that was resolved need an ``IService2`` and it was fulilled by a single instance. That means it's either a singleton or maybe an instance-per-lifetime-scope.
+* Both the ``IHandler<string>`` and the ``IService1`` that was resolved need an ``IService2`` and it was fulfilled by a single instance. That means it's either a singleton or maybe an instance-per-lifetime-scope.
 * Both the ``IService1`` and ``IService2`` need an ``IService3`` and a new one was created for each instance.
 * ``IService3`` is decorated - see how it chains down to a node that looks more like a box? That indicates there's a decorator in play. You can see the component (the decorator) and the target (the thing being decorated) listed in that box.
 * ``IService3`` takes in an ``ILifetimeScope`` constructor parameter.
@@ -298,7 +298,7 @@ Events in the overall pipeline happen in this order:
 * Operation start
     * Resolve request start
         * Middleware start
-        * Middlware success / fail
+        * Middleware success / fail
     * Resolve request success / fail
 * Operation success / fail
 
@@ -372,7 +372,7 @@ When you get this low, you can control the subscriptions for your events separat
 
     // Subscribe to the diagnostics with your tracer.
     // Note the lambda that tells how to determine if
-    // the tracer shold get an event.
+    // the tracer should get an event.
     var tracer = new ConsoleOperationTracer();
     container.DiagnosticSource.Subscribe(tracer, e => e == "Autofac.Operation.Start");
 

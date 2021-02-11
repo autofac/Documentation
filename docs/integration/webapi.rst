@@ -113,18 +113,18 @@ After building your container pass it into a new instance of the ``AutofacWebApi
 
 Provide Filters via Dependency Injection
 ========================================
-Because attributes are created via the reflection API you don't get to call the constructor yourself. 
-That leaves you with no other option except for property injection when working with attributes. 
-The Autofac integration with Web API provides a mechanism that allows you to create classes that 
-implement the filter interfaces 
-(``IAutofacActionFilter``, ``IAutofacContinuationActionFilter``, ``IAutofacAuthorizationFilter`` and ``IAutofacExceptionFilter``) 
+Because attributes are created via the reflection API you don't get to call the constructor yourself.
+That leaves you with no other option except for property injection when working with attributes.
+The Autofac integration with Web API provides a mechanism that allows you to create classes that
+implement the filter interfaces
+(``IAutofacActionFilter``, ``IAutofacContinuationActionFilter``, ``IAutofacAuthorizationFilter`` and ``IAutofacExceptionFilter``)
 and wire them up to the desired controller or action method using the registration syntax on the container builder.
 
 Register the Filter Provider
 ----------------------------
 
-You need to register the Autofac filter provider implementation because it does the work of wiring up the filter 
-based on the registration. This is done by calling the ``RegisterWebApiFilterProvider`` method on the container 
+You need to register the Autofac filter provider implementation because it does the work of wiring up the filter
+based on the registration. This is done by calling the ``RegisterWebApiFilterProvider`` method on the container
 builder and providing an ``HttpConfiguration`` instance.
 
 .. sourcecode:: csharp
@@ -135,8 +135,8 @@ builder and providing an ``HttpConfiguration`` instance.
 Implement the Filter Interface
 ------------------------------
 
-Instead of deriving from one of the existing Web API filter attributes your class implements the 
-appropriate filter interface defined in the integration. 
+Instead of deriving from one of the existing Web API filter attributes your class implements the
+appropriate filter interface defined in the integration.
 
 Standard Action Filter Interface
 ********************************
@@ -144,7 +144,7 @@ Standard Action Filter Interface
 The ``IAutofacActionFilter`` interface lets you define a filter that gets invoked before and after
 the execution of your action, in a similar way as if you derived from ``ActionFilterAttribute``.
 
-The filter below is an action filter and  
+The filter below is an action filter and
 implements ``IAutofacActionFilter`` instead of ``System.Web.Http.Filters.IActionFilter``.
 
 .. sourcecode:: csharp
@@ -171,7 +171,7 @@ implements ``IAutofacActionFilter`` instead of ``System.Web.Http.Filters.IAction
       }
     }
 
-Note in the sample there's no actual async code that runs so it returns ``Task.FromResult(0)``, which is a common way to return an "empty task." 
+Note in the sample there's no actual async code that runs so it returns ``Task.FromResult(0)``, which is a common way to return an "empty task."
 If your filter does require async code, you can return a real ``Task`` object or use ``async``/``await`` code just like any other asynchronous method.
 
 Continuation Action Filter Interface
@@ -200,15 +200,15 @@ such as when you want to allocate a ``TransactionScope`` to the request, like so
         }
     }
 
-.. note:: 
+.. note::
 
   The regular ``IAutofacActionFilter`` runs inside a continuation filter, so async context is also preserved there between
-  ``OnActionExecutingAsync``, the action method itself, and the ``OnActionExecutedAsync`` of the filter. 
+  ``OnActionExecutingAsync``, the action method itself, and the ``OnActionExecutedAsync`` of the filter.
 
 Register the Filter
 -------------------
 
-For the filter to execute you need to register it with the container and inform it which controller (or controllers), and optionally action, should be targeted. 
+For the filter to execute you need to register it with the container and inform it which controller (or controllers), and optionally action, should be targeted.
 This is done using ``ContainerBuilder`` extension methods, which exist for each of the filter types:
 
 - ActionFilter
@@ -226,7 +226,7 @@ For each of the filter types, there are a couple of registration methods:
   Register this filter to run for all action methods on all controllers, in the same way as registering a global Web API filter.
 
 ``AsWebApi{FilterType}For<TController>()``
-  Register the filter for the specified controller, in the same way that placing 
+  Register the filter for the specified controller, in the same way that placing
   an attribute based filter at the controller level would.
 
   Specifying a base controller class will cause this filter to be applied to all controllers that derive from it.
@@ -244,12 +244,12 @@ For each of the filter types, there are a couple of registration methods:
           .AsWebApiActionFilterFor<ValuesController>(c => c.Get(default(int)))
           .InstancePerRequest();
 
-  When applying the filter to an action method that requires a parameter use the ``default`` keyword with the data type of the parameter 
-  as a placeholder in your lambda expression. For example, the ``Get`` action method in the example above required an ``int`` parameter 
+  When applying the filter to an action method that requires a parameter use the ``default`` keyword with the data type of the parameter
+  as a placeholder in your lambda expression. For example, the ``Get`` action method in the example above required an ``int`` parameter
   and used ``default(int)`` as a strongly-typed placeholder in the lambda expression.
 
 ``AsWebApi{FilterType}Where()``
-  The ``*Where`` methods allow you to specify a predicate that can make more advanced custom decisions about which actions and/or controllers to attach to. 
+  The ``*Where`` methods allow you to specify a predicate that can make more advanced custom decisions about which actions and/or controllers to attach to.
 
   In the example below an Exception filter is being applied to all POST methods:
 
@@ -271,7 +271,7 @@ For each of the filter types, there are a couple of registration methods:
           .AsWebApiExceptionFilterWhere((scope, action) => scope.Resolve<IFilterConfig>().ShouldFilter(action))
           .InstancePerRequest();
 
-  .. note:: 
+  .. note::
 
     Filter predicates are invoked once for each action/filter combination; they are not invoked on every request.
 
@@ -289,10 +289,10 @@ You can chain your filter registrations together to attach a filter against mult
 
 Filter Overrides
 ----------------
-When registering filters, there are basic registration methods like ``AsWebApiActionFilterFor<TController>()`` and override registration methods 
-like ``AsWebApiActionFilterOverrideFor<TController>()``. 
+When registering filters, there are basic registration methods like ``AsWebApiActionFilterFor<TController>()`` and override registration methods
+like ``AsWebApiActionFilterOverrideFor<TController>()``.
 
-The point of the override methods is to provide a way to ensure certain filters execute first. 
+The point of the override methods is to provide a way to ensure certain filters execute first.
 You can have as many overrides as you want - these aren't *replacement* filters, just filters that run *first*.
 
 Filters will run in the order:
@@ -324,7 +324,7 @@ In the same way as with standard Web API filters,  you are able to set the ``Htt
     }
   }
 
-To match the standard Web API behaviour, if you set the ``Response`` property, then no subsequent action filters will be 
+To match the standard Web API behavior, if you set the ``Response`` property, then no subsequent action filters will be
 invoked. However, any action filters already invoked will have ``OnActionExecutedAsync`` called with the appropriate response populated.
 
 Standard Web API Filter Attributes are Singletons
@@ -335,7 +335,7 @@ You may notice that if you use the standard Web API filters that you can't use `
 Unlike the filter provider in :doc:`MVC <mvc>`, the one in Web API does not allow you to specify that the filter instances should not be cached.
 This means that **all filter attributes in Web API are effectively singleton instances that exist for the entire lifetime of the application.**
 
-If you are trying to get per-request dependencies in a filter, you'll find that will only work if you use the Autofac filter interfaces. 
+If you are trying to get per-request dependencies in a filter, you'll find that will only work if you use the Autofac filter interfaces.
 Using the standard Web API filters, the dependencies will be injected once - the first time the filter is resolved - and never again.
 
 The singleton nature of the existing Web API filter attributes is why we need our own filter interfaces.
@@ -372,9 +372,9 @@ When setting up filters, you may want to manually add filters to a collection li
 
     config.Filters.Add(new MyActionFilter());
 
-**Autofac will not inject properties on filters registered this way.** This is somewhat similar to when you use ``RegisterInstance`` 
-to put a pre-constructed instance of an object into Autofac - Autofac won't inject or modify pre-constructed instances. 
-This same holds true for filter instances that are pre-constructed and added to a filter collection. 
+**Autofac will not inject properties on filters registered this way.** This is somewhat similar to when you use ``RegisterInstance``
+to put a pre-constructed instance of an object into Autofac - Autofac won't inject or modify pre-constructed instances.
+This same holds true for filter instances that are pre-constructed and added to a filter collection.
 As with attribute filters (as noted above), you can work around this by using service location rather than property injection.
 
 Provide Model Binders via Dependency Injection

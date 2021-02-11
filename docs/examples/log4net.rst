@@ -7,11 +7,11 @@ add that middleware to all your registrations.
 
 The ``Log4NetMiddleware`` is also a good example of how to use :doc:`pipeline middleware <../advanced/pipelines>`.
 
-Here's the sample middleware that injects ``ILog`` parameters based on the type of the component being activated. 
+Here's the sample middleware that injects ``ILog`` parameters based on the type of the component being activated.
 This sample middleware handles both constructor and property injection.
 
 .. sourcecode:: csharp
-    
+
     public class Log4NetMiddleware : IResolveMiddleware
     {
         public PipelinePhase Phase => PipelinePhase.ParameterSelection;
@@ -58,7 +58,7 @@ Here's the simple ``MiddlewareModule`` (not specific to Logging), that adds a si
 pipeline for every registration.
 
 .. sourcecode:: csharp
-    
+
     // Adds a piece of middleware to every registration.
     public class MiddlewareModule : Autofac.Module
     {
@@ -79,5 +79,3 @@ pipeline for every registration.
             };
         }
     }
-
-Thanks for the original idea/contribution by Rich Tebb/Bailey Ling where the idea was posted `on the Autofac newsgroup <https://groups.google.com/forum/#!msg/autofac/Qb-dVPMbna0/s-jLeWeST3AJ>`_.

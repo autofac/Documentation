@@ -295,9 +295,9 @@ There is one abstract member to implement:
 
 .. sourcecode:: csharp
 
-    protected abstract IInjectionBehaviour GetInjectionBehaviourForHandlerType(Type handlerType);
+    protected abstract IInjectionBehavior GetInjectionBehaviorForHandlerType(Type handlerType);
 
-The returned ``IInjectionBehaviour`` can be one of the predefined ``NoInjection``, ``PropertyInjection``, or ``UnsetPropertyInjection`` properties; or a custom implementation of the ``IInjectionBehaviour`` interface.
+The returned ``IInjectionBehavior`` can be one of the predefined ``NoInjection``, ``PropertyInjection``, or ``UnsetPropertyInjection`` properties; or a custom implementation of the ``IInjectionBehavior`` interface.
 
 Example
 =======

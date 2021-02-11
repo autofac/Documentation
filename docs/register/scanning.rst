@@ -50,7 +50,7 @@ The ``Except()`` predicate also allows you to customize the registration for the
 .. sourcecode:: csharp
 
     builder.RegisterAssemblyTypes(asm)
-           .Except<MyCustomisedType>(ct =>
+           .Except<MyCustomizedType>(ct =>
               ct.As<ISpecial>().SingleInstance());
 
 Multiple filters can be used, in which case they will be applied with logical AND.

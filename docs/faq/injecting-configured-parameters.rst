@@ -37,7 +37,7 @@ For this question, let's imagine a simple email notification system like this:
       void SendMessage(string toAddress, string fromAddress, message);
     }
 
-    // Notice this implementaton takes a string parameter for the server address -
+    // Notice this implementation takes a string parameter for the server address -
     // something we won't know until runtime so we can't explicitly register the
     // parameter value.
     public class EmailServer : IEmailServer
@@ -59,7 +59,7 @@ When you register things in Autofac, you might have registrations that look like
 .. sourcecode:: csharp
 
     var builder = new ContainerBuilder();
-    builder.RegisterType<Notifer>().As<INotifer>();
+    builder.RegisterType<Notifier>().As<INotifier>();
     builder.RegisterType<EmailServer>().As<IEmailServer>();
     var container = builder.Build();
 

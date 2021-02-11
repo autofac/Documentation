@@ -31,7 +31,7 @@ To take advantage of Autofac in your .NET Core application via the ``Microsoft.E
       {
         // The Microsoft.Extensions.DependencyInjection.ServiceCollection
         // has extension methods provided by other .NET Core libraries to
-        // regsiter services with DI.
+        // register services with DI.
         var serviceCollection = new ServiceCollection();
 
         // The Microsoft.Extensions.Logging package provides this one-liner

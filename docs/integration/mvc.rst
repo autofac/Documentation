@@ -62,7 +62,7 @@ At application startup, while building your Autofac container, you should regist
     // You can register controllers all at once using assembly scanning...
     builder.RegisterControllers(typeof(MvcApplication).Assembly);
 
-    // ...or you can register individual controlllers manually.
+    // ...or you can register individual controllers manually.
     builder.RegisterType<HomeController>().InstancePerRequest();
 
 Note that ASP.NET MVC requests controllers by their concrete types, so registering them ``As<IController>()`` is incorrect. Also, if you register controllers manually and choose to specify lifetimes, you must register them as ``InstancePerDependency()`` or ``InstancePerRequest()`` - **ASP.NET MVC will throw an exception if you try to reuse a controller instance for multiple requests**.

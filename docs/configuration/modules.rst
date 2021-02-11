@@ -55,7 +55,7 @@ Modules are constructed programmatically, so all of the component registration l
 Dynamic Configuration
 ---------------------
 
-Configuring components within modules is dynamic: the behaviour of a module can vary based on the runtime environment. This is hard, if not impossible, with purely component-based configuration.
+Configuring components within modules is dynamic: the behavior of a module can vary based on the runtime environment. This is hard, if not impossible, with purely component-based configuration.
 
 Advanced Extensions
 -------------------
@@ -163,4 +163,4 @@ Common Use Cases for Modules
  * Package optional application features as 'plug-ins'
  * Provide pre-built packages for integration with a system, e.g. an accounting system
  * Register a number of similar services that are often used together, e.g. a set of file format converters
- * New or customised mechanisms for configuring the container, e.g. JSON/XML configuration is implemented using a module; configuration using attributes could be added this way
+ * New or customized mechanisms for configuring the container, e.g. JSON/XML configuration is implemented using a module; configuration using attributes could be added this way

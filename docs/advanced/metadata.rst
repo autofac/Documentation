@@ -87,7 +87,7 @@ At registration time, the class is used with the overloaded ``WithMetadata`` met
 
 Notice the use of the strongly-typed ``AppenderName`` property.
 
-Registration and consumption of metadata are separate, so strongy-typed metadata can be consumed via the weakly-typed techniques and vice-versa.
+Registration and consumption of metadata are separate, so strongly-typed metadata can be consumed via the weakly-typed techniques and vice-versa.
 
 You can also provide default values using the ``DefaultValue`` attribute:
 
