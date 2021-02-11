@@ -124,6 +124,30 @@ When you resolve the instance per lifetime scope component, you get a single ins
       }
     }
 
+    using(var scope3 = container.BeginLifetimeScope())
+    {
+      var w3 = scope3.Resolve<Worker>();
+      using(var scope4 = scope3.BeginLifetimeScope())
+      {
+        // w3 and w4 are DIFFERENT because they come from
+        // two different scopes.
+        var w4 = scope4.Resolve<Worker>();
+      }
+    }
+
+    // The CONTAINER is a lifetime scope! If you resolve an
+    // InstancePerLifetimeScope service from the container,
+    // that instance will live for the duration of the container
+    // and will effectively be a singleton. It will be held
+    // for the lifetime of the container in case something else
+    // tries to resolve a Worker from the container.
+    var w5 = container.Resolve<Worker>();
+    using(var scope5 = container.BeginLifetimeScope())
+    {
+      // w5 and w6 are DIFFERENT.
+      var w6 = scope5.Resolve<Worker>();
+    }
+
 .. _lifetime-instance-scope-per-matching-lifetime-scope:
 
 Instance Per Matching Lifetime Scope
