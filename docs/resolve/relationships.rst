@@ -77,9 +77,9 @@ A *lazy dependency* is not instantiated until its first use. This appears where 
 
       public void M()
       {
-          // The component implementing B is created the
-          // first time M() is called
-          _b.Value.DoSomething();
+        // The component implementing B is created the
+        // first time M() is called
+        _b.Value.DoSomething();
       }
     }
 
@@ -102,12 +102,12 @@ This type of relationship is interesting particularly when working with componen
 
       public void M()
       {
-          // _b is used for some task
-          _b.Value.DoSomething();
+        // _b is used for some task
+        _b.Value.DoSomething();
 
-          // Here _b is no longer needed, so
-          // it is released
-          _b.Dispose();
+        // Here _b is no longer needed, so
+        // it is released
+        _b.Dispose();
       }
     }
 
@@ -163,21 +163,74 @@ An example of this relationship looks like:
     public class B
     {
       public B() {}
-      
+
       public void DoSomething() {}
     }
 
     public class A
     {
-      Func<B> _newB;
+      Func<B> _bFactory;
 
-      public A(Func<B> b) { _newB = b; }
+      public A(Func<B> b) { _bFactory = b; }
 
       public void M()
       {
-          var b = _newB();
-          b.DoSomething();
+        // Calling the Func<B> resolves it from
+        // the lifetime scope. It's just like calling
+        // Resolve<B>() - if there are any constructor
+        // parameters, they all get resolved from
+        // the scope.
+        var b = _bFactory();
+        b.DoSomething();
       }
+    }
+
+Register the ``A`` and ``B`` components, then resolve:
+
+.. sourcecode:: csharp
+
+    var builder = new ContainerBuilder();
+    builder.RegisterType<A>();
+    builder.RegisterType<B>();
+    var container = builder.Build();
+
+    using(var scope = container.BeginLifetimeScope())
+    {
+      // B won't actually be resolved from the scope
+      // until A calls that injected Func<B> factory method.
+      var a = scope.Resolve<A>();
+
+      // Here it'll resolve a B!
+      a.M();
+
+      // Since B is registered InstancePerDependency, each call
+      // to a.M() will resolve a NEW instance of B.
+      a.M();
+      a.M();
+    }
+
+Lifetime scopes are respected, so you can use that to your advantage.
+
+.. sourcecode:: csharp
+
+    // This time B will be registered InstancePerLifetimeScope
+    // so all of the resolve calls in a given scope will get
+    // the same B instance.
+    var builder = new ContainerBuilder();
+    builder.RegisterType<A>();
+    builder.RegisterType<B>().InstancePerLifetimeScope();
+    var container = builder.Build();
+
+    using(var scope = container.BeginLifetimeScope())
+    {
+      // B gets resolved inside the A.M() method
+      // but since B is InstancePerLifetimeScope, the
+      // A.M() method will get the SAME instance each
+      // time.
+      var a = scope.Resolve<A>();
+      a.M();
+      a.M();
+      a.M();
     }
 
 
@@ -190,21 +243,22 @@ You can also use an *auto-generated factory* to provide parameters when creating
     public class B
     {
       public B(string someString, int id) {}
-      
+
       public void DoSomething() {}
     }
 
     public class A
     {
-        Func<int, string, B> _newB;
+      // The parameter types here match the types in the B constructor.
+      Func<int, string, B> _bFactory;
 
-        public A(Func<int, string, B> b) { _newB = b }
+      public A(Func<int, string, B> b) { _bFactory = b }
 
-        public void M()
-        {
-            var b = _newB(42, "http://hell.owor.ld");
-            b.DoSomething();
-        }
+      public void M()
+      {
+        var b = _bFactory(42, "http://hell.owor.ld");
+        b.DoSomething();
+      }
     }
 
 Note that since we're resolving the instance rather than directly calling the constructor we don't need to declare the parameters in the same order as they appear in the constructor definition, nor do we need to provide *all* the parameters listed in the constructor. If some of the constructor's parameters can be resolved by the lifetime scope, then those parameters can be omitted from the ``Func<X, Y, B>`` signature being declared. You only *need* to list the types that the scope can't resolve.
@@ -215,31 +269,89 @@ Example:
 
 .. sourcecode:: csharp
 
-    //Suppose that P, Q & R are all registered with the Autofac Container.
+    // Suppose that Q and R are registered with the Autofac container,
+    // but int and P are not. You need to provide those at runtime.
     public class B
     {
       public B(int id, P peaDependency, Q queueDependency, R ourDependency) {}
-      
+
       public void DoSomething() {}
     }
 
     public class A
     {
-        Func<int, P, B> _newB;
+      // Note Q and R aren't in this factory.
+      Func<int, P, B> _bFactory;
 
-        public A(Func<int, P, B> bFactory) { _newB = bFactory }
+      public A(Func<int, P, B> bFactory) { _bFactory = bFactory }
 
-        public void M(P existingPea)
-        {
-            // The Q and R will be resolved by Autofac, but P will be existingPea instead.
-            var b = _newB(42, existingPea);
-            b.DoSomething();
-        }
+      public void M(P existingPea)
+      {
+        // The Q and R will be resolved by Autofac, but the int
+        // and P get provided by you as parameters here.
+        var b = _bFactory(42, existingPea);
+        b.DoSomething();
+      }
     }
 
 Internally, Autofac determines what values to use for the constructor args solely based on the type and behaves as though we've temporarily defined the input values for resolution. A consequence of this is that  **auto-generated function factories cannot have duplicate types in the input parameter list.** See below for further notes on this.
 
-**Lifetime scopes are respected** using this relationship type, just as they are when using :doc:`delegate factories <../advanced/delegate-factories>`. If you register an object as ``InstancePerDependency()`` and call the ``Func<X, Y, B>`` multiple times, you'll get a new instance each time. However, if you register an object as ``SingleInstance()`` and call the ``Func<X, Y, B>`` to resolve the object more than once, you will get *the same object instance every time regardless of the different parameters you pass in.* Just passing different parameters will not break the respect for the lifetime scope.
+**Lifetime scopes are respected** using this relationship type, just as they are when using ``Func<B>`` or :doc:`delegate factories <../advanced/delegate-factories>`. If you register an object as ``InstancePerDependency()`` and call the ``Func<X, Y, B>`` multiple times, you'll get a new instance each time. However, if you register an object as ``SingleInstance()`` and call the ``Func<X, Y, B>`` to resolve the object more than once, you will get *the same object instance every time regardless of the different parameters you pass in.* Just passing different parameters will not break the respect for the lifetime scope:
+
+.. sourcecode:: csharp
+
+    var builder = new ContainerBuilder();
+    builder.RegisterType<A>();
+    builder.RegisterType<B>();
+    builder.RegisterType<Q>();
+    builder.RegisterType<R>();
+    var container = builder.Build();
+
+    using(var scope = container.BeginLifetimeScope())
+    {
+      // B won't actually be resolved from the scope
+      // until A calls that injected Func<int, P, B> factory method.
+      var a = scope.Resolve<A>();
+      var p = new P();
+
+      // Here it'll resolve a B!
+      a.M(p);
+
+      // Since B is registered InstancePerDependency, each call
+      // to a.M(P) will resolve a NEW instance of B.
+      a.M(p);
+      a.M(p);
+    }
+
+This shows how lifetime scopes are respected regardless of parameters:
+
+.. sourcecode:: csharp
+
+    // Note we're registering B as InstancePerLifetimeScope this time. That means
+    // B will get resolved fresh only ONE TIME per lifetime scope, even if different
+    // parameters are passed.
+    var builder = new ContainerBuilder();
+    builder.RegisterType<B>().InstancePerLifetimeScope();
+    builder.RegisterType<Q>();
+    builder.RegisterType<R>();
+    var container = builder.Build();
+
+    using(var scope = container.BeginLifetimeScope())
+    {
+      // Get the factory, just like it would be in the A class.
+      var factory = scope.Resolve<Func<int, P, B>>();
+
+      // First call, the B will be resolved with these parameters:
+      var b1 = factory(10, new P());
+
+      // Second call, the B will be the SAME even though the
+      // parameters changed because B is registered InstancePerLifetimeScope.
+      var b2 = factory(17, new P());
+
+      // In a unit test this would pass because they're the same.
+      Assert.Same(b1, b2);
+    }
+
 
 As noted above, ``Func<X, Y, B>`` treats arguments as ``TypedParameter`` so you can't have duplicate types in the parameter list. For example, say you have a type like this:
 
