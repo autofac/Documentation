@@ -13,4 +13,3 @@ Autofac offers integration into several ASP.NET application types. The integrati
     webapi.rst
     signalr.rst
     webforms.rst
-    ria.rst
