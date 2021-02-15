@@ -4,12 +4,11 @@ Release Notes
 
 Release notes for Autofac and integration packages are all stored in the GitHub releases for the respective package.
 
-
-
 * Core components
 
  - `Autofac <https://github.com/autofac/Autofac/releases>`_
  - `Autofac.Configuration <https://github.com/autofac/Autofac.Configuration/releases>`_
+ - `Autofac.Diagnostics.DotGraph <https://github.com/autofac/Autofac.Diagnostics.DotGraph/releases>`_
 
 * Integration libraries
 
@@ -20,19 +19,16 @@ Release notes for Autofac and integration packages are all stored in the GitHub 
   + `MVC <https://github.com/autofac/Autofac.Mvc/releases>`_
   + `Web API <https://github.com/autofac/Autofac.WebApi/releases>`_
   + `SignalR <https://github.com/autofac/Autofac.SignalR/releases>`_
-  + `RIA/Domain Services <https://github.com/autofac/Autofac.Extras.DomainServices/releases>`_
   + OWIN
 
     * `OWIN Core <https://github.com/autofac/Autofac.Owin/releases>`_
-    * `Web API <https://github.com/autofac/Autofac.WebApi.Owin/releases>`__
-    * `MVC <https://github.com/autofac/Autofac.Mvc.Owin/releases>`__
+    * `Web API <https://github.com/autofac/Autofac.WebApi.Owin/releases>`_
+    * `MVC <https://github.com/autofac/Autofac.Mvc.Owin/releases>`_
 
- - `WCF <https://github.com/autofac/Autofac.Wcf/releases>`__
+ - `WCF <https://github.com/autofac/Autofac.Wcf/releases>`_
  - `MEF <https://github.com/autofac/Autofac.Mef/releases>`_
  - `Service Fabric <https://github.com/autofac/Autofac.ServiceFabric/releases>`_
  - `Common Service Locator <https://github.com/autofac/Autofac.Extras.CommonServiceLocator/releases>`_
- - `Enterprise Library 5 Configurator <https://github.com/autofac/Autofac/wiki/Enterprise-Library-Configurator-Release-Notes>`_
- - `NHibernate <https://github.com/autofac/Autofac.Extras.NHibernate/releases>`_
  - `Moq <https://github.com/autofac/Autofac.Extras.Moq/releases>`_
  - `FakeItEasy <https://github.com/autofac/Autofac.Extras.FakeItEasy/releases>`_
  - `MvvmCross <https://github.com/autofac/Autofac.Extras.MvvmCross/releases>`_
@@ -40,8 +36,8 @@ Release notes for Autofac and integration packages are all stored in the GitHub 
 * Multitenancy
 
  - `General Applications <https://github.com/autofac/Autofac.Multitenant/releases>`_
- - `WCF <https://github.com/autofac/Autofac.Multitenant.Wcf/releases>`__
- - `ASP.NET Core <https://github.com/autofac/Autofac.AspNetCore.Multitenant/releases>`__
+ - `WCF <https://github.com/autofac/Autofac.Multitenant.Wcf/releases>`_
+ - `ASP.NET Core <https://github.com/autofac/Autofac.AspNetCore.Multitenant/releases>`_
 
 * Extended features
 

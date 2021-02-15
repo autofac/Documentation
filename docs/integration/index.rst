@@ -12,6 +12,5 @@ Application Integration
     servicefabric.rst
     mef.rst
     csl.rst
-    nhibernate.rst
     moq.rst
     fakeiteasy.rst
