@@ -67,7 +67,7 @@ Here's a unit test that shows what it looks like to forcibly create a captive de
 
             // The rule manager is a single-instance component. It
             // will only ever be instantiated one time and the cached
-            // instance will be used thereafter. It will be always be resolved
+            // instance will be used thereafter. It will always be resolved
             // from the root lifetime scope (the container) because
             // it needs to be shared.
             builder.RegisterType<RuleManager>()
