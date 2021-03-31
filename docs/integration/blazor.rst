@@ -10,27 +10,25 @@ Blazor
 
 **Client-side** injection is slightly more restricted due to requirements for `WebAssembly <https://webassembly.org>`_ hosting.
 
-At present (as of 11/9/2019), some of the features around ``Startup`` classes are not available: ``ConfiguresServices`` and ``ConfigureContainer`` will not be executed by ``UseBlazorStartup``.
-
-The alternative is to use ``UseServiceProviderFactory`` with an instance of ``AutofacServiceProviderFactory``. The ``AutofacServiceProviderFactory`` takes an ``Action`` on a ``ContainerBuilder`` which can be used for any registrations.
-
+This example for WebAssembly works as of March 30, 2021 with .NET 5.
 Example:
 
 .. sourcecode:: csharp
 
   public class Program
   {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
-      CreateHostBuilder(args).Build().Run();
+        var builder = WebAssemblyHostBuilder.CreateDefault(args);
+        builder.ConfigureContainer(new AutofacServiceProviderFactory(ConfigureContainer));
+
+        builder.RootComponents.Add<App>("#app");
+
+        await builder.Build().RunAsync();
     }
 
-    public static IWebAssemblyHostBuilder CreateHostBuilder(string[] args) =>
-      BlazorWebAssemblyHost.CreateDefaultBuilder()
-        .UseServiceProviderFactory(new AutofacServiceProviderFactory(Register))
-        .UseBlazorStartup<Startup>();
 
-    private static void Register(ContainerBuilder builder)
+    private static void ConfigureContainer(ContainerBuilder builder)
     {
       // add any registrations here
     }
