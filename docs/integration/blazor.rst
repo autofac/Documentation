@@ -10,7 +10,7 @@ Blazor
 
 **Client-side** injection is slightly more restricted due to requirements for `WebAssembly <https://webassembly.org>`_ hosting.
 
-This example for WebAssembly works as of 30/03/2021 with Net5. 
+This example for WebAssembly works as of March 30, 2021 with .NET 5.
 Example:
 
 .. sourcecode:: csharp
