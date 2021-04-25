@@ -150,18 +150,15 @@ In your Startup class (which is basically the same across all the versions of AS
 
     public class Startup
     {
-      public Startup(IHostingEnvironment env)
+      public Startup(IConfiguration configuration)
       {
-        // In ASP.NET Core 3.0 `env` will be an IWebHostEnvironment, not IHostingEnvironment.
-        var builder = new ConfigurationBuilder()
-            .SetBasePath(env.ContentRootPath)
-            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-            .AddEnvironmentVariables();
-        this.Configuration = builder.Build();
+        // In ASP.NET Core 3.x, using `Host.CreateDefaultBuilder` (as in the preceding Program.cs snippet) will 
+        // set up some configuration for you based on your appsettings.json and environment variables. See "Remarks" at 
+        // https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.host.createdefaultbuilder for details.
+        this.Configuration = configuration;
       }
 
-      public IConfigurationRoot Configuration { get; private set; }
+      public IConfiguration Configuration { get; private set; }
 
       public ILifetimeScope AutofacContainer { get; private set; }
 
