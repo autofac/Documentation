@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "ms-python.python",
+    "lextudio.restructuredtext",
+    "stkb.rewrap",
+    "travisillig.vscode-json-stable-stringify"
+  ]
+}
