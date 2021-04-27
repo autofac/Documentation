@@ -1,19 +1,26 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
-    "version": "2.0.0",
-    "tasks": [
-      {
-        "label": "Build HTML Docs",
-        "type": "shell",
-        "command": "./make.bat html",
-        "options": {
-          "cwd": "${workspaceFolder}/docs"
-        },
-        "group": {
-          "kind": "build",
-          "isDefault": true
-        }
-      }
-    ]
+  "tasks": [
+    {
+      "command": "./make.bat html",
+      "group": {
+        "isDefault": true,
+        "kind": "build"
+      },
+      "label": "Build HTML Docs",
+      "options": {
+        "cwd": "${workspaceFolder}/docs"
+      },
+      "type": "shell"
+    },
+    {
+      "detail": "Generate PlantUML diagrams as puml files change.",
+      "group": "build",
+      "label": "Watch PlantUML",
+      "problemMatcher": [
+      ],
+      "script": "watch",
+      "type": "npm"
+    }
+  ],
+  "version": "2.0.0"
 }
