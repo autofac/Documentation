@@ -1,3 +1,48 @@
 @startuml
-Bob->Alice : hello
+' Layout hints:
+' https://crashedmind.github.io/PlantUMLHitchhikersGuide/layout/layout.html
+
+database root [
+  <b>Container / Root Lifetime Scope</b>
+
+  The container is where the primary
+  set of registrations live. It serves as
+  the root lifetime scope and holds
+  references to any singletons so they
+  can be shared across all child scopes.
+]
+
+database child1 [
+  <b>Lifetime Scope</b>
+]
+
+database child2 [
+  <b>Lifetime Scope</b>
+
+  Child lifetime scopes can start from
+  the container. All of the registrations
+  from the root are available, but
+  additional registrations can be added
+  in each child scope to override defaults
+  or insert new services.
+]
+
+database child1_1 [
+  <b>Lifetime Scope</b>
+]
+
+database child1_2 [
+  <b>Lifetime Scope</b>
+
+  Child lifetime scopes can start from
+  other lifetime scopes, not just the
+  root. These can be additional units of
+  work or areas where overrides and
+  new services need to be registered.
+]
+
+root -d-> child1
+root -d-> child2
+child1 -d-> child1_1
+child1 -d-> child1_2
 @enduml

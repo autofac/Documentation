@@ -42,7 +42,13 @@ The **scope** of a service is the area in the application where that service can
       // The scope of "component" is just within these
       // braces. You can't use it out there, but the
       // component can use the shared singleton.
-      component.DoWork(Singleton);
+      for (var i = 0; i < 10; i++)
+      {
+        // The scope of "i" is only inside the for loop,
+        // but the singleton is still available, as is
+        // the component.
+        component.DoWork(Singleton, i);
+      }
     }
 
 The concept of a **lifetime scope** in Autofac combines these two notions. Effectively, **a lifetime scope equates with a unit of work in your application**. A unit of work might begin a lifetime scope at the start, then services required for that unit of work get resolved from a lifetime scope. As you resolve services, Autofac tracks disposable (``IDisposable``) components that are resolved. At the end of the unit of work, you dispose of the associated lifetime scope and Autofac will automatically clean up/dispose of the resolved services.
@@ -60,13 +66,26 @@ As you work in your application, it's good to remember these concepts so you mak
 Scopes and Hierarchy
 --------------------
 
-The easiest way to visualize lifetime scopes is as a hierarchy, like a tree. You start with the root container, and each unit of work (web request, etc.) branches off from there.
+The easiest way to visualize lifetime scopes is as a hierarchy, like a tree. You start with the root container - the *root lifetime scope* - and each unit of work (web request, etc.) - each *child lifetime scope* - branches off from there.
 
 .. image:: lifetime-scope-tree.png
 
-TODO: Scopes are hierarchical from the container, like a tree
+When you build an Autofac container, what you're creating is that root container/lifetime scope. :doc:`Application integration packages <../integration/index>` or application code can create child lifetime scopes from the container, or even create children from other children.
 
-TODO: Lifetime can dictate where dependencies come from, like a singleton gets dependencies from its scope. You can go UP the tree to the root but you can't go DOWN.
+Lifetime scopes help determine where dependencies come from. *In general*, a component will try to get its dependencies from the lifetime scope resolving the component. For example, if you're in one of the child lifetime scopes and try to resolve something, Autofac will try to get all of the component's dependencies from the child scope.
+
+What affects this mechanism is the "lifetime" aspect of "lifetime scope." Some components, like singletons need to be shared across multiple scopes. This affects how dependencies get located. The "basic rules" are:
+
+- A child lifetime scope can get dependencies from parent scopes, but a parent scope may not reach down into a child scope. (You can locate things by moving "up the tree" but you can't move "down the tree.")
+- A component will get its dependencies from the scope that owns the component even if the component is resolved by a scope further down the tree. For example, singletons are owned by the root lifetime scope because they need to be shared across all child scopes. When you resolve a singleton, *all of its dependencies will come from the root scope*. It doesn't matter if you're resolving it from a child scope and have overrides or other things you think the singleton should use. Doing it this way ensures you can't dispose dependencies out from under the singleton; and that you won't create a memory leak by holding references to things in child scopes after the scope is disposed.
+
+Part of the job of the lifetime scope is to :doc:`handle disposal of the components you resolve <disposal>`. When you resolve a component that implements ``IDisposable``, the owning lifetime scope will hold a reference to the component so it can be properly disposed when the scope is disposed. :doc:`You can dig deeper into how to work with disposal <disposal>` if you like, but some basic things to consider:
+
+- If you resolve ``IDisposable`` items from the root lifetime scope (container) they will be held until the container is disposed, which is generally at application end. **This can cause a memory leak.** Always try to resolve things from child lifetime scopes and dispose of the scopes when you're done with them.
+- Disposing a parent lifetime scope does not automatically dispose of the children. Using the diagram as an example, if you dispose of the root lifetime scope it will not dispose of the four child scopes out there. It's up to you as the creator of lifetime scopes to responsibly dispose them.
+- If you dispose a parent scope but keep using the child scope, things will fail. You can't resolve dependencies from a disposed scope. It's recommended you dispose scopes in the reverse order created.
+
+You can read more about :doc:`working with lifetime scopes <working-with-scopes>` (including more code examples!), :doc:`component disposal <disposal>` and the different :doc:`instance scopes available <instance-scope>` in the respective documentation.
 
 ------------------------
 Example: Web Application
