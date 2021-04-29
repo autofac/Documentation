@@ -8,8 +8,9 @@ database root [
   The container is where the primary
   set of registrations live. It serves as
   the root lifetime scope and holds
-  references to any singletons so they
-  can be shared across all child scopes.
+  references to singletons declared at
+  the root level so they can be shared
+  across all child scopes.
 ]
 
 database child1 [
