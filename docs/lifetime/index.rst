@@ -77,7 +77,7 @@ Lifetime scopes help determine where dependencies come from. *In general*, a com
 What affects this mechanism is the "lifetime" aspect of "lifetime scope." Some components, like singletons need to be shared across multiple scopes. This affects how dependencies get located. The "basic rules" are:
 
 - A child lifetime scope can get dependencies from parent scopes, but a parent scope may not reach down into a child scope. (You can locate things by moving "up the tree" but you can't move "down the tree.")
-- A component will get its dependencies from the scope that owns the component even if the component is resolved by a scope further down the tree. For example, singletons are owned by the root lifetime scope because they need to be shared across all child scopes. When you resolve a singleton, *all of its dependencies will come from the root scope*. It doesn't matter if you're resolving it from a child scope and have overrides or other things you think the singleton should use. Doing it this way ensures you can't dispose dependencies out from under the singleton; and that you won't create a memory leak by holding references to things in child scopes after the scope is disposed.
+- A component will get its dependencies *from the scope that owns the component* even if the component is resolved by a scope further down the tree. We'll discuss this below with an example on singleton lifetime.
 
 Part of the job of the lifetime scope is to :doc:`handle disposal of the components you resolve <disposal>`. When you resolve a component that implements ``IDisposable``, the owning lifetime scope will hold a reference to the component so it can be properly disposed when the scope is disposed. :doc:`You can dig deeper into how to work with disposal <disposal>` if you like, but some basic things to consider:
 
@@ -86,6 +86,113 @@ Part of the job of the lifetime scope is to :doc:`handle disposal of the compone
 - If you dispose a parent scope but keep using the child scope, things will fail. You can't resolve dependencies from a disposed scope. It's recommended you dispose scopes in the reverse order created.
 
 You can read more about :doc:`working with lifetime scopes <working-with-scopes>` (including more code examples!), :doc:`component disposal <disposal>` and the different :doc:`instance scopes available <instance-scope>` in the respective documentation.
+
+---------------------------
+Example: Singleton Lifetime
+---------------------------
+
+Earlier we noted that a component will get its dependencies from the scope that owns the component. Let's dive into this with an example: singletons.
+
+**When you declare a singleton, it's owned by the scope in which it's registered.**
+
+- If you declare a singleton when building your container, it's held by the root lifetime scope. When you resolve a singleton registered this way, *all of its dependencies will come from the root scope*.
+- When creating a child lifetime scope, you can add singletons - those will be held by the child lifetime scope in which they're registered. When you resolve it, *all of its dependencies will come from that child lifetime scope*.
+
+Doing it this way ensures you can't dispose dependencies out from under the singleton; and that you won't create a memory leak by holding references to things in child scopes after the scope is disposed.
+
+Let's say you have a couple of classes like this:
+
+.. sourcecode:: csharp
+
+    public class Component
+    {
+      private readonly Dependency _dep;
+
+      public string Name => this._dep.Name;
+
+      public Component(Dependency dep)
+      {
+        this._dep = dep;
+      }
+    }
+
+    public class Dependency
+    {
+      public string Name { get; }
+
+      public Dependency(string name)
+      {
+        this.Name = name;
+      }
+    }
+
+Now let's say you have some code that builds a container and uses these classes.
+
+.. sourcecode:: csharp
+
+    var builder = new ContainerBuilder();
+
+    // A singleton declared at container build
+    // time will be owned by the root scope and get
+    // all dependencies from the root scope.
+    builder.RegisterType<Component>()
+           .SingleInstance();
+
+    // Anything that resolves a Dependency from
+    // the root lifetime scope will see the name
+    // as 'root'
+    builder.Register(ctx => new Dependency("root"));
+
+    var container = builder.Build();
+
+    // Resolve the component from the root lifetime scope.
+    var rootComp = container.Resolve<Component>();
+
+    // This will show "root"
+    Console.WriteLine(rootComp.Name);
+
+    // Even if we override the Dependency in a child
+    // scope, it'll still show "root"
+    using (var child1 = container.BeginLifetimeScope(
+      b => b.Register(ctx => new Dependency("child1")))
+    {
+      child1Comp = child1.Resolve<Component>();
+      Console.WriteLine(child1Comp.Name);
+    }
+
+    // You can override the singleton by adding a new
+    // singleton in a child scope. This one will be
+    // owned by the child and will work in its children,
+    // but it doesn't override at the root scope.
+    using (var child2 = container.BeginLifetimeScope(
+      b => b.Register(ctx => new Dependency("child2")))
+    {
+      var child2Comp = child2.Resolve<Component>();
+
+      // This will show "child2"
+      Console.WriteLine(child2Comp.Name);
+
+      // rootComp and child2Comp are TWO DIFFERENT SINGLETONS.
+      Debug.Assert(rootComp != child2Comp);
+
+      using (var child2SubScope = scope.BeginLifetimeScope(
+        b => b.Register(ctx => new Dependency("child2SubScope")))
+      {
+        var child2SubComp = child2SubScope.Resolve<Component>();
+
+        // This will show "child2"
+        Console.WriteLine(child2SubComp.Name);
+
+        // child2Comp and child2SubComp are THE SAME.
+        Debug.Assert(child2Comp == child2SubComp);
+      }
+    }
+
+In picture format, it looks like this:
+
+.. image:: lifetime-scope-singleton-example.png
+
+As you can see, lifetime scope plays a role not only in how long a component lives but also where it gets its dependencies. As you design your application, you need to consider this so you don't run into issues where you think you're overriding a value but you're foiled by the component's declared lifetime. You can read more about the options for component instance scope :doc:`in our instance scope docs <instance-scope>`.
 
 ------------------------
 Example: Web Application
