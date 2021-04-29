@@ -232,7 +232,7 @@ As web requests come in, lifetime scopes might look like this:
 A rough sequence of events for a web app framework like :doc:`ASP.NET Core <../integration/aspnetcore>` goes like this:
 
 1. When a web request comes in, the web application framework creates a child lifetime scope - the "request lifetime scope."
-2. The web application framework resolves the controller instance from the request lifetime scope. Since the controller is registered as "instance per lifetime scope," it will be a sort of "singleton" within that request but will not be shared with other requests.
+2. The web application framework resolves the controller instance from the request lifetime scope. Since the controller is registered as "instance per lifetime scope," this instance will be a shared by any components within that request but will not be shared with other requests.
 3. The logging service, registered as a singleton at the application level, gets injected as a dependency into each controller instance.
 4. At the end of each web request, the request lifetime scope will be disposed and the controllers will be garbage collected. The logger will remain alive and cached at the root lifetime scope so it can continue to be injected for the rest of the application lifetime.
 5. At the end of the web application (during shutdown) the web app framework should dispose of the root container and release the logger.
