@@ -165,7 +165,10 @@ Now let's say you have some code that builds a container and uses these classes.
     // owned by the child and will work in its children,
     // but it doesn't override at the root scope.
     using (var child2 = container.BeginLifetimeScope(
-      b => b.Register(ctx => new Dependency("child2")))
+      b => {
+        b.RegisterType<Component>().SingleInstance();
+        b.Register(ctx => new Dependency("child2");
+      }))
     {
       var child2Comp = child2.Resolve<Component>();
 
