@@ -24,3 +24,7 @@ indent_size = 2
 
 [NuGet.Config]
 indent_size = 2
+
+; PlantUML - match examples
+[*.puml]
+indent_size = 2

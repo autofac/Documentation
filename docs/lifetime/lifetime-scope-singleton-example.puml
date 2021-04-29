@@ -1,0 +1,76 @@
+@startuml
+' Layout hints:
+' https://crashedmind.github.io/PlantUMLHitchhikersGuide/layout/layout.html
+
+database "Container / Root Lifetime Scope" as root {
+  rectangle dependency_root [
+    <b>Dependency</b>
+    Lifetime = InstancePerDependency
+    Name = 'root'
+  ]
+
+  rectangle component_root [
+    <b>Component</b>
+    Lifetime = Singleton
+    Name = 'root'
+  ]
+}
+
+dependency_root --> component_root
+
+database "Lifetime Scope - child1" as child1 {
+  rectangle dependency_child1 [
+    <b>Dependency</b>
+    Lifetime = InstancePerDependency
+    Name = 'child1'
+  ]
+
+  rectangle component_child1 [
+    <b>Component</b>
+    Lifetime = Singleton
+    Name = 'root'
+  ]
+}
+
+component_root ..> component_child1
+
+database "Lifetime Scope - child2" as child2 {
+  rectangle dependency_child2 [
+    <b>Dependency</b>
+    Lifetime = InstancePerDependency
+    Name = 'child2'
+  ]
+
+  rectangle component_child2 [
+    <b>Component</b>
+    Lifetime = Singleton
+    Name = 'child2'
+
+    New singleton registration for
+    this child scope and its children.
+  ]
+}
+
+dependency_child2 --> component_child2
+
+database "Lifetime Scope - child2SubScope" as child2_1 {
+  rectangle dependency_child2_1 [
+    <b>Dependency</b>
+    Lifetime = InstancePerDependency
+    Name = 'child2SubScope'
+  ]
+
+  rectangle component_child2_1 [
+    <b>Component</b>
+    Lifetime = Singleton
+    Name = 'child2'
+  ]
+}
+
+component_child2 ..> component_child2_1
+
+root --d-> child1
+root --d-> child2
+child2 -d-> child2_1
+
+@enduml

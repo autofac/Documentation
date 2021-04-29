@@ -1,0 +1,46 @@
+{
+  "author": "Autofac Contributors",
+  "dependencies": {
+    "node-plantuml": "^0.9.0",
+    "watch": "^1.0.2"
+  },
+  "description": "PlantUML diagram generator for Autofac documentation.",
+  "devDependencies": {
+    "eslint": "^7.12.1"
+  },
+  "eslintConfig": {
+    "env": {
+      "es6": true,
+      "node": true
+    },
+    "extends": [
+      "eslint:recommended"
+    ],
+    "rules": {
+      "comma-dangle": 1,
+      "eqeqeq": 2,
+      "no-console": 0,
+      "no-debugger": 1,
+      "no-extra-parens": 1,
+      "no-extra-semi": 1,
+      "no-irregular-whitespace": 0,
+      "no-undef": 0,
+      "no-unused-vars": 0,
+      "semi": 1,
+      "semi-spacing": 1,
+      "valid-jsdoc": [
+        2,
+        {
+          "requireReturn": false
+        }
+      ]
+    }
+  },
+  "license": "MIT",
+  "main": "index.js",
+  "name": "plantuml-in-autofac-docs",
+  "scripts": {
+    "watch": "node index.js"
+  },
+  "version": "1.0.0"
+}

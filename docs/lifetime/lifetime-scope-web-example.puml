@@ -1,0 +1,24 @@
+@startuml
+database "Application Container" as root {
+  file "Logging Service" as logger
+}
+
+database "Web Request Scope 1" as request1 {
+  rectangle "Controller" as controller1 {
+    file "Logging Service" as controllerLogger1
+  }
+}
+
+database "Web Request Scope 2" as request2 {
+  rectangle "Controller" as controller2 {
+    file "Logging Service" as controllerLogger2
+  }
+}
+
+root --> request1
+root --> request2
+
+logger ..> controllerLogger1
+logger ..> controllerLogger2
+
+@enduml

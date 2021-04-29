@@ -8,13 +8,14 @@ Usage and API documentation for Autofac and integration libraries.
 
 ## Updating the User Documentation Site
 
-User documentation is viewable at [https://docs.autofac.org](https://docs.autofac.org)
-(a CNAME to [https://autofac.readthedocs.io](https://autofac.readthedocs.io)).
-It is stored in the `/docs` folder in this source repo.
+User documentation is viewable at
+[https://docs.autofac.org](https://docs.autofac.org) (a CNAME to
+[https://autofac.readthedocs.io](https://autofac.readthedocs.io)). It is stored
+in the `/docs` folder in this source repo.
 
-To build the docs and see them locally, you need to follow the
-[Getting Started](https://docs.readthedocs.org/en/latest/getting_started.html)
-docs on Read The Docs so you get Python and Sphinx installed.
+To build the docs and see them locally, you need to follow the [Getting
+Started](https://docs.readthedocs.org/en/latest/getting_started.html) docs on
+Read The Docs so you get Python and Sphinx installed.
 
 The docs are written in [reStructuredText](http://sphinx-doc.org/rest.html),
 which is very similar to Markdown but not quite. References below.
@@ -22,11 +23,15 @@ which is very similar to Markdown but not quite. References below.
 Updates to the documentation checked into the `/docs` folder will automatically
 propagate to Read The Docs. No build or separate push is required.
 
+There is support for converting PlantUML (.puml) documents into PNG images for
+easier diagramming. Run `npm watch` to start the generation. Diagrams only get
+generated on change and will not be rebuilt/regenerated without a change.
+
 ### Building
 
-1. Install [Python 2.7](https://www.python.org/download/)
+1. Install [Python 3.x](https://www.python.org/download/)
 2. Install Sphinx: `pip install sphinx sphinx-autobuild`
-3. Build the docs after you edit them. There should be NO errors or warnings: `make.bat html`
+3. Build the docs after you edit them. There should be NO errors or warnings: `make html`
 
 ### References
 
