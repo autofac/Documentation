@@ -3,13 +3,13 @@ database "Application Container" as root {
   file "Logging Service" as logger
 }
 
-database "Web Request 1" as request1 {
+database "Web Request Scope 1" as request1 {
   rectangle "Controller" as controller1 {
     file "Logging Service" as controllerLogger1
   }
 }
 
-database "Web Request 2" as request2 {
+database "Web Request Scope 2" as request2 {
   rectangle "Controller" as controller2 {
     file "Logging Service" as controllerLogger2
   }
