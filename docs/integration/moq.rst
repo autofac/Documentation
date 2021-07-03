@@ -99,7 +99,7 @@ to configuring a new Lifetime Scope:
     public void Test()
     {
       var dependency = new Dependency();
-      using (var mock = AutoMock.GetLoose(cfg => cfg.RegisterInstance(dependency).As<IDependency>())
+      using (var mock = AutoMock.GetLoose(cfg => cfg.RegisterInstance(dependency).As<IDependency>()))
       {
         // Returns your registered instance.
         var dep = mock.Create<IDependency>();
