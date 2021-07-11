@@ -4,10 +4,10 @@ Frequently Asked Questions
 
 .. toctree::
 
+    exceptions/dependency-resolution/index.rst
     per-request-scope.rst
     select-by-context.rst
     instance-per-session.rst
-    common-errors.rst
     iis-restart.rst
     conditional-registration.rst
     share-across-app-types.rst
