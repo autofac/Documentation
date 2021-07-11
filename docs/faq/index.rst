@@ -7,6 +7,7 @@ Frequently Asked Questions
     per-request-scope.rst
     select-by-context.rst
     instance-per-session.rst
+    common-errors.rst
     iis-restart.rst
     conditional-registration.rst
     share-across-app-types.rst
