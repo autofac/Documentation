@@ -31,29 +31,32 @@ The ``ContravariantRegistrationSource`` is helpful in registering types that nee
       void Handle(TCommand command);
     }
 
-    public class CommandAHandler : IHandler<CommandA>
+    public class BaseCommandHandler : IHandler<BaseCommand>
     {
-      public void Handle(CommandA command)
+      public void Handle(BaseCommand command)
       {
+         Console.WriteLine(command.GetType().Name);
       }
     }
 
-    public class CommandA
+    public class BaseCommand
     {
     }
 
-    public class CommandB : CommandA
+    public class DerivedCommand : BaseCommand
     {
     }
 
     var builder = new ContainerBuilder();
     builder.RegisterSource(new ContravariantRegistrationSource());
-    builder.RegisterType<CommandAHandler>().As<IHandler<CommandA>>();
+    builder.RegisterType<BaseCommandHandler>().As<IHandler<BaseCommand>>();
     var container = builder.Build();
 
-    // a and b are both CommandAHandler.
-    var a = container.Resolve<IHandler<CommandA>>();
-    var b = container.Resolve<IHandler<CommandB>>();
+    // a and b are both BaseCommandHandler.
+    var a = container.Resolve<IHandler<BaseCommand>>();
+    a.Handle(new BaseCommand()); // prints BaseCommand
+    var b = container.Resolve<IHandler<DerivedCommand>>();
+    b.Handle(new DerivedCommand()); // prints DerivedCommand
 
 
 Implementing a Registration Source
