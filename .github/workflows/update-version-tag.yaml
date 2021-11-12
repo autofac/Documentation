@@ -13,3 +13,9 @@ jobs:
     concurrency: update-version-tag
     steps:
       - uses: actions/checkout@v2
+      - name: Tag Repo
+        uses: richardsimko/update-tag@v1
+        with:
+          tag_name: ${{ env.DOC_VERSION }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
