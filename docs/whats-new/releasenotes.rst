@@ -22,8 +22,8 @@ Release notes for Autofac and integration packages are all stored in the GitHub 
   + OWIN
 
     * `OWIN Core <https://github.com/autofac/Autofac.Owin/releases>`_
-    * `Web API <https://github.com/autofac/Autofac.WebApi.Owin/releases>`_
-    * `MVC <https://github.com/autofac/Autofac.Mvc.Owin/releases>`_
+    * `OWIN Web API Integration <https://github.com/autofac/Autofac.WebApi.Owin/releases>`_
+    * `OWIN MVC Integration <https://github.com/autofac/Autofac.Mvc.Owin/releases>`_
 
  - `WCF <https://github.com/autofac/Autofac.Wcf/releases>`_
  - `MEF <https://github.com/autofac/Autofac.Mef/releases>`_
@@ -35,9 +35,9 @@ Release notes for Autofac and integration packages are all stored in the GitHub 
 
 * Multitenancy
 
- - `General Applications <https://github.com/autofac/Autofac.Multitenant/releases>`_
- - `WCF <https://github.com/autofac/Autofac.Multitenant.Wcf/releases>`_
- - `ASP.NET Core <https://github.com/autofac/Autofac.AspNetCore.Multitenant/releases>`_
+ - `General Application Multitenancy <https://github.com/autofac/Autofac.Multitenant/releases>`_
+ - `WCF Multitenancy <https://github.com/autofac/Autofac.Multitenant.Wcf/releases>`_
+ - `ASP.NET Core Multitenancy <https://github.com/autofac/Autofac.AspNetCore.Multitenant/releases>`_
 
 * Extended features
 
