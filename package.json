@@ -1,8 +1,8 @@
 {
   "author": "Autofac Contributors",
   "dependencies": {
-    "node-plantuml": "^0.9.0",
-    "watch": "^1.0.2"
+    "chokidar": "^3.5.2",
+    "node-plantuml": "^0.9.0"
   },
   "description": "PlantUML diagram generator for Autofac documentation.",
   "devDependencies": {
