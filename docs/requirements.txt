@@ -1,1 +1,4 @@
+# Newer docutils isn't compatible with Sphinx, causes build breaks.
+# https://github.com/readthedocs/readthedocs.org/issues/8616
 docutils<0.18
+Sphinx>=4.3.0
