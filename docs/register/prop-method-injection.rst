@@ -25,13 +25,35 @@ If the component is a :ref:`reflection component <register-registration-reflecti
 
 .. sourcecode:: csharp
 
+    // Default behavior: inject all properties that are public and writable.
     builder.RegisterType<A>().PropertiesAutowired();
+
+    // Provide a delegate property selector to be more granular. This example
+    // shows injecting all properties where the property type starts with
+    // 'I' - one way you might "only inject interface properties." The delegate
+    // gets the PropertyInfo describing the property to be injected and the
+    // instance getting injected.
+    builder.RegisterType<B>()
+           .PropertiesAutowired(
+             (propInfo, instance) => propInfo.PropertyType.Name.StartsWith("I"));
+
+    // Even more fancy, you can provide your own implementation of
+    // IPropertySelector with as much functionality as you want. Don't
+    // forget this will run on every associated resolution, so performance
+    // is important!
+    builder.RegisterType<C>().PropertiesAutowired(new MyCustomPropSelector());
 
 If you have one specific property and value to wire up, you can use the ``WithProperty()`` modifier:
 
 .. sourcecode:: csharp
 
     builder.RegisterType<A>().WithProperty("PropertyName", propertyValue);
+
+You can also populate *just the properties* on an object. Do this using the ``InjectUnsetProperties`` extension on a lifetime scope, which will resolve and populate properties that are *public, writable, and not yet set (null)*:
+
+.. sourcecode:: csharp
+
+    lifetimeScope.InjectUnsetProperties(myObject);
 
 Method Injection
 ================
