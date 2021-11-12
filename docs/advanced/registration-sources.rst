@@ -20,6 +20,45 @@ You can use the ``Autofac.Features.ResolveAnything.AnyConcreteTypeNotAlreadyRegi
     builder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
     var container = builder.Build();
 
+Contravariant Registration Source
+=================================
+The ``ContravariantRegistrationSource`` is helpful in registering types that need to be later resolved in a `contravariant context <https://docs.microsoft.com/en-us/dotnet/standard/generics/covariance-and-contravariance>`_ (using a more generic / less derived type than originally specified). This is common in handler patterns:
+
+.. sourcecode:: csharp
+
+    public interface IHandler<in TCommand>
+    {
+      void Handle(TCommand command);
+    }
+
+    public class BaseCommandHandler : IHandler<BaseCommand>
+    {
+      public void Handle(BaseCommand command)
+      {
+         Console.WriteLine(command.GetType().Name);
+      }
+    }
+
+    public class BaseCommand
+    {
+    }
+
+    public class DerivedCommand : BaseCommand
+    {
+    }
+
+    var builder = new ContainerBuilder();
+    builder.RegisterSource(new ContravariantRegistrationSource());
+    builder.RegisterType<BaseCommandHandler>().As<IHandler<BaseCommand>>();
+    var container = builder.Build();
+
+    // a and b are both BaseCommandHandler.
+    var a = container.Resolve<IHandler<BaseCommand>>();
+    a.Handle(new BaseCommand()); // prints BaseCommand
+    var b = container.Resolve<IHandler<DerivedCommand>>();
+    b.Handle(new DerivedCommand()); // prints DerivedCommand
+
+
 Implementing a Registration Source
 ==================================
 
