@@ -1,0 +1,15 @@
+name: Update Version Tag
+on:
+  push:
+    branches:
+      - master
+jobs:
+  update-version-tag:
+    runs-on: ubuntu-latest
+    env:
+      # This is the tag that will be kept up to date with master.
+      DOC_VERSION: v6.0.0
+    # Don't update the tag at the same time another update is running.
+    concurrency: update-version-tag
+    steps:
+      - uses: actions/checkout@v2
