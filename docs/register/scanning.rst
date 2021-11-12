@@ -19,10 +19,20 @@ Otherwise known as convention-driven registration or scanning, Autofac can regis
 
 Each ``RegisterAssemblyTypes()`` call will apply one set of rules only - multiple invocations of ``RegisterAssemblyTypes()`` are necessary if there are multiple different sets of components to register.
 
+Autofac also supports assembly scanning for open generics using ``RegisterAssemblyOpenGenericTypes()``. This uses the same general semantics as ``RegisterAssemblyTypes()``:
+
+.. sourcecode:: csharp
+
+    var dataAccess = Assembly.GetExecutingAssembly();
+
+    builder.RegisterAssemblyOpenGenericTypes(dataAccess)
+           .Where(t => t.Name.StartsWith("MessageHandler"))
+           .AsImplementedInterfaces();
+
 Filtering Types
 ---------------
 
-``RegisterAssemblyTypes()`` accepts a parameter array of one or more assemblies. By default, **all concrete classes in the assembly will be registered.** This includes internal and nested private classes. You can filter the set of types to register using some provided LINQ-style predicates.
+``RegisterAssemblyTypes()`` and ``RegisterAssemblyOpenGenericTypes()`` each accept a parameter array of one or more assemblies. By default, **all concrete classes in the assembly will be registered.** This includes internal and nested private classes. You can filter the set of types to register using some provided LINQ-style predicates.
 
 In 4.8.0 a ``PublicOnly()`` extension was added to make data encapsulation easier. If you only want your public classes registered, use ``PublicOnly()``:
 
@@ -65,7 +75,7 @@ Multiple filters can be used, in which case they will be applied with logical AN
 Specifying Services
 -------------------
 
-The registration syntax for ``RegisterAssemblyTypes()`` is a superset of :doc:`the registration syntax for single types <index>`, so methods like ``As()`` all work with assemblies as well:
+The registration syntaxes for ``RegisterAssemblyTypes()`` and  ``RegisterAssemblyOpenGenericTypes()`` are a subset of :doc:`the registration syntax for single types <index>`, so methods like ``As()`` all work with assemblies as well:
 
 .. sourcecode:: csharp
 
