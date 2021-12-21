@@ -365,13 +365,13 @@ You can then make use of the metadata as parameters on consumer registrations:
                  new ResolvedParameter(
                    (pi, ctx) => pi.ParameterType == typeof(ISender),
                    (pi, ctx) => ctx.Resolve<IEnumerable<Meta<ISender>>>()
-                                   .First(a => a.Metadata["SendAllowed"].Equals("order"))));
+                                   .First(a => a.Metadata["SendAllowed"].Equals("order")).Value));
         builder.RegisterType<CustomerNotifier>();
                .WithParameter(
                  new ResolvedParameter(
                    (pi, ctx) => pi.ParameterType == typeof(ISender),
                    (pi, ctx) => ctx.Resolve<IEnumerable<Meta<ISender>>>()
-                                   .First(a => a.Metadata["SendAllowed"].Equals("notification"))));
+                                   .First(a => a.Metadata["SendAllowed"].Equals("notification")).Value));
       }
     }
 
