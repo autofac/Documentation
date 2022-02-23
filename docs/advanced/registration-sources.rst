@@ -22,7 +22,11 @@ You can use the ``Autofac.Features.ResolveAnything.AnyConcreteTypeNotAlreadyRegi
 
 Contravariant Registration Source
 =================================
-The ``ContravariantRegistrationSource`` is helpful in registering types that need to be later resolved in a `contravariant context <https://docs.microsoft.com/en-us/dotnet/standard/generics/covariance-and-contravariance>`_ (using a more generic / less derived type than originally specified). This is common in handler patterns:
+The ``ContravariantRegistrationSource`` is helpful in registering types that need to be later resolved in a `contravariant context <https://docs.microsoft.com/en-us/dotnet/standard/generics/covariance-and-contravariance>`_ (using a more generic / less derived type than originally specified).
+
+**If you use this source, register it before registering other things.** Just as with standard registrations, registration sources are evaluated in the order of registration. If you register an open generic (which is *also* a registration source under the covers) and *then* register ``ContravariantRegistrationSource``, you will not get the outcome you expect.
+
+Using ``ContravariantRegistrationSource`` is common in handler patterns:
 
 .. sourcecode:: csharp
 
@@ -48,8 +52,11 @@ The ``ContravariantRegistrationSource`` is helpful in registering types that nee
     }
 
     var builder = new ContainerBuilder();
+
+    // Register this BEFORE registering other things!
     builder.RegisterSource(new ContravariantRegistrationSource());
     builder.RegisterType<BaseCommandHandler>().As<IHandler<BaseCommand>>();
+
     var container = builder.Build();
 
     // a and b are both BaseCommandHandler.
