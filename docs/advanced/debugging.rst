@@ -379,16 +379,61 @@ When you get this low, you can control the subscriptions for your events separat
 Symbols and Sources
 -------------------
 
-Autofac packages have been updated `to use Source Link <https://github.com/dotnet/sourcelink>`_ so the debugging experience right to the source should feel native.
+Autofac packages have been updated `to use Source Link <https://github.com/dotnet/sourcelink>`_ so you can debug right from your code into the Autofac source. Packages may have the symbols right inside or they may be in the `NuGet Symbol Server <https://docs.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg#nugetorg-symbol-server>`_.
 
-Older packages and packages that haven't been updated yet have symbols published to MyGet and SymbolSource.
+**In Visual Studio**, there's an option to enable searching the NuGet symbol server. `See the documentation from Microsoft explaining how to configure Visual Studio to make symbol servers work. <https://docs.microsoft.com/en-us/visualstudio/debugger/specify-symbol-dot-pdb-and-source-files-in-the-visual-studio-debugger>`_
 
-You can set up Visual Studio to debug/step *right into Autofac source* using the following symbol servers:
+**In VS Code**, you may need to set the debugging options up in ``settings.json`` or ``launch.json``.
 
-- ``https://www.myget.org/F/autofac/symbols/``
-- ``http://srv.symbolsource.org/pdb/Public/``
+A ``settings.json`` block to enable symbols during unit test debugging looks like this:
 
-`There is documentation on MyGet explaining how to configure Visual Studio to make symbol servers work work. <http://docs.myget.org/docs/reference/symbolsource>`_
+.. sourcecode:: json
+
+    {
+      "csharp.unitTestDebuggingOptions": {
+        "symbolOptions": {
+          "searchMicrosoftSymbolServer": true,
+          "searchNuGetOrgSymbolServer": true
+        }
+      }
+    }
+
+To launch your application with symbols enabled, ``launch.json`` might look something like this:
+
+.. sourcecode:: json
+
+    {
+      "configurations": [
+        {
+          "console": "internalConsole",
+          "cwd": "${workspaceFolder}/src/MyProject",
+          "env": {
+            "ASPNETCORE_ENVIRONMENT": "Development",
+            "ASPNETCORE_URLS": "https://localhost:5000",
+            "COMPlus_ReadyToRun": "0",
+            "COMPlus_ZapDisable": "1"
+          },
+          "justMyCode": false,
+          "name": "Launch with SourceLink (Development)",
+          "preLaunchTask": "build",
+          "program": "${workspaceFolder}/src/MyProject/bin/Debug/net6.0/MyProject.dll",
+          "request": "launch",
+          "serverReadyAction": {
+            "action": "openExternally",
+            "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+            "uriFormat": "%s"
+          },
+          "stopAtEntry": false,
+          "suppressJITOptimizations": true,
+          "symbolOptions": {
+            "searchMicrosoftSymbolServer": true,
+            "searchNuGetOrgSymbolServer": true
+          },
+          "type": "coreclr"
+        }
+      ],
+      "version": "0.2.0"
+    }
 
 Support
 -------

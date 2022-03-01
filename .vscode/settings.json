@@ -71,7 +71,7 @@
   "files.watcherExclude": {
     "**/target": true
   },
-  "restructuredtext.builtDocumentationPath": "${workspaceRoot}/docs/_build/html",
+  "restructuredtext.builtDocumentationPath": "${workspaceRoot}/docs/_build",
   "restructuredtext.confPath": "${workspaceFolder}/docs",
   "restructuredtext.languageServer.disabled": true,
   "restructuredtext.linter.extraArgs": [
