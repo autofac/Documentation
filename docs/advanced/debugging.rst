@@ -24,6 +24,8 @@ Also, take a look at your exception stack traces. It may look like Autofac is th
 
 And, of course, if you're hitting that ever-challenging ``No scope with a Tag matching 'AutofacWebRequest'`` exception, :doc:`we have a whole FAQ on that <../faq/per-request-scope>`.
 
+.. _debugging_diagnostics:
+
 Diagnostics
 -----------
 
