@@ -69,7 +69,14 @@ Parameters with Lambda Expression Components
 
 With lambda expression component registrations, rather than passing the parameter value *at registration time* you enable the ability to pass the value *at service resolution time*. (:doc:`Read more about resolving with parameters. <../resolve/parameters>`)
 
-In the component registration expression, you can make use of the incoming parameters by changing the delegate signature you use for registration. Instead of just taking in an ``IComponentContext`` parameter, take in an ``IComponentContext`` and an ``IEnumerable<Parameter>``:
+In the component registration expression, you can make use of the incoming parameters by using the generic lambda ``Register`` methods:
+
+.. sourcecode:: csharp
+
+    builder.Register((string configSectionName) => new ConfigReader(configSectionName));
+
+If you need access to the full list of parameters, it's available by changing the delegate signature you use for registration.
+Instead of specifying the parameter as an argument to the lambda, take in an ``IComponentContext`` and an ``IEnumerable<Parameter>``:
 
 .. sourcecode:: csharp
 
