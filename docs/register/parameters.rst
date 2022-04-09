@@ -73,7 +73,7 @@ In the component registration expression, you can make use of the incoming param
 
 .. sourcecode:: csharp
 
-    builder.Register((string configSectionName) => new ConfigReader(configSectionName));
+    builder.Register((MyConfig config) => new Worker(config));
 
 If you need access to the full list of parameters, it's available by changing the delegate signature you use for registration.
 Instead of specifying the parameter as an argument to the lambda, take in an ``IComponentContext`` and an ``IEnumerable<Parameter>``:
@@ -84,11 +84,15 @@ Instead of specifying the parameter as an argument to the lambda, take in an ``I
     // c = The current IComponentContext to dynamically resolve dependencies
     // p = An IEnumerable<Parameter> with the incoming parameter set
     builder.Register((c, p) =>
-                     new ConfigReader(p.Named<string>("configSectionName")))
-           .As<IConfigReader>();
+                     new Worker(p.Named<MyConfig>(config)));
 
 When :doc:`resolving with parameters <../resolve/parameters>`, your lambda will use the parameters passed in:
 
 .. sourcecode:: csharp
 
-    var reader = scope.Resolve<IConfigReader>(new NamedParameter("configSectionName", "sectionName"));
+    var customConfig = new MyConfig
+    {
+      SomeValue = "../"
+    };
+
+    var reader = scope.Resolve<MyConfig>(new NamedParameter(config, customConfig));
