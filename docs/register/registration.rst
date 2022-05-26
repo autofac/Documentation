@@ -134,11 +134,23 @@ Autofac can accept a delegate or lambda expression to be used as a component cre
 
 .. sourcecode:: csharp
 
-  builder.Register(c => new A(c.Resolve<B>()));
+    builder.Register(c => new A(c.Resolve<B>()));
 
 The parameter ``c`` provided to the expression is the *component context* (an ``IComponentContext`` object) in which the component is being created. You can use this to resolve other values from the container to assist in creating your component. **It is important to use this rather than a closure to access the container** so that :doc:`deterministic disposal <../lifetime/disposal>` and nested containers can be supported correctly.
 
 Additional dependencies can be satisfied using this context parameter - in the example, ``A`` requires a constructor parameter of type ``B`` that may have additional dependencies.
+
+As well as using ``IComponentContext`` to resolve dependencies in your lambda expression, you can also use the generic ``Register`` overloads to specify your dependencies as a variable number of typed arguments to the lambda, and Autofac will resolve them for you:
+
+.. sourcecode:: csharp
+
+    builder.Register((IDependency1 dep1, IDependency2 dep2) => new Component(dep1, dep2));
+
+You can blend the ``IComponentContext`` and generic approach if you need to make conditional choices, or use methods like ``ResolveNamed``. Just add the ``IComponentContext`` as the first parameter to the lambda:
+
+.. sourcecode:: csharp
+
+    builder.Register((IComponentContext ctxt, IDependency1 dep1) => new Component(dep1, ctxt.ResolveNamed<IDependency2>("value")));
 
 The default service provided by an expression-created component is the inferred return type of the expression.
 

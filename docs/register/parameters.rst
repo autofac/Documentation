@@ -69,7 +69,14 @@ Parameters with Lambda Expression Components
 
 With lambda expression component registrations, rather than passing the parameter value *at registration time* you enable the ability to pass the value *at service resolution time*. (:doc:`Read more about resolving with parameters. <../resolve/parameters>`)
 
-In the component registration expression, you can make use of the incoming parameters by changing the delegate signature you use for registration. Instead of just taking in an ``IComponentContext`` parameter, take in an ``IComponentContext`` and an ``IEnumerable<Parameter>``:
+In the component registration expression, you can make use of the incoming parameters by using the generic lambda ``Register`` methods:
+
+.. sourcecode:: csharp
+
+    builder.Register((MyConfig config) => new Worker(config));
+
+If you need access to the full list of parameters, it's available by changing the delegate signature you use for registration.
+Instead of specifying the parameter as an argument to the lambda, take in an ``IComponentContext`` and an ``IEnumerable<Parameter>``:
 
 .. sourcecode:: csharp
 
@@ -77,11 +84,15 @@ In the component registration expression, you can make use of the incoming param
     // c = The current IComponentContext to dynamically resolve dependencies
     // p = An IEnumerable<Parameter> with the incoming parameter set
     builder.Register((c, p) =>
-                     new ConfigReader(p.Named<string>("configSectionName")))
-           .As<IConfigReader>();
+                     new Worker(p.Named<MyConfig>(config)));
 
 When :doc:`resolving with parameters <../resolve/parameters>`, your lambda will use the parameters passed in:
 
 .. sourcecode:: csharp
 
-    var reader = scope.Resolve<IConfigReader>(new NamedParameter("configSectionName", "sectionName"));
+    var customConfig = new MyConfig
+    {
+      SomeValue = "../"
+    };
+
+    var reader = scope.Resolve<MyConfig>(new NamedParameter(config, customConfig));
