@@ -68,13 +68,13 @@
     "wireup",
     "xunit"
   ],
+  "esbonio.server.enabled": true,
+  "esbonio.sphinx.buildDir": "${workspaceRoot}/docs/_build",
+  "esbonio.sphinx.confDir": "${workspaceFolder}/docs",
   "files.watcherExclude": {
     "**/target": true
   },
-  "restructuredtext.builtDocumentationPath": "${workspaceRoot}/docs/_build",
-  "restructuredtext.confPath": "${workspaceFolder}/docs",
-  "restructuredtext.languageServer.disabled": true,
-  "restructuredtext.linter.extraArgs": [
+  "restructuredtext.linter.doc8.extraArgs": [
     "--config",
     "\"${workspaceFolder}/doc8.ini\""
   ]
