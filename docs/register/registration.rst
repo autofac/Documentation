@@ -178,6 +178,8 @@ The ``ResolveOptional`` method will try to resolve the value but won't throw an 
 
 **Property injection is not recommended in the majority of cases.** Alternatives like `the Null Object pattern <http://en.wikipedia.org/wiki/Null_Object_pattern>`_, overloaded constructors or constructor parameter default values make it possible to create cleaner, "immutable" components with optional dependencies using constructor injection.
 
+.. _register-select-impl-by-parameter:
+
 Selection of an Implementation by Parameter Value
 -------------------------------------------------
 
@@ -209,7 +211,34 @@ Using this registration would look like:
 
     var card = container.Resolve<CreditCard>(new NamedParameter("accountId", "12345"));
 
-A cleaner, type-safe syntax can be achieved if a delegate to create ``CreditCard`` instances is declared and :doc:`a delegate factory <../advanced/delegate-factories>` is used.
+You can use parameters with the ``Func<X, Y>`` :doc:`relationship <../resolve/relationships>` by using typed instead of named parameters.
+
+.. sourcecode:: csharp
+
+    builder.Register<CreditCard>(
+      (c, p) =>
+        {
+          // Typed instead of named to work with Func<X, Y>
+          var accountId = p.TypedAs<string>();
+          if (accountId.StartsWith("9"))
+          {
+            return new GoldCard(accountId);
+          }
+          else
+          {
+            return new StandardCard(accountId);
+          }
+        });
+
+Using this registration would look like:
+
+.. sourcecode:: csharp
+
+    var cardFactory = container.Resolve<Func<string, CreditCard>>();
+    var card = cardFactory("12345");
+
+
+Another clean, type-safe syntax can be achieved if a delegate to create ``CreditCard`` instances is declared and :doc:`a delegate factory <../advanced/delegate-factories>` is used. Delegate factories are the way you can support more than one parameter of the same type.
 
 Open Generic Components
 =======================

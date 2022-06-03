@@ -86,3 +86,5 @@ Autofac supports two features that allow you to automatically generate service "
 
 - :doc:`Delegate Factories <../advanced/delegate-factories>` allow you to define factory delegate methods.
 - The ``Func<T>`` :doc:`implicit relationship type <../resolve/relationships>` can provide an automatically-generated factory function.
+
+There is an example of selecting an implementation by parameter using these methods :ref:`on the registration page <register-select-impl-by-parameter>`.
