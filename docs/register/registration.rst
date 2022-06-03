@@ -237,6 +237,22 @@ Using this registration would look like:
     var cardFactory = container.Resolve<Func<string, CreditCard>>();
     var card = cardFactory("12345");
 
+You can use :ref:`lambda expression components <register-registration-lambda-expression-components>` here, too, to make it even simpler:
+
+.. sourcecode:: csharp
+
+    builder.Register<string, CreditCard>(
+      (accountId) =>
+        {
+          if (accountId.StartsWith("9"))
+          {
+            return new GoldCard(accountId);
+          }
+          else
+          {
+            return new StandardCard(accountId);
+          }
+        });
 
 Another clean, type-safe syntax can be achieved if a delegate to create ``CreditCard`` instances is declared and :doc:`a delegate factory <../advanced/delegate-factories>` is used. Delegate factories are the way you can support more than one parameter of the same type.
 
