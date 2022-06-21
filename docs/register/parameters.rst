@@ -84,7 +84,7 @@ Instead of specifying the parameter as an argument to the lambda, take in an ``I
     // c = The current IComponentContext to dynamically resolve dependencies
     // p = An IEnumerable<Parameter> with the incoming parameter set
     builder.Register((c, p) =>
-                     new Worker(p.Named<MyConfig>(config)));
+                     new Worker(p.Named<MyConfig>("config")));
 
 When :doc:`resolving with parameters <../resolve/parameters>`, your lambda will use the parameters passed in:
 
