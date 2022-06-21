@@ -95,4 +95,4 @@ When :doc:`resolving with parameters <../resolve/parameters>`, your lambda will 
       SomeValue = "../"
     };
 
-    var worker = scope.Resolve<Worker>(new NamedParameter(config, customConfig));
+    var worker = scope.Resolve<Worker>(new NamedParameter("config", customConfig));
