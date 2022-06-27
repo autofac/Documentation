@@ -4,15 +4,18 @@ Getting Started
 
 The basic pattern for integrating Autofac into your application is:
 
-- Structure your app with *inversion of control* (IoC) in mind.
-- Add Autofac references.
-- At application startup...
-- Create a `ContainerBuilder`.
-- Register components.
-- Build the container and store it for later use.
-- During application execution...
-- Create a lifetime scope from the container.
-- Use the lifetime scope to resolve instances of the components.
+* Structure your app with *inversion of control* (IoC) in mind.
+* Add Autofac references.
+* At application startup...
+
+  * Create a ``ContainerBuilder``.
+  * Register components.
+  * Build the container and store it for later use.
+
+* During application execution...
+
+  * Create a lifetime scope from the container.
+  * Use the lifetime scope to resolve instances of the components.
 
 This getting started guide walks you through these steps for a simple console application. Once you have the basics down, you can check out the rest of the wiki for more advanced usage and :doc:`integration information for WCF, ASP.NET, and other application types <../integration/index>`.
 
