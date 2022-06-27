@@ -1,4 +1,6 @@
 # Newer docutils isn't compatible with Sphinx, causes build breaks.
 # https://github.com/readthedocs/readthedocs.org/issues/8616
-docutils<0.18
+# Bullet lists don't work unless you pin < 0.17
+# https://github.com/readthedocs/readthedocs.org/issues/8252
+docutils<0.17
 Sphinx>=4.3.0
