@@ -13,6 +13,7 @@ Advanced Topics
     delegate-factories.rst
     owned-instances.rst
     pooled-instances.rst
+    constructor-selection.rst
     concurrency.rst
     multitenant.rst
     pipelines.rst
