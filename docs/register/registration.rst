@@ -94,6 +94,8 @@ Specifying a Constructor
 
 Note that you will still need to have the requisite parameters available at resolution time or there will be an error when you try to resolve the object. You can :doc:`pass parameters at registration time <parameters>` or you can :doc:`pass them at resolve time <../resolve/parameters>`.
 
+.. note:: You can find advanced methods of customising which constructor to use :doc:`here <../advanced/constructor-selection>`.
+
 Instance Components
 ===================
 
