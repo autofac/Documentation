@@ -100,7 +100,7 @@ When using Autofac with the ASP.NET Core Integration, all per-request lifetime s
   recommend you do so.
 
   If your component only implements ``IAsyncDisposable``, but someone disposes of the scope synchronously,
-  then Autofac will be forced to use a sync-over-async blocking dispose, and will raise a :ref:`diagnostic warning <debugging_diagnostics>`:
+  then Autofac will be forced to use a sync-over-async blocking dispose, and will raise a :doc:`diagnostic warning <../troubleshooting/diagnostics>`:
 
     AUTOFAC: A synchronous Dispose has been attempted, but the tracked object of type 'AsyncComponent' only implements IAsyncDisposable.
     This will result in an inefficient blocking dispose. Consider either implementing IDisposable on 'AsyncComponent' or disposing of the

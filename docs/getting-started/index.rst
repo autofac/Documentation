@@ -97,7 +97,7 @@ The first step is to add Autofac references to your project. For this example, w
 
 The easiest way to do this is through NuGet. The "Autofac" package has all the core functionality you'll need.
 
-.. image:: gsnuget.png
+.. image:: gs-nuget.png
 
 Application Startup
 ===================
@@ -242,7 +242,7 @@ Need Help?
 - You can `ask questions on StackOverflow <https://stackoverflow.com/questions/tagged/autofac>`_.
 - You can `participate in the Autofac Google Group <https://groups.google.com/forum/#forum/autofac>`_.
 - There's an introductory `Autofac tutorial <http://www.codeproject.com/KB/architecture/di-with-autofac.aspx>`_ on CodeProject.
-- We have :doc:`advanced debugging tips <../advanced/debugging>` if you want to dive deep.
+- We have :doc:`advanced debugging tips <../troubleshooting/index>` if you want to dive deep.
 
 Building from Source
 ====================
