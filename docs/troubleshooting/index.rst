@@ -21,6 +21,7 @@ We have some documentation here on the most common exceptions and things to look
 
    exceptions/component-not-registered.rst
    exceptions/no-found-constructors-can-be-invoked.rst
+   exceptions/no-scope-with-matching-tag.rst
 
 Diagnostics
 -----------
