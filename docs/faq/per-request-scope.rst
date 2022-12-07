@@ -274,14 +274,14 @@ No Scope with a Tag Matching 'AutofacWebRequest'
 
 A very common exception people see when they start working with per-request lifetime scope is::
 
-    DependencyResolutionException: No scope with a Tag matching
-    'AutofacWebRequest' is visible from the scope in which the instance
-    was requested. This generally indicates that a component registered
-    as per-HTTP request is being requested by a SingleInstance()
-    component (or a similar scenario.) Under the web integration always
-    request dependencies from the DependencyResolver.Current or
-    ILifetimeScopeProvider.RequestLifetime, never from the container
-    itself.
+    No scope with a tag matching 'AutofacWebRequest' is visible from the scope
+    in which the instance was requested.
+
+    If you see this during execution of a web application, it generally
+    indicates that a component registered as per-HTTP request is being
+    requested by a SingleInstance() component (or a similar scenario). Under
+    the web integration always request dependencies from the dependency
+    resolver or the request lifetime scope, never from the container itself.
 
 What this means is that the application tried to resolve a dependency that is registered as ``InstancePerRequest()`` but there wasn't any request lifetime in place.
 
