@@ -12,7 +12,7 @@ Example Message
     Cannot resolve parameter 'MyApp.IMyDependency myDep' of constructor
     'Void .ctor(MyApp.IMyDependency)'.
 
-This error means that Autofac tried to instantiate a component using its constructor, one or more of the dependencies listed as parameters in the constructor cannot be resolved from the container. The message tells you what parameters could not be resolved.
+This error means that Autofac tried to instantiate a component using its constructor, but one or more of the dependencies listed as parameters in the constructor cannot be resolved from the container. The message tells you what parameters could not be resolved.
 
 In the example message, we see:
 
