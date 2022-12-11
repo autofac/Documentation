@@ -17,6 +17,7 @@ Autofac is an addictive `IoC container <http://martinfowler.com/articles/injecti
    integration/index.rst
    best-practices/index.rst
    advanced/index.rst
+   troubleshooting/index.rst
    examples/index.rst
    faq/index.rst
    glossary.rst

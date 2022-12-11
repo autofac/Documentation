@@ -17,6 +17,8 @@ Autofac offers several different parameter matching strategies:
 
 ``ResolvedParameter`` can be used as a way to supply values dynamically retrieved from the container, e.g. by resolving a service by name.
 
+.. _parameters-with-reflection-components:
+
 Parameters with Reflection Components
 =====================================
 
