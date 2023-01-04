@@ -20,6 +20,7 @@ We have some documentation here on the most common exceptions and things to look
 .. toctree::
 
    exceptions/service-not-registered.rst
+   exceptions/no-found-constructors.rst
    exceptions/no-found-constructors-can-be-invoked.rst
    exceptions/no-scope-with-matching-tag.rst
 
