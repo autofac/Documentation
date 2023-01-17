@@ -23,7 +23,7 @@ Troubleshooting
 
 This usually happens when a component is registered with Autofac that does not have any constructor marked ``public``, for example objects that only have ``internal`` or ``private`` constructors. By default, Autofac only works with public constructors.
 
-If you have created your own custom ``IConstructorFinder`` instance, the message is telling you that your custom constructor finder is not returning an empty array of constructors from the ``FindConstructors()`` method. This scenario (creating a custom ``IConstructorFinder``) is not common, but it happens. You will see the component registration with a ``FindConstructorsWith()`` call to attach the custom constructor finder.
+If you have created your own custom ``IConstructorFinder`` instance, the message is telling you that your custom constructor finder is returning an empty array of constructors from the ``FindConstructors()`` method. This scenario (creating a custom ``IConstructorFinder``) is not common, but it happens. You will see the component registration with a ``FindConstructorsWith()`` call to attach the custom constructor finder.
 
 Go look at the component (class) noted in the exception and see if there are any constructors. If there are none at all, then there should be the compiler-generated default (parameterless) constructor, which is public. If there are constructors in the class, then the compiler won't generate that default public parameterless constructor. If there aren't any ``public`` constructors, that's going to be the problem.
 
