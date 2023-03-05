@@ -52,9 +52,10 @@ You indicate that a lifetime scope is for an ``AssemblyLoadContext`` with the ne
       builder.RegisterAssemblyTypes(pluginAssembly).AsImplementedInterfaces();
     }))
     {
-      // Because of default load context behaviour, because we have already loaded
-      // PluginDefinition into the *application* so we can reference IPlugin, the loaded MyPlugin assembly
-      // will share the same type.
+      // The application should reference the PluginDefinition project, which means the
+      // default load context will have loaded the IPlugin interface already. When the
+      // MyPlugin assembly gets loaded it should share the same type and allow resolution
+      // with the common interface.
       var plugin = scope.Resolve<IPlugin>();
 
       plugin.DoSomething();
