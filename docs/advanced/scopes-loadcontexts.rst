@@ -49,7 +49,7 @@ You indicate that a lifetime scope is for an ``AssemblyLoadContext`` with the ne
     {
       var pluginAssembly = loadContext.LoadFromAssemblyPath("plugins/MyPlugin.dll");
 
-      builder.RegisterAssemblyTypes(pluginAssembly);
+      builder.RegisterAssemblyTypes(pluginAssembly).AsImplementedInterfaces();
     }))
     {
       // Because of default load context behaviour, because we have already loaded
