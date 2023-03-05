@@ -3,7 +3,7 @@ AssemblyLoadContext and Lifetime Scopes
 
 In .NET Core `the AssemblyLoadContext was introduced <https://learn.microsoft.com/en-us/dotnet/core/dependency-loading/understanding-assemblyloadcontext>`_, allowing developers to dynamically load and unload assemblies from their application. This is very useful for developers writing applications with plugin-based architectures.
 
-In order to unload the assemblies in an ``AssemblyLoadContext`` when a plugin is no longer needed, and reclaim the memory required by that plugin, no references to types in that assembly can be held by anything outside the loaded context. This includes Autofac, which by default holds a variety of internal references and caches for types that have been registered.
+In order to unload the assemblies in an ``AssemblyLoadContext`` when an assembly is no longer needed, no references to types in that assembly can be held by anything outside the loaded context. This includes Autofac, which by default holds a variety of internal references and caches for types that have been registered.
 
 As of Autofac 7.0, we've added support for indicating to Autofac that a given lifetime scope represents types loaded for a given ``AssemblyLoadContext``; when a lifetime scope created for a specific ``AssemblyLoadContext`` is unloaded, Autofac will make a *best-effort* attempt to remove all references we hold for types from the loaded context, to allow the ``AssemblyLoadContext`` to be unloaded.
 
