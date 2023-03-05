@@ -35,9 +35,11 @@ For example, given the following type:
       public required ILogger Logger { get; set; }
 
       public required IConfigReader ConfigReader { get; set; }
+
+      public IDatabaseContext Context { get; set; }
     }
 
-When the component is resolved, Autofac will populate the ``Logger`` and ``ConfigReader`` properties as if they were constructor parameters.
+When the component is resolved, Autofac will populate the ``Logger`` and ``ConfigReader`` properties as if they were constructor parameters. The ``Context`` property will be treated like a standard property and will not be populated by default.
 
 Required property injection also works automatically in all base classes with required properties:
 
