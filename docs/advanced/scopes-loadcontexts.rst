@@ -55,7 +55,7 @@ You indicate that a lifetime scope is for an ``AssemblyLoadContext`` with the ne
     }))
     {
       // Because of default load context behaviour, because we have already loaded
-      // PluginDefinition into the application to use IPlugin, the loaded MyPlugin assembly
+      // PluginDefinition into the *application* so we can reference IPlugin, the loaded MyPlugin assembly
       // will share the same type.
       var plugin = scope.Resolve<IPlugin>();
 
@@ -69,3 +69,7 @@ You indicate that a lifetime scope is for an ``AssemblyLoadContext`` with the ne
   If you capture a reference to any resolved components, or any types in the loaded assembly, outside Autofac it's highly likely you won't be able to unload your load context.
 
   AssemblyLoadContexts are tricky to use in such a way that unloading is guaranteed every time (whether using Autofac or not). See the dotnet documentation on `troubleshooting unloadability <https://learn.microsoft.com/en-us/dotnet/standard/assembly/unloadability#troubleshoot-unloadability-issues>`_ if you run into problems.
+
+You can create additional lifetime scopes from your "load context scope" using the regular `BeginLifetimeScope` method, without needing to further track your load context.
+
+That means you can load a plugin, then the plugin can resolve `ILifetimeScope` and create new scopes, with all the assembly metadata being isolated to that initial "load context scope".
