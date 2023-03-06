@@ -374,6 +374,16 @@ You might want to register that type and have an auto-generated function factory
     // Throws a DependencyResolutionException:
     var obj = func(1, 2, "three");
 
+Should you decide to use the built-in auto-generated factory behavior (``Func<X, Y, B>``) and only resolve a factory with one of each type, it will work but you'll get the same input for all constructor parameters of the same type.
+
+.. sourcecode:: csharp
+
+    var func = container.Resolve<Func<int, string, DuplicateTypes>>();
+
+    // This works and is the same as calling
+    // new DuplicateTypes(1, 1, "three")
+    var obj = func(1, "three");
+
 Delegate Factories
 ^^^^^^^^^^^^^^^^^^
 
@@ -405,16 +415,6 @@ Now the function will work:
 
     var func = scope.Resolve<FactoryDelegate>();
     var obj = func(1, 2, "three");
-
-Should you decide to use the built-in auto-generated factory behavior (``Func<X, Y, B>``) and only resolve a factory with one of each type, it will work but you'll get the same input for all constructor parameters of the same type.
-
-.. sourcecode:: csharp
-
-    var func = container.Resolve<Func<int, string, DuplicateTypes>>();
-
-    // This works and is the same as calling
-    // new DuplicateTypes(1, 1, "three")
-    var obj = func(1, "three");
 
 Enumeration (IEnumerable<B>, IList<B>, ICollection<B>)
 ------------------------------------------------------
