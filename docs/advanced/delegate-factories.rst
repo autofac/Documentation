@@ -180,7 +180,6 @@ Lifetime Scopes and Disposal
 
 Just as with the ``Func<T>`` relationships or calling ``Resolve<T>()`` directly, using delegate factories is resolving something from a lifetime scope. If the thing you're resolving is disposable, :doc:`the lifetime scope will track it and dispose of it when the scope is disposed <../lifetime/disposal>`. Resolving directly from the container or from a very long-lived lifetime scope when using disposable components may result in a memory leak as the scope holds references to all the disposable components resolved.
 
-
 RegisterGeneratedFactory (Obsolete)
 ===================================
 
