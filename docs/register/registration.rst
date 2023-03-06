@@ -96,44 +96,6 @@ Note that you will still need to have the requisite parameters available at reso
 
 .. note:: You can find advanced methods of customising which constructor to use :doc:`here <../advanced/constructor-selection>`.
 
-Required Properties
--------------------
-
-Starting in Autofac 7.0, in a reflection-based component, all `required properties <https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/required>`_ are automatically resolved, in the same manner as constructor parameters.
-
-All required properties of the component *must* be resolvable services (or supplied as a :doc:`parameter <../resolve/parameters>`) otherwise an exception will be thrown when trying to resolve the component.
-
-For example, consider a class with these properties:
-
-.. sourcecode:: csharp
-
-    public class MyComponent
-    {
-      public required ILogger Logger { get; set; }
-
-      public required IConfigReader ConfigReader { get; set; }
-    }
-
-You can register and use this class as you could if it had a constructor:
-
-.. sourcecode:: csharp
-
-    var builder = new ContainerBuilder();
-    builder.RegisterType<MyComponent>();
-    builder.RegisterType<ConsoleLogger>().As<ILogger>();
-    builder.RegisterType<ConfigReader>().As<IConfigReader>();
-    var container = builder.Build();
-
-    using(var scope = container.BeginLifetimeScope())
-    {
-      // Logger and ConfigReader will be populated.
-      var component = scope.Resolve<MyComponent>();
-    }
-
-Required properties are also set automatically on all base classes (if they are present); this makes required properties useful with deep object hierarchies, because it allows you to avoid having to invoke base constructors with the set of services; Autofac will set the base class properties for you.
-
-.. note:: For more details on required property injection, see the dedicated section in the :doc:`property injection documentation <prop-method-injection>`.
-
 Instance Components
 ===================
 
