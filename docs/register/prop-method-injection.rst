@@ -166,7 +166,7 @@ If you have one specific property and value to wire up, you can use the ``WithPr
     builder.RegisterType<A>().WithProperty("PropertyName", propertyValue);
 
 Overriding Required Properties
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------------
 
 Any property values provided for required properties using the ``WithProperty`` method when registering a type will override the requirement to inject that property, and Autofac will use the provided value instead:
 
