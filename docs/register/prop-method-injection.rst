@@ -156,10 +156,6 @@ You can use the ``PropertiesAutowired()`` modifier at registration time to injec
     // is important!
     builder.RegisterType<C>().PropertiesAutowired(new MyCustomPropSelector());
 
-.. note::
-
-  Properties set on a component because they are ``required`` may lead to duplicate injection of a property if ``PropertiesAutowired`` is also used on that component.  Consider using ``PropertiesAutowired(PropertyWiringOptions.PreserveSetValues)`` to avoid repeating property injection.
-
 Manually Specifying Properties
 ------------------------------
 

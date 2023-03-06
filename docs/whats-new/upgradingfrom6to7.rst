@@ -9,7 +9,7 @@ In the upgrade from Autofac 6.x to 7.x, the amount of breaking change was fairly
 
   If a required property *cannot* be resolved during component activation, an exception will now be thrown.
 
-  Equally, if you previously used ``PropertiesAutowired()`` to populate required properties on components, those properties will now be doubly-resolved, so you may wish to remove ``PropertiesAutowired()`` in favour of the default functionality.
+  Equally, if you previously used ``PropertiesAutowired()`` to populate required properties on components, those properties will now be automatically injected, so ``PropertiesAutowired()`` can be removed provided there are no "not required" properties on the component.
 
 - ``RegisterGeneratedFactory`` has been marked as obsolete.  You should update your code to use the ``Func<T>`` `implicit relationship <../resolve/relationships>`_  or `delegate factories <../advanced/delegate-factories>`_.
 
