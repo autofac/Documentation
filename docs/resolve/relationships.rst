@@ -236,7 +236,7 @@ Lifetime scopes are respected, so you can use that to your advantage.
 
 Parameterized Instantiation (Func<X, Y, B>)
 -------------------------------------------
-You can also use an *auto-generated factory* to provide parameters when creating an new instance of the object, where the constructor of the object calls for some additional parameters. While the ``Func<B>`` relationship is similar to ``Resolve<B>()``, the ``Func<X, Y, B>`` relationship is like calling ``Resolve<B>(TypedParameter.From<X>(x), TypedParameter.From<Y>(y))`` - a resolve operation that has typed parameters. This is an alternative to :doc:`passing parameters during registration <../register/parameters>` or :doc:`passing during manual resolution <../resolve/parameters>`:
+You can use an *auto-generated factory* to provide parameters when creating an new instance of the object, where the constructor of the object calls for some additional parameters. While the ``Func<B>`` relationship is similar to ``Resolve<B>()``, the ``Func<X, Y, B>`` relationship is like calling ``Resolve<B>(TypedParameter.From<X>(x), TypedParameter.From<Y>(y))`` - a resolve operation that has typed parameters. This is an alternative to :doc:`passing parameters during registration <../register/parameters>` or :doc:`passing during manual resolution <../resolve/parameters>`:
 
 .. sourcecode:: csharp
 
@@ -294,7 +294,40 @@ Example:
       }
     }
 
-Internally, Autofac determines what values to use for the constructor args solely based on the type and behaves as though we've temporarily defined the input values for resolution. A consequence of this is that  **auto-generated function factories cannot have duplicate types in the input parameter list.** See below for further notes on this.
+Autofac determines what values to use for the constructor args **solely based on the type** (like ``TypedParameter``). A consequence of this is that  **auto-generated function factories cannot have duplicate types in the input parameter list.** For example, say you have a type like this:
+
+.. sourcecode:: csharp
+
+    public class DuplicateTypes
+    {
+      public DuplicateTypes(int a, int b, string c)
+      {
+        // ...
+      }
+    }
+
+You might want to register that type and have an auto-generated function factory for it. *You will be able to resolve the function, but you won't be able to execute it.* You can try to resolve a factory with one of each type, and that will work but you'll get the same input for all constructor parameters of the same type.
+
+.. sourcecode:: csharp
+
+    // This auto-generated factory has two parameters of the
+    // same type - problem!
+    var funcWithDuplicates = scope.Resolve<Func<int, int, string, DuplicateTypes>>();
+
+    // Throws a DependencyResolutionException because of the
+    // two int types.
+    var obj1 = funcWithDuplicates(1, 2, "three");
+
+    // This auto-generated factory removes the duplicates, BUT...
+    var funcWithoutDuplicates = container.Resolve<Func<int, string, DuplicateTypes>>();
+
+    // ...the int factory parameter will be the same value for
+    // BOTH constructor parameters. This factory call will work,
+    // but it's like saying
+    // var obj2 = new DuplicateTypes(1, 1, "three");
+    var obj2 = funcWithoutDuplicates(1, "three");
+
+If you really need multiple parameters of the same type, :doc:`check out delegate factories <../advanced/delegate-factories>`.
 
 **Lifetime scopes are respected** using this relationship type, just as they are when using ``Func<B>`` or :doc:`delegate factories <../advanced/delegate-factories>`. If you register an object as ``InstancePerDependency()`` and call the ``Func<X, Y, B>`` multiple times, you'll get a new instance each time. However, if you register an object as ``SingleInstance()`` and call the ``Func<X, Y, B>`` to resolve the object more than once, you will get *the same object instance every time regardless of the different parameters you pass in.* Just passing different parameters will not break the respect for the lifetime scope:
 
@@ -352,69 +385,7 @@ This shows how lifetime scopes are respected regardless of parameters:
       Assert.Same(b1, b2);
     }
 
-
-As noted above, ``Func<X, Y, B>`` treats arguments as ``TypedParameter`` so you can't have duplicate types in the parameter list. For example, say you have a type like this:
-
-.. sourcecode:: csharp
-
-    public class DuplicateTypes
-    {
-      public DuplicateTypes(int a, int b, string c)
-      {
-        // ...
-      }
-    }
-
-You might want to register that type and have an auto-generated function factory for it. *You will be able to resolve the function, but you won't be able to execute it.*
-
-.. sourcecode:: csharp
-
-    var func = scope.Resolve<Func<int, int, string, DuplicateTypes>>();
-
-    // Throws a DependencyResolutionException:
-    var obj = func(1, 2, "three");
-
-Should you decide to use the built-in auto-generated factory behavior (``Func<X, Y, B>``) and only resolve a factory with one of each type, it will work but you'll get the same input for all constructor parameters of the same type.
-
-.. sourcecode:: csharp
-
-    var func = container.Resolve<Func<int, string, DuplicateTypes>>();
-
-    // This works and is the same as calling
-    // new DuplicateTypes(1, 1, "three")
-    var obj = func(1, "three");
-
-Delegate Factories
-^^^^^^^^^^^^^^^^^^
-
-In a loosely coupled scenario where the parameters are matched on type, you shouldn't really know about the order of the parameters for a specific object's constructor. If you need to do something like this, you should use a :doc:`delegate factory, which you can read about in the advanced topics section <../advanced/delegate-factories>`.
-
-RegisterGeneratedFactory
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. important::
-
-    ``RegisterGeneratedFactory`` is now marked as obsolete as of Autofac 7.0, this section is included for posterity; if you cannot use the ``Func<T>`` implicit relationship, use :doc:`delegate factories <../advanced/delegate-factories>`.
-
-The now-obsolete way to handle a loosely coupled scenario where the parameters are matched on type was through the use of ``RegisterGeneratedFactory()``.
-
-.. sourcecode:: csharp
-
-    public delegate DuplicateTypes FactoryDelegate(int a, int b, string c);
-
-Then register that delegate using ``RegisterGeneratedFactory()``:
-
-.. sourcecode:: csharp
-
-    builder.RegisterType<DuplicateTypes>();
-    builder.RegisterGeneratedFactory<FactoryDelegate>(new TypedService(typeof(DuplicateTypes)));
-
-Now the function will work:
-
-.. sourcecode:: csharp
-
-    var func = scope.Resolve<FactoryDelegate>();
-    var obj = func(1, 2, "three");
+**Delegate factories allow you to provide a custom delegate as the signature for your factory** function, which can overcome challenges with relationships like ``Func<X, Y, B>`` like allowing for multiple parameters of the same time. Delegate factories can be a powerful alternative for factory generation - :doc:`check this feature out in the advanced topics section <../advanced/delegate-factories>`.
 
 Enumeration (IEnumerable<B>, IList<B>, ICollection<B>)
 ------------------------------------------------------
