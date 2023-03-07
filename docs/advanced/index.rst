@@ -16,6 +16,7 @@ Advanced Topics
     constructor-selection.rst
     concurrency.rst
     multitenant.rst
+    scopes-loadcontexts.rst
     pipelines.rst
     aggregate-services.rst
     interceptors.rst
