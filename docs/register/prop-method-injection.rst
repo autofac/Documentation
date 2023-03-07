@@ -32,14 +32,16 @@ For example, given the following type:
 
     public class MyComponent
     {
-      public required ILogger Logger { get; set; }
+      public required ILogger Logger { protected get; init; }
 
-      public required IConfigReader ConfigReader { get; set; }
+      public required IConfigReader ConfigReader { protected get; init; }
 
       public IDatabaseContext Context { get; set; }
     }
 
 When the component is resolved, Autofac will populate the ``Logger`` and ``ConfigReader`` properties as if they were constructor parameters. The ``Context`` property will be treated like a standard property and will not be populated by default.
+
+You can use any valid combination of access modifiers on required properties, however, ``public required ... { protected get; init; }`` is recommended as it provides access and visibility that are similar to constructors: the property is only settable at construction and not publicly visible to other classes.
 
 Required property injection also works automatically in all base classes with required properties:
 
@@ -47,12 +49,12 @@ Required property injection also works automatically in all base classes with re
 
     public class ComponentBase
     {
-      public required ILogger Logger { get; set; }
+      public required ILogger Logger { protected get; init; }
     }
 
     public class MyComponent : ComponentBase
     {
-      public required IConfigReader ConfigReader { get; set; }
+      public required IConfigReader ConfigReader { protected get; init; }
     }
 
 In the above example, resolving ``MyComponent`` would populate ``Logger`` in the base class, as well as ``ConfigReader`` in the component itself.
@@ -78,7 +80,7 @@ You can mix-and-match constructors and required properties if you so wish:
 
       private ILogger Logger { get; set; }
 
-      public required IConfigReader ConfigReader { get; set; }
+      public required IConfigReader ConfigReader { protected get; init; }
     }
 
 When multiple constructors are available, by default Autofac selects the constructor with the most matching parameters (unless :doc:`custom constructor selection is used <../advanced/constructor-selection>`).  This remains the case, and the set of required properties has no impact on the selected constructor.
@@ -98,7 +100,7 @@ Autofac has no idea whether or not you set a given required property inside a co
         Logger = logger;
       }
 
-      public required ILogger Logger { get; set; }
+      public required ILogger Logger { protected get; init; }
     }
 
 Here, the constructor that Autofac will pick is going to be the one that takes the ``ILogger`` parameter, which in turn sets the ``Logger`` property. However, since ``Logger`` is marked as a required property, Autofac will resolve ``ILogger`` a second time, and inject it into the required property.
@@ -121,7 +123,7 @@ To avoid this, mark constructors that set all your required properties with the 
         Logger = logger;
       }
 
-      public required ILogger Logger { get; set; }
+      public required ILogger Logger { protected get; init; }
     }
 
 Since the constructor is marked as setting all required members, no required property injection will occur in Autofac, when *that constructor* is used to create an instance of the component.
@@ -174,9 +176,9 @@ Any property values provided for required properties using the ``WithProperty`` 
 
   public class MyComponent
   {
-    public required ILogger Logger { get; set; }
+    public required ILogger Logger { protected get; init; }
 
-    public required IConfigReader ConfigReader { get; set; }
+    public required IConfigReader ConfigReader { protected get; init; }
   }
 
   var builder = new ContainerBuilder();
