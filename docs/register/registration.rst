@@ -109,9 +109,9 @@ For example, consider a class with these properties:
 
     public class MyComponent
     {
-      public required ILogger Logger { get; set; }
+      public required ILogger Logger { protected get; init; }
 
-      public required IConfigReader ConfigReader { get; set; }
+      public required IConfigReader ConfigReader { protected get; init; }
     }
 
 You can register and use this class as you could if it had a constructor:
