@@ -11,6 +11,6 @@ In the upgrade from Autofac 6.x to 7.x, the amount of breaking change was fairly
 
   Equally, if you previously used ``PropertiesAutowired()`` to populate required properties on components, those properties will now be automatically injected, so ``PropertiesAutowired()`` can be removed provided there are no "not required" properties on the component.
 
-- ``RegisterGeneratedFactory`` has been marked as obsolete.  You should update your code to use the ``Func<T>`` `implicit relationship <../resolve/relationships>`_  or `delegate factories <../advanced/delegate-factories.html>`_.
+- ``RegisterGeneratedFactory`` has been marked as obsolete.  You should update your code to use the ``Func<T>`` `implicit relationship <../resolve/relationships.html>`_  or `delegate factories <../advanced/delegate-factories.html>`_.
 
 - The definition of the ``ILifetimeScope`` interface has been changed to add the ``BeginLoadContextLifetimeScope`` method and its overloads, on .NET 5.0+. If you implement a "fake" lifetime scope for any tests, you will need to add an implementation of these methods. For most test use-cases, it's suitable to call the existing ``BeginLifetimeScope`` methods, ignoring the provided load context.
