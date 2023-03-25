@@ -2,7 +2,7 @@
 How do I work with per-request lifetime scope?
 ==============================================
 
-In applications that have a request/response semantic (e.g., :doc:`ASP.NET MVC <../integration/mvc>` or :doc:`Web API <../integration/webapi>`), you can register dependencies to be "instance-per-request," meaning you will get a one instance of the given dependency for each request handled by the application and that instance will be tied to the individual request lifecycle.
+In applications that have a request/response semantic (e.g., :doc:`ASP.NET MVC <../integration/mvc>` or :doc:`Web API <../integration/webapi>`), you can register dependencies to be "instance-per-request," meaning you will get one instance of the given dependency for each request handled by the application and that instance will be tied to the individual request lifecycle.
 
 In order to understand per-request lifetime, you should have a good understanding of :doc:`how dependency lifetime scopes work in general <../lifetime/instance-scope>`. Once you understand how dependency lifetime scopes work, per-request lifetime scope is easy.
 
