@@ -178,7 +178,7 @@ Now let's say you have some code that builds a container and uses these classes.
       // rootComp and child2Comp are TWO DIFFERENT SINGLETONS.
       Debug.Assert(rootComp != child2Comp);
 
-      using (var child2SubScope = scope.BeginLifetimeScope(
+      using (var child2SubScope = child2.BeginLifetimeScope(
         b => b.Register(ctx => new Dependency("child2SubScope")))
       {
         var child2SubComp = child2SubScope.Resolve<Component>();
