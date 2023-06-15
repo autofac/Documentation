@@ -487,6 +487,15 @@ These extensions run at the time of ``ContainerBuilder.Build()`` and will execut
              reg.IsRegistered(new TypedService(typeof(IService))) &&
              reg.IsRegistered(new TypedService(typeof(HandlerB))));
 
+    // Be careful with open generics - IfNotRegistered and IsRegistered
+    // only work with CLOSED generics because that's what you'd resolve!
+    // Note the check is for a closed generic that would be registered
+    // as part of the open generic - if you put an open generic in the
+    // IfNotRegistered check, it'll always appear not registered.
+    builder.RegisterGeneric(typeof(CommandHandler<>))
+           .As(typeof(ICommandHandler<>))
+           .IfNotRegistered(typeof(ICommandHandler<MyCommand>));
+
     // This is when the conditionals actually run. Again,
     // they run in the order the registrations were added
     // to the ContainerBuilder.
