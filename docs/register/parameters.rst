@@ -56,7 +56,7 @@ Or you could pass a parameter to a reflection component registration:
     // Using a TYPED parameter:
     builder.RegisterType<ConfigReader>()
            .As<IConfigReader>()
-           .WithParameter(new TypedParameter(typeof(string), "sectionName"));
+           .WithParameter(TypedParameter.From("sectionName"));
 
     // Using a RESOLVED parameter:
     builder.RegisterType<ConfigReader>()
