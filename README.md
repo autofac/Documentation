@@ -2,16 +2,13 @@
 
 Usage and API documentation for Autofac and integration libraries.
 
-[![Documentation Status](https://readthedocs.org/projects/autofac/badge/?version=latest)](https://readthedocs.org/projects/autofac/?badge=latest) [![Open in Visual Studio Code](https://open.vscode.dev/badges/open-in-vscode.svg)](https://open.vscode.dev/autofac/Documentation)
+[![Documentation Status](https://readthedocs.org/projects/autofac/badge/?version=latest)](https://readthedocs.org/projects/autofac/?badge=latest)
 
 **[Check out the Autofac documentation at docs.autofac.org!](https://docs.autofac.org/)**
 
 ## Updating the User Documentation Site
 
-User documentation is viewable at
-[https://docs.autofac.org](https://docs.autofac.org) (a CNAME to
-[https://autofac.readthedocs.io](https://autofac.readthedocs.io)). It is stored
-in the `/docs` folder in this source repo.
+User documentation is viewable at [https://docs.autofac.org](https://docs.autofac.org) (a CNAME to [https://autofac.readthedocs.io](https://autofac.readthedocs.io)). It is stored in the `/docs` folder in this source repo.
 
 To build the docs and see them locally, you need to follow the [Getting
 Started](https://docs.readthedocs.org/en/latest/getting_started.html) docs on
@@ -20,12 +17,9 @@ Read The Docs so you get Python and Sphinx installed.
 The docs are written in [reStructuredText](http://sphinx-doc.org/rest.html),
 which is very similar to Markdown but not quite. References below.
 
-Updates to the documentation checked into the `/docs` folder will automatically
-propagate to Read The Docs. No build or separate push is required.
+Updates to the documentation checked into the `/docs` folder will automatically propagate to Read The Docs. No build or separate push is required.
 
-There is support for converting PlantUML (.puml) documents into PNG images for
-easier diagramming. Run `npm watch` to start the generation. Diagrams only get
-generated on change and will not be rebuilt/regenerated without a change.
+There is support for converting PlantUML (.puml) documents into PNG images for easier diagramming. Run `npm watch` to start the generation. Diagrams only get generated on change and will not be rebuilt/regenerated without a change.
 
 ### Building
 
