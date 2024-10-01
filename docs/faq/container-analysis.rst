@@ -46,4 +46,4 @@ These are somewhat simple cases. Consider the additional cases of things like...
 
 These are not uncommon scenarios and that's not even a complete list of dynamic capabilities supported.
 
-It is possible that at some point a very simplistic analysis mechanism could be added to try catching a minority of issues, but it is likely a more valuable endeavor to enhance Autofac to support better diagnostic and tracing functionality to more quickly target and resolve runtime challenges that are encountered. (If you're interested in helping with that effort, `let us know! <https://github.com/autofac/Autofac/issues>`_)
+It is possible that at some point a very simplistic analysis mechanism could be added to try catching a minority of issues, but it is likely a more valuable endeavor to enhance :doc:`Autofac's existing diagnostic and tracing functionality <../troubleshooting/diagnostics>` to more quickly target and resolve runtime challenges that are encountered. (If you're interested in helping with that effort, `let us know! <https://github.com/autofac/Autofac/issues>`_)
