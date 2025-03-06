@@ -85,18 +85,7 @@ Under the covers, ``EnableInterfaceInterceptors()`` creates an interface proxy t
 Both techniques can be used in conjunction with the assembly scanning support, so you can configure batches of components using the same methods.
 
 **Special case: WCF proxy and remoting objects**
-While WCF proxy objects *look* like interfaces, the ``EnableInterfaceInterceptors()`` mechanism won't work because, behind the scenes, .NET is actually using a ``System.Runtime.Remoting.TransparentProxy`` object that behaves like the interface. If you want interception on a WCF proxy, you need to use the ``InterceptTransparentProxy()`` method.
-
-.. sourcecode:: csharp
-
-    var cb = new ContainerBuilder();
-    cb.RegisterType<TestServiceInterceptor>();
-    cb.Register(c => CreateChannelFactory()).SingleInstance();
-    cb
-      .Register(c => c.Resolve<ChannelFactory<ITestService>>().CreateChannel())
-      .InterceptTransparentProxy(typeof(IClientChannel))
-      .InterceptedBy(typeof(TestServiceInterceptor))
-      .UseWcfSafeRelease();
+While WCF proxy objects *look* like interfaces, the ``EnableInterfaceInterceptors()`` mechanism won't work because, behind the scenes, the .NET desktop framework is actually using a ``System.Runtime.Remoting.TransparentProxy`` object that behaves like the interface. As of v6.0.0 of ``Autofac.Extras.DynamicProxy`` the ability to intercept ``TransparentProxy`` objects was removed in an effort to improve cross-platform support.
 
 .. _associate_interceptors:
 
@@ -186,7 +175,7 @@ To enable proxying via interfaces, the component must provide its services throu
 WCF Proxies
 -----------
 
-As mentioned earlier, WCF proxies and other remoting types are special cases and can't use standard interface or class interception. You must use ``InterceptTransparentProxy()`` on those types.
+As mentioned earlier, WCF proxies and other remoting types are special cases and can't use standard interface or class interception.
 
 Class Interceptors and UsingConstructor
 ---------------------------------------
