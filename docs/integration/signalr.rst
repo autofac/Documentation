@@ -143,7 +143,7 @@ If you are using SignalR :doc:`as part of an OWIN application <owin>`, you need 
         // Register the Autofac middleware FIRST, then the standard SignalR middleware.
         app.UseAutofacMiddleware(container);
         app.MapSignalR("/signalr", config);
-        
+
         // To add custom HubPipeline modules, you have to get the HubPipeline
         // from the dependency resolver, for example:
         var hubPipeline = config.Resolver.Resolve<IHubPipeline>();

@@ -8,11 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # This is the tag that will be kept up to date with master.
-      DOC_VERSION: v7.0.0
+      DOC_VERSION: v8.0.0
     # Don't update the tag at the same time another update is running.
     concurrency: update-version-tag
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Documentation Repo
+        uses: actions/checkout@v6
       - name: Tag Repo
         uses: richardsimko/update-tag@v1
         with:

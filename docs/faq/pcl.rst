@@ -6,9 +6,7 @@ Autofac (3.x) is a **Portable Class Library** that targets multiple platforms.
 
 As a Portable Class Library, if you open up Autofac in Reflector, dotPeek, or other like tools, you'll see references to version 2.0.5.0 of various system libraries. Version 2.0.5.0 is, in fact, the Silverlight version of the .NET framework. *This is expected and is not a problem.* At runtime everything pans out. Autofac will correctly bind to the framework version you're using - be it .NET 4.5, Silverlight, or Windows Phone. `You can read more about Portable Class Libraries on MSDN. <https://msdn.microsoft.com/en-us/library/gg597391.aspx>`_
 
-You may encounter an exception that looks something like this when using Autofac as a Portable Class Library:
-
-.. sourcecode:: none
+You may encounter an exception that looks something like this when using Autofac as a Portable Class Library::
 
     Test 'MyNamespace.MyFixture.MyTest' failed: System.IO.FileLoadException : Could not load file or assembly 'System.Core, Version=2.0.5.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e, Retargetable=Yes' or one of its dependencies. The given assembly name or codebase was invalid. (Exception from HRESULT: 0x80131047)
         at Autofac.Builder.RegistrationData..ctor(Service defaultService)

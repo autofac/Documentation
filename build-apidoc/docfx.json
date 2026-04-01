@@ -1,0 +1,93 @@
+{
+  "build": {
+    "cleanupCacheHistory": false,
+    "content": [
+      {
+        "files": [
+          "index.md",
+          "current.md",
+          "legacy-framework.md",
+          "toc.yml",
+          "api/**.yml",
+          "api/**/**.yml",
+          "api/legacy/**.yml",
+          "api/legacy/**/**.yml"
+        ]
+      }
+    ],
+    "globalMetadata": {
+      "_appFooter": "Copyright © 2007-2026 Autofac Contributors. All rights reserved.",
+      "_appLogoPath": "images/logo.png",
+      "_appName": "Autofac API Reference",
+      "_appTitle": "Autofac",
+      "_disableAffix": true,
+      "_disableBreadcrumb": true,
+      "_disableContribution": true,
+      "_disableNavbar": false,
+      "_disableNextArticle": true,
+      "_disableToc": false,
+      "_enableSearch": true,
+      "pdf": false
+    },
+    "keepFileLink": false,
+    "output": "artifacts/doc/Website",
+    "resource": [
+      {
+        "files": [
+          "images/**"
+        ]
+      }
+    ],
+    "template": [
+      "default",
+      "modern"
+    ]
+  },
+  "dest": ".docfx",
+  "metadata": [
+    {
+      "dest": "api",
+      "disableDefaultFilter": false,
+      "disableGitFeatures": false,
+      "filter": "docfx-filter.yml",
+      "memberLayout": "separatePages",
+      "namespaceLayout": "nested",
+      "src": [
+        {
+          "files": [
+            "Placeholder/bin/Debug/net10.0/Autofac*.dll",
+            "Placeholder/bin/Debug/net10.0/Autofac*.xml"
+          ]
+        }
+      ]
+    },
+    {
+      "dest": "api/legacy",
+      "disableDefaultFilter": false,
+      "disableGitFeatures": false,
+      "filter": "docfx-filter.yml",
+      "memberLayout": "separatePages",
+      "namespaceLayout": "nested",
+      "src": [
+        {
+          "files": [
+            "Placeholder/bin/Debug/net472/Autofac.Integration.Mvc*.dll",
+            "Placeholder/bin/Debug/net472/Autofac.Integration.Mvc*.xml",
+            "Placeholder/bin/Debug/net472/Autofac.Integration.Owin.dll",
+            "Placeholder/bin/Debug/net472/Autofac.Integration.Owin.xml",
+            "Placeholder/bin/Debug/net472/Autofac.Integration.ServiceFabric.dll",
+            "Placeholder/bin/Debug/net472/Autofac.Integration.ServiceFabric.xml",
+            "Placeholder/bin/Debug/net472/Autofac.Integration.SignalR.dll",
+            "Placeholder/bin/Debug/net472/Autofac.Integration.SignalR.xml",
+            "Placeholder/bin/Debug/net472/Autofac.Integration.Wcf.dll",
+            "Placeholder/bin/Debug/net472/Autofac.Integration.Wcf.xml",
+            "Placeholder/bin/Debug/net472/Autofac.Integration.Web*.dll",
+            "Placeholder/bin/Debug/net472/Autofac.Integration.Web*.xml",
+            "Placeholder/bin/Debug/net472/Autofac.Multitenant.Wcf.dll",
+            "Placeholder/bin/Debug/net472/Autofac.Multitenant.Wcf.xml"
+          ]
+        }
+      ]
+    }
+  ]
+}

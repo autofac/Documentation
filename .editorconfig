@@ -1,30 +1,64 @@
-; EditorConfig to support per-solution formatting.
-; Use the EditorConfig VS add-in to make this work.
-; http://editorconfig.org/
+# EditorConfig to support per-solution formatting.
+# http://editorconfig.org/
 
-; This is the default for the codeline.
+# For items that have specific line endings, be sure your .gitattributes
+# has corresponding lines like:
+# *.bat  text eol=crlf
+# *.cmd  text eol=crlf
+# *.in   text eol=lf
+# *.rego text eol=lf
+# *.sh   text eol=lf
+# *.sln  text eol=crlf
+
+# This is the default for the codeline.
 root = true
 
+# Default
 [*]
 indent_style = space
 trim_trailing_whitespace = true
+insert_final_newline = true
 
-[*.rst]
-indent_size = 2
-end_of_line = lf
-
-[*.{config,cs,xml}]
+# .NET Code - match defaults for VS
+[*.{cs,csx,vb,vbx}]
 indent_size = 4
+charset = utf-8-bom
 
-[*.{proj,props,sln,targets}]
+# .NET project files and MSBuild - match defaults for VS
+[*.{csproj,nuspec,proj,projitems,props,shproj,targets,vbproj,vcxproj,vcxproj.filters,vsixmanifest,vsct}]
+indent_size = 2
+
+# .NET solution files - match defaults for VS
+[*.sln]
+end_of_line = crlf
 indent_style = tab
 
-[*.{kproj,csproj,json,ps1,psd1,psm1,resx}]
+# Config - match XML and default nuget.config template
+[*.config]
 indent_size = 2
 
-[NuGet.Config]
+# HTML, XML - match defaults for VS
+[*.{cshtml,html,xml}]
+indent_size = 4
+
+# JavaScript and JS mixes - match eslint settings; JSON also matches .NET Core templates
+[*.{js,json,mjs,ts,vue}]
 indent_size = 2
 
-; PlantUML - match examples
+# Markdown - match markdownlint settings
+[*.{md,markdown}]
+indent_size = 2
+
+# PlantUML - match examples
 [*.puml]
 indent_size = 2
+
+# PowerShell - match defaults for New-ModuleManifest and PSScriptAnalyzer Invoke-Formatter
+[*.{ps1,psd1,psm1}]
+indent_size = 4
+charset = utf-8-bom
+
+# ReStructuredText - standard indentation format from examples
+[*.rst]
+indent_size = 2
+end_of_line = LF

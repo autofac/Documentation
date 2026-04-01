@@ -1,29 +1,46 @@
-const chokidar = require('chokidar');
-const plantUml = require('node-plantuml');
-const fs = require('fs');
-const path = require('path');
+import chokidar from 'chokidar';
+import plantUml from 'node-plantuml-latest';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const style = path.resolve(__dirname, '.plantstyles');
 
 /**
  * Logs a dated message to the console.
- * @param {string} message - The message to log.
+ * @param {string} message The message to log.
  */
 function log(message) {
   const now = new Date();
-  console.log(`[${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}] ${message}`);
+  console.log(
+    `[${now.getHours().toString().padStart(2, '0')}:${now
+      .getMinutes()
+      .toString()
+      .padStart(2, '0')}:${now
+      .getSeconds()
+      .toString()
+      .padStart(2, '0')}] ${message}`
+  );
 }
 
 /**
  * Generates/regenerates a diagram based on a PlantUML file.
- * @param {string} pathToFile - The absolute file path to the PlantUML file.
+ * @param {string} pathToFile The absolute file path to the PlantUML file.
  */
 function generateDiagram(pathToFile) {
   cleanupDiagram(pathToFile);
   const diagramPath = calculateDiagramPath(pathToFile);
-  log("Generating " + diagramPath);
+  log('Generating ' + diagramPath);
   try {
-    const gen = plantUml.generate(pathToFile, { format: "png", config: style });
+    const content = stripRelativeIncludes(pathToFile);
+    const gen = plantUml.generate(content, {
+      format: 'png',
+      config: style,
+      pragma: 'layout=smetana'
+    });
     gen.out.pipe(fs.createWriteStream(diagramPath));
   } catch (error) {
     console.error(error);
@@ -31,14 +48,34 @@ function generateDiagram(pathToFile) {
 }
 
 /**
+ * Reads the content of the puml file and removes relative !include statements
+ * for .plantstyles files.
+ * @param {string} pathToFile The absolute file path to the PlantUML file.
+ * @returns {string} The stripped content without relative !include statements.
+ */
+function stripRelativeIncludes(pathToFile) {
+  let stripped = '';
+
+  fs.readFileSync(pathToFile, 'utf-8')
+    .split(/\r?\n/)
+    .forEach((line) => {
+      if (!/^!include [./]*.plantstyles$/.test(line)) {
+        stripped += line + '\n';
+      }
+    });
+
+  return stripped;
+}
+
+/**
  * Removes a diagram based on a PlantUML file.
- * @param {string} pathToFile - The absolute file path to the PlantUML file.
+ * @param {string} pathToFile The absolute file path to the PlantUML file.
  */
 function cleanupDiagram(pathToFile) {
   const diagramPath = calculateDiagramPath(pathToFile);
   try {
     if (fs.existsSync(diagramPath)) {
-      log("Removing " + diagramPath);
+      log('Removing ' + diagramPath);
       fs.unlinkSync(diagramPath);
     }
   } catch (error) {
@@ -47,20 +84,25 @@ function cleanupDiagram(pathToFile) {
 }
 
 /**
- * Determines the path to the generated visual diagram based on the
- * location of a PlantUML file.
- * @param {string} pathToFile - The absolute file path to the PlantUML file.
- * @return {string} The absolute path to the diagram associated with the PlantUML file.
+ * Determines the path to the generated visual diagram based on the location of
+ * a PlantUML file.
+ * @param {string} pathToFile The absolute file path to the PlantUML file.
+ * @returns {string} The absolute path to the diagram associated with the
+ * PlantUML file.
  */
 function calculateDiagramPath(pathToFile) {
-  const filename = path.basename(pathToFile, ".puml") + ".png";
+  const filename = path.basename(pathToFile, '.puml') + '.png';
   return path.join(path.dirname(pathToFile), filename);
 }
 
 const watcher = chokidar
-  .watch('**/*.puml', {
+  .watch('.', {
+    // Ignore all files except .puml files that are not in node_modules.
+    ignored: (path, stats) =>
+      stats?.isFile() &&
+      !path.endsWith('.puml') &&
+      path.indexOf('node_modules') < 0,
     persistent: true,
-    ignored: [/(^|[/\\])\../, 'node_modules'],
     cwd: __dirname,
     ignoreInitial: true
   })

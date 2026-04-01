@@ -1,18 +1,18 @@
 {
-  "cSpell.enabledLanguageIds": [
-    "asciidoc",
-    "csharp",
-    "css",
-    "git-commit",
-    "handlebars",
-    "html",
-    "json",
-    "jsonc",
-    "markdown",
-    "plaintext",
-    "restructuredtext",
-    "text"
-  ],
+  "cSpell.enabledFileTypes": {
+    "asciidoc": true,
+    "csharp": true,
+    "css": true,
+    "git-commit": true,
+    "handlebars": true,
+    "html": true,
+    "json": true,
+    "jsonc": true,
+    "markdown": true,
+    "plaintext": true,
+    "restructuredtext": true,
+    "text": true
+  },
   "cSpell.words": [
     "actnars",
     "appender",
@@ -26,6 +26,7 @@
     "blumhardt's",
     "codebehind",
     "commenters",
+    "docfx",
     "extensionless",
     "gitflow",
     "gitter",
@@ -35,6 +36,7 @@
     "lifecycles",
     "linq",
     "liskov",
+    "msbuild",
     "multitenancy",
     "multitenant",
     "multithreaded",
@@ -64,6 +66,7 @@
     "toctree",
     "typeof",
     "unconfigured",
+    "venv",
     "walkthrough",
     "webapi",
     "webforms",
@@ -71,11 +74,17 @@
     "xunit"
   ],
   "esbonio.server.enabled": true,
-  "esbonio.sphinx.buildDir": "${workspaceRoot}/docs/_build",
-  "esbonio.sphinx.confDir": "${workspaceFolder}/docs",
   "files.watcherExclude": {
     "**/target": true
   },
+  "markdown.extension.toc.levels": "2..6",
+  "plantuml.exportFormat": "png",
+  "plantuml.exportIncludeFolderHeirarchy": true,
+  "plantuml.exportOutDir": "/",
+  "plantuml.exportSubFolder": false,
+  "plantuml.jarArgs": [
+    "-Playout=smetana"
+  ],
   "restructuredtext.linter.doc8.extraArgs": [
     "--config",
     "\"${workspaceFolder}/doc8.ini\""
