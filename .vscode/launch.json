@@ -11,7 +11,6 @@
       "internalConsoleOptions": "neverOpen",
       "module": "http.server",
       "name": "Browse Rendered User Docs",
-      "preLaunchTask": "Activate Python Venv",
       "request": "launch",
       "serverReadyAction": {
         "action": "openExternally",
@@ -31,7 +30,6 @@
       "internalConsoleOptions": "neverOpen",
       "module": "http.server",
       "name": "Browse Rendered API Docs",
-      "preLaunchTask": "Activate Python Venv",
       "request": "launch",
       "serverReadyAction": {
         "action": "openExternally",

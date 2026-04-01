@@ -57,14 +57,6 @@
       ],
       "script": "watch",
       "type": "npm"
-    },
-    {
-      "command": "& ./.venv/bin/Activate.ps1",
-      "detail": "Activate the workspace Python virtual environment in PowerShell.",
-      "label": "Activate Python Venv",
-      "problemMatcher": [
-      ],
-      "type": "shell"
     }
   ],
   "version": "2.0.0",

@@ -6,6 +6,7 @@ We also have API docs at <https://autofac.org/apidoc/>. This documentation is wh
 
 - [Initial Checkout and Setup](#initial-checkout-and-setup)
 - [Validating Changes](#validating-changes)
+- [VS Code Integration](#vs-code-integration)
 - [Updating User Docs](#updating-user-docs)
 - [Updating API Documentation](#updating-api-documentation)
   - [Adding/Updating Doc Sources](#addingupdating-doc-sources)
@@ -63,6 +64,14 @@ pre-commit run --all-files
 # Run the linting
 npm run lint
 ```
+
+## VS Code Integration
+
+There are tasks set up to build the docs and browse things after build. You may find issues where, if you try to launch the docs, you'll get errors indicating the Python virtual environment hasn't been activated in that terminal.
+
+From the command palette, select "Python Envs: Activate Environment in Current Terminal" and it should pick up your `.venv` and activate it. Then the launch should work for you to browse.
+
+The tasks all assume you're working with PowerShell since that's cross-platform.
 
 ## Updating User Docs
 
