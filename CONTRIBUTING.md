@@ -6,8 +6,6 @@ We also have API docs at <https://autofac.org/apidoc/>. This documentation is wh
 
 - [Initial Checkout and Setup](#initial-checkout-and-setup)
 - [Validating Changes](#validating-changes)
-  - [Pre-commit Hooks](#pre-commit-hooks)
-  - [Manual Linting](#manual-linting)
 - [Updating User Docs](#updating-user-docs)
 - [Updating API Documentation](#updating-api-documentation)
   - [Adding/Updating Doc Sources](#addingupdating-doc-sources)
@@ -28,7 +26,7 @@ Prerequisites:
 
 After cloning, set up the tools and dependencies.
 
-```bash
+```powershell
 # Register pre-commit hooks (runs linters before commits)
 pre-commit install
 
@@ -36,16 +34,11 @@ pre-commit install
 python3 -m venv .venv
 
 # Activate the virtual environment (cross-platform)
-# On macOS/Linux:
-source .venv/bin/activate
-# On Windows:
-# .venv\Scripts\Activate.ps1
+.venv\Scripts\Activate.ps1
 
 # Restore dependencies
 npm install
 pip install -r ./docs/requirements.txt
-
-# Restore .NET tools (including docfx for API docs)
 dotnet tool restore
 
 # When you're done, deactivate your virtual environment.
@@ -54,8 +47,6 @@ deactivate
 
 ## Validating Changes
 
-### Pre-commit Hooks
-
 This repository uses `pre-commit` hooks to automatically validate code quality. These hooks run automatically when you commit, and include:
 
 - **eslint**: Lints JavaScript files
@@ -63,27 +54,15 @@ This repository uses `pre-commit` hooks to automatically validate code quality. 
 - **doc8**: Validates reStructuredText (`.rst`) files in the `docs/` folder for formatting and style issues
 - **General checks**: YAML/JSON validation, trailing whitespace, merge conflict markers, etc.
 
-To run the hooks manually on all files:
+You can also run the pre-commit hooks or linting manually:
 
-```bash
+```powershell
+# Run the pre-commit hooks
 pre-commit run --all-files
-```
 
-To bypass hooks during development (not recommended):
-
-```bash
-git commit --no-verify
-```
-
-### Manual Linting
-
-To run all linters manually:
-
-```bash
+# Run the linting
 npm run lint
 ```
-
-This command runs eslint, markdownlint, and doc8 in sequence. Fix any issues before committing.
 
 ## Updating User Docs
 
@@ -101,17 +80,12 @@ npm run watch
 # Build the docs after any edits. It should build with NO errors or warnings.
 cd ./docs
 make html
-```
 
-Build the docs after you edit them. There should be NO errors or warnings: `make html`
-
-To browse rendered user docs through a local web server:
-
-```bash
+# Browse the docs at http://localhost:8081
 npm run browse-doc
 ```
 
-Then open <http://localhost:8081/> in your browser.
+Build the docs after you edit them. There should be NO errors or warnings: `make html`
 
 ## Updating API Documentation
 
@@ -132,8 +106,12 @@ API documentation is built using [DocFX](https://dotnet.github.io/docfx/), which
 
 To build locally:
 
-```bash
+```powershell
+# Build the docs.
 dotnet msbuild build-apidoc/Documentation.proj
+
+# Browse the docs at http://localhost:8080
+npm run browse-apidoc
 ```
 
 This will:
@@ -145,14 +123,6 @@ This will:
 5. Generate HTML documentation
 
 Build output is in `build-apidoc/artifacts/doc/Website/`.
-
-To browse rendered API docs through a local web server:
-
-```bash
-npm run browse-apidoc
-```
-
-Then open <http://localhost:8080/> in your browser.
 
 DocFX may generate warnings about missing XML documentation. These indicate methods/types without doc comments. Consider submitting a PR to add documentation if you find gaps!
 
