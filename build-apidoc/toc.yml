@@ -1,14 +1,6 @@
 - name: Home
   href: index.md
-- name: API Reference
-  items:
-    - name: Current APIs
-      href: current.md
-      items:
-        - name: Browse all modern namespaces
-          href: api/toc.yml
-    - name: Legacy .NET Framework integrations
-      href: legacy-framework.md
-      items:
-        - name: Browse all legacy namespaces
-          href: api/legacy/toc.yml
+- name: Current APIs
+  href: api/toc.yml
+- name: Legacy APIs
+  href: api/legacy/toc.yml

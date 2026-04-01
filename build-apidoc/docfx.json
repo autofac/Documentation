@@ -18,8 +18,12 @@
     "globalMetadata": {
       "_appFooter": "Copyright © 2007-2026 Autofac Contributors. All rights reserved.",
       "_appLogoPath": "images/logo.png",
+      "_appName": "Autofac API Reference",
       "_appTitle": "Autofac",
+      "_disableAffix": true,
       "_disableBreadcrumb": true,
+      "_disableContribution": true,
+      "_disableNavbar": false,
       "_disableNextArticle": true,
       "_disableToc": false,
       "_enableSearch": true,
