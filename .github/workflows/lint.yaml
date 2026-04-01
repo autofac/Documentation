@@ -24,6 +24,7 @@ jobs:
         run: |
           npm install
           pip install -r ./docs/requirements.txt
+          pip install pre-commit
           dotnet tool restore
       - name: Run linters
         run: |
