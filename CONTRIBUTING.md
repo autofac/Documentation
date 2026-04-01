@@ -151,8 +151,7 @@ To enable the automated deployment workflow, a repository admin must:
 1. **Create a GitHub App** (for the autofac organization):
    - Go to <https://github.com/organizations/autofac/settings/apps>
    - Create a new GitHub App with the name "Documentation Deployer"
-   - Set **Permissions**:
-     - `Contents`: Read & write (to push docs to autofac.github.com)
+   - Set **Repository Permissions** / `Contents`: Read & write (to push docs to autofac.github.com)
    - Set **Where can this GitHub App be installed?**: Only on this account
    - Create the app and note the **App ID**
 2. **Generate a private key**:
@@ -162,8 +161,8 @@ To enable the automated deployment workflow, a repository admin must:
    - Go to the app's "Install app" tab or visit <https://github.com/apps/documentation-deployer>
    - Install it on the `autofac.github.com` repository only
 4. **Store secrets in this repository** (<https://github.com/autofac/Documentation/settings/secrets/actions>):
-   - `APP_ID`: The app ID from step 1
-   - `APP_PRIVATE_KEY`: The full contents of the `.pem` file from step 2 (including `-----BEGIN PRIVATE KEY-----` and `-----END PRIVATE KEY-----`)
+   - `APIDOCS_APP_ID`: The app ID from step 1
+   - `APIDOCS_APP_PRIVATE_KEY`: The full contents of the `.pem` file from step 2 (including `-----BEGIN PRIVATE KEY-----` and `-----END PRIVATE KEY-----`)
 
 Once set up, pushing to `master` will automatically deploy updated API docs to `autofac.github.com/apidoc/`.
 
