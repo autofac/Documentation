@@ -2,7 +2,7 @@
 <Project DefaultTargets="Document" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="15.0">
   <Target Name="Document">
     <!-- Clean artifacts and build directories -->
-    <RemoveDir Directories="$(MSBuildProjectDirectory)/artifacts;$(MSBuildProjectDirectory)/Placeholder/bin;$(MSBuildProjectDirectory)/Placeholder/obj;$(MSBuildProjectDirectory)/obj;$(MSBuildProjectDirectory)/.docfx" />
+    <RemoveDir Directories="$(MSBuildProjectDirectory)/artifacts;$(MSBuildProjectDirectory)/api;$(MSBuildProjectDirectory)/Placeholder/bin;$(MSBuildProjectDirectory)/Placeholder/obj;$(MSBuildProjectDirectory)/obj;$(MSBuildProjectDirectory)/.docfx" />
 
     <!-- Restore .NET tools (includes docfx) -->
     <Exec Command="dotnet tool restore" WorkingDirectory="$(MSBuildProjectDirectory)/.." />
