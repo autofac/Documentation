@@ -1,3 +1,7 @@
+---
+_layout: landing
+---
+
 # Autofac API Reference
 
 This site contains the generated API reference for Autofac packages.

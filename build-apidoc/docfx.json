@@ -5,11 +5,13 @@
       {
         "files": [
           "index.md",
+          "current.md",
+          "legacy-framework.md",
           "toc.yml",
-          "obj/api/**.yml",
-          "obj/api/**/**.yml",
-          "obj/api/legacy/**.yml",
-          "obj/api/legacy/**/**.yml"
+          "api/**.yml",
+          "api/**/**.yml",
+          "api/legacy/**.yml",
+          "api/legacy/**/**.yml"
         ]
       }
     ],
@@ -17,20 +19,14 @@
       "_appFooter": "Copyright © 2007-2026 Autofac Contributors. All rights reserved.",
       "_appLogoPath": "images/logo.png",
       "_appTitle": "Autofac",
+      "_disableBreadcrumb": true,
+      "_disableNextArticle": true,
+      "_disableToc": false,
       "_enableSearch": true,
       "pdf": false
     },
     "keepFileLink": false,
-    "markdownEngineName": "markdig",
-    "markdownEngineProperties": {
-    },
-    "noLangKeyword": false,
-    "noRawCodeBlockLineNumbers": false,
     "output": "artifacts/doc/Website",
-    "overwrite": [
-    ],
-    "postProcessors": [
-    ],
     "resource": [
       {
         "files": [
@@ -44,14 +40,14 @@
     ]
   },
   "dest": ".docfx",
-  "fileMetadata": {
-  },
   "metadata": [
     {
-      "dest": "obj/api",
+      "dest": "api",
       "disableDefaultFilter": false,
       "disableGitFeatures": false,
       "filter": "docfx-filter.yml",
+      "memberLayout": "separatePages",
+      "namespaceLayout": "nested",
       "src": [
         {
           "files": [
@@ -62,10 +58,12 @@
       ]
     },
     {
-      "dest": "obj/api/legacy",
+      "dest": "api/legacy",
       "disableDefaultFilter": false,
       "disableGitFeatures": false,
       "filter": "docfx-filter.yml",
+      "memberLayout": "separatePages",
+      "namespaceLayout": "nested",
       "src": [
         {
           "files": [
