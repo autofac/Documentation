@@ -12,7 +12,8 @@ jobs:
     # Don't update the tag at the same time another update is running.
     concurrency: update-version-tag
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout Documentation Repo
+        uses: actions/checkout@v6
       - name: Tag Repo
         uses: richardsimko/update-tag@v1
         with:

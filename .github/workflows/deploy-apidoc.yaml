@@ -1,5 +1,4 @@
 name: Deploy API Documentation
-
 on:
   push:
     branches:
@@ -7,53 +6,44 @@ on:
     paths:
       - build-apidoc/**
       - .github/workflows/deploy-apidoc.yaml
-
 jobs:
   deploy-apidoc:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
-
     steps:
       - name: Checkout Documentation Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           path: docs-repo
-
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '10.0.x'
-
       - name: Restore .NET Tools
         run: dotnet tool restore
         working-directory: docs-repo
-
       - name: Build API Documentation
         run: dotnet msbuild build-apidoc/Documentation.proj
         working-directory: docs-repo
-
       - name: Generate GitHub App Token
         id: app_token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v3
         with:
           app-id: ${{ secrets.APIDOCS_APP_ID }}
           private-key: ${{ secrets.APIDOCS_APP_PRIVATE_KEY }}
           owner: autofac
           repositories: autofac.github.com
-
       - name: Checkout Autofac Site Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: autofac/autofac.github.com
           path: autofac-site
           token: ${{ steps.app_token.outputs.token }}
-
       - name: Sync API Documentation
         run: |
           rsync -av --delete docs-repo/build-apidoc/artifacts/doc/Website/ autofac-site/apidoc/
-
       - name: Commit and Push Changes
         run: |
           cd autofac-site
