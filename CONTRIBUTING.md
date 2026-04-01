@@ -4,7 +4,7 @@ User documentation is viewable at <https://docs.autofac.org> (a CNAME to <https:
 
 We also have API docs at <https://autofac.org/apidoc/>. This documentation is what gets put in the <https://github.com/autofac/autofac.github.com/tree/master/apidoc> folder.
 
-- [Initial Checkout and Setup](#initial-checkout-and-setup)
+- [Checkout and Setup](#checkout-and-setup)
 - [Validating Changes](#validating-changes)
 - [VS Code Integration](#vs-code-integration)
 - [Updating User Docs](#updating-user-docs)
@@ -16,7 +16,7 @@ We also have API docs at <https://autofac.org/apidoc/>. This documentation is wh
 - [Updating the Primary Documentation Version](#updating-the-primary-documentation-version)
 - [References](#references)
 
-## Initial Checkout and Setup
+## Checkout and Setup
 
 Prerequisites:
 
@@ -40,6 +40,10 @@ dotnet tool restore
 
 # Register pre-commit hooks (runs linters before commits)
 pre-commit install
+
+# At times you may need to FORCE PULL tags because the most recent doc version
+# tag follows the `master` branch.
+git pull --tags --force
 
 # When you're done, deactivate your virtual environment.
 deactivate
