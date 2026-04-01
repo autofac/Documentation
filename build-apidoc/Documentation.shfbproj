@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current"
-         DefaultTargets="Build"
-         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    DefaultTargets="Build"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <!-- A framework version is required for NuGet restore.  This can be any valid version -->
         <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -55,36 +55,36 @@
         <WorkingPath>artifacts\doc\temp\</WorkingPath>
         <ComponentConfigurations>
             <ComponentConfig id="Code Block Component"
-                             enabled="True"
-                             xmlns="">
+                enabled="True"
+                xmlns="">
                 <component id="Code Block Component">
                     <basePath value="{@HtmlEncProjectFolder}" />
                     <outputPaths>{@HelpFormatOutputPaths}</outputPaths>
                     <allowMissingSource value="false" />
                     <removeRegionMarkers value="false" />
                     <colorizer syntaxFile="{@SHFBFolder}PresentationStyles\Colorizer\highlight.xml"
-                               styleFile="{@SHFBFolder}PresentationStyles\Colorizer\highlight.xsl"
-                               stylesheet="{@SHFBFolder}PresentationStyles\Colorizer\highlight.css"
-                               scriptFile="{@SHFBFolder}PresentationStyles\Colorizer\highlight.js"
-                               disabled="{@DisableCodeBlockComponent}"
-                               language="cs"
-                               tabSize="0"
-                               numberLines="false"
-                               outlining="false"
-                               keepSeeTags="false"
-                               defaultTitle="true" />
+                        styleFile="{@SHFBFolder}PresentationStyles\Colorizer\highlight.xsl"
+                        stylesheet="{@SHFBFolder}PresentationStyles\Colorizer\highlight.css"
+                        scriptFile="{@SHFBFolder}PresentationStyles\Colorizer\highlight.js"
+                        disabled="{@DisableCodeBlockComponent}"
+                        language="cs"
+                        tabSize="0"
+                        numberLines="false"
+                        outlining="false"
+                        keepSeeTags="false"
+                        defaultTitle="true" />
                 </component>
             </ComponentConfig>
         </ComponentConfigurations>
         <PlugInConfigurations>
             <PlugInConfig id="Wildcard Assembly References"
-                          enabled="True"
-                          xmlns="">
+                enabled="True"
+                xmlns="">
                 <configuration>
                     <references>
                         <reference path="Placeholder\bin\Debug\net472\"
-                                   wildcard="*.dll"
-                                   recurse="true" />
+                            wildcard="*.dll"
+                            recurse="true" />
                     </references>
                 </configuration>
             </PlugInConfig>

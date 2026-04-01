@@ -96,7 +96,7 @@ How Aggregate Services are Resolved
 Properties
 ----------
 
-Read-only properties mirror the behavior of regular constructor-injected dependencies. The type of each property will be resolved and cached in the aggregate service when the aggregate service instance is constructed. 
+Read-only properties mirror the behavior of regular constructor-injected dependencies. The type of each property will be resolved and cached in the aggregate service when the aggregate service instance is constructed.
 
 Here is a functionally equivalent sample:
 
@@ -110,17 +110,17 @@ Here is a functionally equivalent sample:
       {
         _myService = context.Resolve<IMyService>();
       }
- 
-      public IMyService MyService 
-      { 
-        get { return _myService; }      
+
+      public IMyService MyService
+      {
+        get { return _myService; }
       }
     }
 
 Methods
 -------
 
-Methods will behave like factory delegates and will translate into a resolve call on each invocation. The method return type will be resolved, passing on any parameters to the resolve call. 
+Methods will behave like factory delegates and will translate into a resolve call on each invocation. The method return type will be resolved, passing on any parameters to the resolve call.
 
 A functionally equivalent sample of the method call:
 

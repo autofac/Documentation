@@ -1,9 +1,11 @@
 {
   "recommendations": [
     "dbaeumer.vscode-eslint",
+    "dnut.rewrap-revived",
+    "jebbs.plantuml",
     "ms-python.python",
     "lextudio.restructuredtext",
-    "stkb.rewrap",
+    "streetsidesoftware.code-spell-checker",
     "travisillig.vscode-json-stable-stringify"
   ]
 }

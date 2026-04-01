@@ -1,9 +1,13 @@
 ' https://github.com/matthewjosephtaylor/plantuml-style
 ' Not-ugly plantuml style defaults
-
+!pragma layout smetana
 skinparam defaultFontName  Helvetica
 skinparam sequenceMessageAlign center
 skinparam monochrome true
+
+skinparam {
+    RoundCorner 20
+}
 
 skinparam activity {
     ArrowColor Black
@@ -47,8 +51,8 @@ skinparam package {
 
 skinparam component {
     BackgroundColor White
-    InterfaceBackgroundColor White
     BorderColor Black
+    InterfaceBackgroundColor White
     InterfaceBorderColor Black
 }
 
@@ -66,11 +70,14 @@ skinparam state {
 skinparam sequence {
     ArrowColor Black
     BackgroundColor White
-    ParticipantBackgroundColor White
     BorderColor Black
-    LifeLineBorderColor Black
-    ParticipantBorderColor Black
     BoxLineColor Black
+    GroupBodyBackgroundColor transparent
+    LifeLineBorderColor Black
+    MessageAlign left
+    ParticipantBackgroundColor White
+    ParticipantBorderColor Black
+    ParticipantPadding 40
 }
 
 skinparam interface {

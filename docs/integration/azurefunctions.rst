@@ -4,7 +4,7 @@ Azure Functions
 
 Azure Functions supports dependency injection with the Microsoft dependency
 injection framework out of the box, but you can make it work with Autofac with a
-bit of bootstrapping code. 
+bit of bootstrapping code.
 
 We recommend reading the `official Microsoft documentation
 <https://docs.microsoft.com/en-us/azure/azure-functions/functions-dotnet-dependency-injection>`_
@@ -17,9 +17,9 @@ Overview of Steps
 =================
 
 #. Install Autofac, ``Autofac.Extensions.DependencyInjection``, and
-   ``Microsoft.Azure.Functions.Extensions`` from NuGet.  
+   ``Microsoft.Azure.Functions.Extensions`` from NuGet.
 #. Add an Autofac-based job activator to create instances of your function
-   classes.  
+   classes.
 #. Create a ``Startup`` class where you register your components and replace the
    default job activator.
 
@@ -28,7 +28,7 @@ Autofac Job Activator
 
 A job activator is responsible for instantiating the classes that hold your
 functions. Add the following code to your project — it's a job activator that
-resolves the appropriate class from an Autofac lifetime scope. We'll implement 
+resolves the appropriate class from an Autofac lifetime scope. We'll implement
 ``LifetimeScopeWrapper`` and ``LoggerModule`` in the next steps.
 
 .. sourcecode:: csharp
@@ -42,14 +42,14 @@ resolves the appropriate class from an Autofac lifetime scope. We'll implement
             // throw.
             throw new NotSupportedException();
         }
-    
+
         public T CreateInstance<T>(IFunctionInstanceEx functionInstance)
             where T : notnull
         {
             var lifetimeScope = functionInstance.InstanceServices
                 .GetRequiredService<LifetimeScopeWrapper>()
                 .Scope;
-    
+
             // This is necessary because some dependencies of ILoggerFactory are registered
             // after FunctionsStartup.
             var loggerFactory = functionInstance.InstanceServices.GetRequiredService<ILoggerFactory>();
@@ -59,7 +59,7 @@ resolves the appropriate class from an Autofac lifetime scope. We'll implement
             lifetimeScope.Resolve<ILogger>(
                 new NamedParameter(LoggerModule.FunctionNameParam, functionInstance.FunctionDescriptor.LogName)
             );
-    
+
             return lifetimeScope.Resolve<T>();
         }
     }
@@ -73,12 +73,12 @@ the function has completed.
   internal sealed class LifetimeScopeWrapper : IDisposable
   {
       public ILifetimeScope Scope { get; }
-  
+
       public LifetimeScopeWrapper(IContainer container)
       {
           Scope = container.BeginLifetimeScope();
       }
-  
+
       public void Dispose()
       {
           Scope.Dispose();
@@ -95,17 +95,17 @@ We can work around this by adding the following code.
     {
         public const string LoggerFactoryParam = "loggerFactory";
         public const string FunctionNameParam = "functionName";
-    
+
         protected override void Load(ContainerBuilder builder)
         {
             builder.Register((ctx, p) => p.Named<ILoggerFactory>(LoggerFactoryParam))
                 .SingleInstance();
-    
+
             builder.Register((ctx, p) =>
                 {
                     var factory = ctx.Resolve<ILoggerFactory>();
                     var functionName = p.Named<string>(FunctionNameParam);
-    
+
                     return factory.CreateLogger(Microsoft.Azure.WebJobs.Logging.LogCategories.CreateFunctionUserCategory(functionName));
                 })
                 .InstancePerLifetimeScope();
@@ -128,38 +128,38 @@ The ``FunctionsStartup`` base class is provided by the
 .. sourcecode:: csharp
 
     [assembly: FunctionsStartup(typeof(MyFunctionApp.Startup))]
-    
+
     namespace MyFunctionApp;
-    
+
     internal class Startup : FunctionsStartup
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {
             // Use IServiceCollection.Add extension method to add features as needed, e.g.
             builder.Services.AddDataProtection();
-    
+
             builder.Services.AddSingleton(GetContainer(builder.Services));
-    
+
             // Important: Use AddScoped so our Autofac lifetime scope gets disposed
             // when the function finishes executing
             builder.Services.AddScoped<LifetimeScopeWrapper>();
-    
+
             builder.Services.Replace(ServiceDescriptor.Singleton(typeof(IJobActivator), typeof(AutofacJobActivator)));
             builder.Services.Replace(ServiceDescriptor.Singleton(typeof(IJobActivatorEx), typeof(AutofacJobActivator)));
         }
-    
+
         private static IContainer GetContainer(IServiceCollection serviceCollection)
         {
             var containerBuilder = new ContainerBuilder();
             containerBuilder.Populate(serviceCollection);
             containerBuilder.RegisterModule<LoggerModule>();
-    
+
             // This is a convenient way to register all your function classes at once
             containerBuilder.RegisterAssemblyTypes(typeof(Startup).Assembly)
                 .InNamespaceOf<Function1>();
-    
+
             // TODO: Register other dependencies with the ContainerBuilder like normal
-    
+
             return containerBuilder.Build();
         }
     }
@@ -177,12 +177,12 @@ dependency injection. Notice that the class and ``Run`` method are not static.
     public class Function1
     {
         private readonly IRandomNumberService _randomNumberService;
-    
+
         public Function1(IRandomNumberService randomNumberService)
         {
             _randomNumberService = randomNumberService;
         }
-    
+
         // Call this by going to http://localhost:7071/api/Function1 in your web browser
         [FunctionName("Function1")]
         public IActionResult Run(
@@ -191,7 +191,7 @@ dependency injection. Notice that the class and ``Run`` method are not static.
         )
         {
             var number = _randomNumberService.GetDouble();
-    
+
             return new OkObjectResult($"Your random number is {number}.");
         }
     }
@@ -205,4 +205,3 @@ This guide was inspired by
 <https://github.com/junalmeida/autofac-azurefunctions>`_, a community NuGet
 package. Give ``Autofac.Extensions.DependencyInjection.AzureFunctions`` a try if
 you would prefer a NuGet package over the DIY approach presented here.
-

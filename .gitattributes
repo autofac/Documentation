@@ -1,51 +1,74 @@
+# Set default behavior to automatically normalize line endings.
+* text=auto
+
 *.doc  diff=astextplain
-*.DOC	diff=astextplain
-*.docx	diff=astextplain
-*.DOCX	diff=astextplain
-*.dot	diff=astextplain
-*.DOT	diff=astextplain
-*.pdf	diff=astextplain
-*.PDF	diff=astextplain
-*.rtf	diff=astextplain
-*.RTF	diff=astextplain
+*.DOC  diff=astextplain
+*.docx diff=astextplain
+*.DOCX diff=astextplain
+*.dot  diff=astextplain
+*.DOT  diff=astextplain
+*.pdf  diff=astextplain
+*.PDF  diff=astextplain
+*.rtf  diff=astextplain
+*.RTF  diff=astextplain
 
-*.jpg  	binary
-*.png 	binary
-*.gif 	binary
+*.jpg  binary
+*.png  binary
+*.gif  binary
 
-*.rst text eol=lf
-*.cs text=auto diff=csharp
-*.vb text=auto
-*.resx text=auto
-*.c text=auto
-*.cpp text=auto
-*.cxx text=auto
-*.h text=auto
-*.hxx text=auto
-*.py text=auto
-*.rb text=auto
-*.java text=auto
-*.html text=auto
-*.htm text=auto
-*.css text=auto
-*.scss text=auto
-*.sass text=auto
-*.less text=auto
-*.js text=auto
-*.lisp text=auto
-*.clj text=auto
-*.sql text=auto
-*.php text=auto
-*.lua text=auto
-*.m text=auto
-*.asm text=auto
-*.erl text=auto
-*.fs text=auto
-*.fsx text=auto
-*.hs text=auto
+# Force bash scripts to always use lf line endings so that if a repo is accessed
+# in Unix via a file share from Windows, the scripts will work.
+*.in text eol=lf
+*.sh text eol=lf
 
-*.csproj text=auto
-*.vbproj text=auto
-*.fsproj text=auto
-*.dbproj text=auto
-*.sln text=auto eol=crlf
+# Likewise, force cmd and batch scripts to always use crlf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+*.sln text eol=crlf
+
+*.asm    text
+*.c      text
+*.clj    text
+*.config text
+*.cpp    text
+*.cs     text diff=csharp
+*.csproj text
+*.css    text
+*.cxx    text
+*.dbproj text
+*.erl    text
+*.fs     text
+*.fsproj text
+*.fsx    text
+*.h      text
+*.hs     text
+*.htm    text
+*.html   text
+*.hxx    text
+*.java   text
+*.js     text
+*.json   text
+*.less   text
+*.lisp   text
+*.lss    text
+*.lua    text
+*.m      text
+*.md     text
+*.php    text
+*.props  text
+*.py     text
+*.rb     text
+*.resx   text
+*.rst    text eol=lf
+*.sass   text
+*.scss   text
+*.sql    text
+*.vb     text
+*.vbproj text
+*.yaml   text
+
+# Set linguist language for .h files explicitly based on
+# https://github.com/github/linguist/issues/1626#issuecomment-401442069
+# this only affects the repo's language statistics
+*.h linguist-language=C
