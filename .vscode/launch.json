@@ -1,0 +1,45 @@
+{
+  "configurations": [
+    {
+      "args": [
+        "8081",
+        "--directory",
+        "./docs/_build/html"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "internalConsoleOptions": "neverOpen",
+      "module": "http.server",
+      "name": "Browse Rendered User Docs",
+      "preLaunchTask": "Activate Python Venv",
+      "request": "launch",
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "Serving HTTP on.*port 8081",
+        "uriFormat": "http://localhost:8081"
+      },
+      "type": "debugpy"
+    },
+    {
+      "args": [
+        "8080",
+        "--directory",
+        "./build-apidoc/artifacts/doc/Website"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "internalConsoleOptions": "neverOpen",
+      "module": "http.server",
+      "name": "Browse Rendered API Docs",
+      "preLaunchTask": "Activate Python Venv",
+      "request": "launch",
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "Serving HTTP on.*port 8080",
+        "uriFormat": "http://localhost:8080"
+      },
+      "type": "debugpy"
+    }
+  ],
+  "version": "0.2.0"
+}

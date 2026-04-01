@@ -1,7 +1,29 @@
 {
+  "linux": {
+    "options": {
+      "shell": {
+        "args": [
+          "-NoProfile",
+          "-Command"
+        ],
+        "executable": "pwsh"
+      }
+    }
+  },
+  "osx": {
+    "options": {
+      "shell": {
+        "args": [
+          "-NoProfile",
+          "-Command"
+        ],
+        "executable": "/usr/local/bin/pwsh"
+      }
+    }
+  },
   "tasks": [
     {
-      "command": "make html",
+      "command": "& ${workspaceFolder}/.venv/bin/Activate.ps1 && make html",
       "group": {
         "isDefault": true,
         "kind": "build"
@@ -16,6 +38,18 @@
       }
     },
     {
+      "command": "dotnet msbuild ./Documentation.proj",
+      "group": {
+        "isDefault": false,
+        "kind": "build"
+      },
+      "label": "Build API Docs",
+      "options": {
+        "cwd": "${workspaceFolder}/build-apidoc"
+      },
+      "type": "shell"
+    },
+    {
       "detail": "Generate PlantUML diagrams as puml files change.",
       "group": "build",
       "label": "Watch PlantUML",
@@ -23,7 +57,28 @@
       ],
       "script": "watch",
       "type": "npm"
+    },
+    {
+      "command": "& ./.venv/bin/Activate.ps1",
+      "detail": "Activate the workspace Python virtual environment in PowerShell.",
+      "label": "Activate Python Venv",
+      "problemMatcher": [
+      ],
+      "type": "shell"
     }
   ],
-  "version": "2.0.0"
+  "version": "2.0.0",
+  "windows": {
+    "options": {
+      "shell": {
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-Command"
+        ],
+        "executable": "pwsh.exe"
+      }
+    }
+  }
 }

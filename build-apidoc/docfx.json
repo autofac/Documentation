@@ -17,7 +17,8 @@
       "_appFooter": "Copyright © 2007-2026 Autofac Contributors. All rights reserved.",
       "_appLogoPath": "images/logo.png",
       "_appTitle": "Autofac",
-      "_enableSearch": true
+      "_enableSearch": true,
+      "pdf": false
     },
     "keepFileLink": false,
     "markdownEngineName": "markdig",
@@ -38,7 +39,8 @@
       }
     ],
     "template": [
-      "default"
+      "default",
+      "modern"
     ]
   },
   "dest": ".docfx",
@@ -49,7 +51,7 @@
       "dest": "obj/api",
       "disableDefaultFilter": false,
       "disableGitFeatures": false,
-      "filter": "docfx-filterConfig.yml",
+      "filter": "docfx-filter.yml",
       "src": [
         {
           "files": [
@@ -63,7 +65,7 @@
       "dest": "obj/api/legacy",
       "disableDefaultFilter": false,
       "disableGitFeatures": false,
-      "filter": "docfx-filterConfig.yml",
+      "filter": "docfx-filter.yml",
       "src": [
         {
           "files": [
