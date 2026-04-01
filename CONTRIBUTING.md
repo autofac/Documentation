@@ -20,7 +20,7 @@ We also have API docs at <https://autofac.org/apidoc/>. This documentation is wh
 
 Prerequisites:
 
-- Node 22 or later
+- Node 24 or later
 - Python 3.12 or later
 - .NET SDK 10.0 or later
 - [pre-commit](https://pre-commit.com)
