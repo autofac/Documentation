@@ -23,8 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
-          pip install -r ./docs/requirements.txt
-          pip install pre-commit
+          pip install -r ./requirements.txt
           dotnet tool restore
       - name: Run linters
         run: |

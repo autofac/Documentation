@@ -23,14 +23,10 @@ Prerequisites:
 - Node 24 or later
 - Python 3.12 or later
 - .NET SDK 10.0 or later
-- [pre-commit](https://pre-commit.com)
 
 After cloning, set up the tools and dependencies.
 
 ```powershell
-# Register pre-commit hooks (runs linters before commits)
-pre-commit install
-
 # Set up your Python virtual environment
 python3 -m venv .venv
 
@@ -39,8 +35,11 @@ python3 -m venv .venv
 
 # Restore dependencies
 npm install
-pip install -r ./docs/requirements.txt
+pip install -r ./requirements.txt
 dotnet tool restore
+
+# Register pre-commit hooks (runs linters before commits)
+pre-commit install
 
 # When you're done, deactivate your virtual environment.
 deactivate
