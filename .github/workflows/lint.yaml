@@ -26,4 +26,6 @@ jobs:
           pip install -r ./docs/requirements.txt
           dotnet tool restore
       - name: Run linters
-        run: npm run lint
+        run: |
+          pre-commit run --all-files
+          npm run lint
