@@ -33,6 +33,9 @@ python3 -m venv .venv
 # Restore dependencies
 npm install
 pip install -r ./docs/requirements.txt
+
+# When you're done with docs, deactivate your virtual environment.
+deactivate
 ```
 
 ## Updating User Docs
