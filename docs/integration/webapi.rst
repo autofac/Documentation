@@ -239,7 +239,6 @@ For each of the filter types, there are a couple of registration methods:
   .. sourcecode:: csharp
 
       var builder = new ContainerBuilder();
-       
       builder.Register(c => new LoggingActionFilter(c.Resolve<ILogger>()))
           .AsWebApiActionFilterFor<ValuesController>(c => c.Get(default(int)))
           .InstancePerRequest();
@@ -256,7 +255,6 @@ For each of the filter types, there are a couple of registration methods:
   .. sourcecode:: csharp
 
       var builder = new ContainerBuilder();
-       
       builder.Register(c => new LoggingExceptionFilter(c.Resolve<ILogger>()))
           .AsWebApiExceptionFilterWhere(action => action.SupportedHttpMethods.Contains(HttpMethod.Post))
           .InstancePerRequest();
@@ -266,7 +264,6 @@ For each of the filter types, there are a couple of registration methods:
   .. sourcecode:: csharp
 
       var builder = new ContainerBuilder();
-       
       builder.Register(c => new LoggingExceptionFilter(c.Resolve<ILogger>()))
           .AsWebApiExceptionFilterWhere((scope, action) => scope.Resolve<IFilterConfig>().ShouldFilter(action))
           .InstancePerRequest();
@@ -431,7 +428,7 @@ The point to remember here is that **the actual configuration of what services s
     [AutofacControllerConfiguration]
     public class ValuesController : ApiController
     {
-      // Implementation...
+      // Implementation...
     }
 
 Supported Services

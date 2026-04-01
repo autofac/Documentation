@@ -13,6 +13,12 @@ repos:
       - id: markdownlint
         args:
           - --fix
+  - repo: https://github.com/PyCQA/doc8
+    rev: 2a7a5eef1de341fab48019faf3de8a64ac2ad900  # frozen: v2.0.0
+    hooks:
+      - id: doc8
+        args: [--config, doc8.ini]
+        files: docs/.*\.rst$
   - repo: https://github.com/tillig/json-sort-cli
     rev: "009ab2ab49e1f2fa9d6b9dfc31009ceeca055204"  # frozen: v3.0.0
     hooks:

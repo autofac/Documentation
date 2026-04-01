@@ -21,3 +21,7 @@ node_modules/
 
 # Python
 .venv/
+
+# OS
+.DS_Store
+Thumbs.db

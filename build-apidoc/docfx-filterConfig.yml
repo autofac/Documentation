@@ -1,0 +1,16 @@
+apiRules:
+  - exclude:
+      uidRegex: ^System
+      type: Namespace
+  - exclude:
+      uidRegex: ^Microsoft
+      type: Namespace
+  - exclude:
+      uidRegex: ^Castle
+      type: Namespace
+  - exclude:
+      type: Type
+      uidRegex: '^.*\+.*CompilerGenerated.*'
+  - exclude:
+      type: Member
+      uidRegex: '^.*\..*>d__.*'

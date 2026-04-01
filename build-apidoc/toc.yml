@@ -1,0 +1,8 @@
+- name: Home
+  href: index.md
+- name: API Reference
+  items:
+    - name: Core and modern APIs
+      href: obj/api/toc.yml
+    - name: Legacy .NET Framework integrations
+      href: obj/api/legacy/toc.yml

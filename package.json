@@ -15,8 +15,13 @@
   "license": "MIT",
   "main": "index.js",
   "name": "plantuml-in-autofac-docs",
+  "overrides": {
+    "balanced-match": "^4.0.4"
+  },
   "scripts": {
-    "lint": "npm exec eslint . && npm exec markdownlint-cli2 \"**/*.md\" \"#node_modules\"",
+    "browse-apidoc": "python -m http.server 8080 --directory ./build-apidoc/artifacts/doc/Website",
+    "browse-doc": "python -m http.server 8081 --directory ./docs/_build/html",
+    "lint": "npm exec eslint . && npm exec markdownlint-cli2 \"**/*.md\" \"#node_modules\" && python -m doc8 docs/",
     "watch": "node index.js"
   },
   "version": "1.0.0"

@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Document" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="15.0">
   <Target Name="Document">
-    <RemoveDir Directories="$(MSBuildProjectDirectory)\artifacts;$(MSBuildProjectDirectory)\Placeholder\bin;$(MSBuildProjectDirectory)\Placeholder\obj" />
-    <Exec Command="dotnet publish" WorkingDirectory="$(MSBuildProjectDirectory)/Placeholder" />
-    <!--
-     Dynamically generate the list of Autofac assemblies to put in the documentation so we don't
-     have to modify the doc build when assemblies change.
-    -->
-    <PropertyGroup>
-      <BuildDirectory>$(MSBuildProjectDirectory)\Placeholder\bin\Debug\net472\publish</BuildDirectory>
-    </PropertyGroup>
-    <ItemGroup>
-      <DocTarget Include="$(BuildDirectory)\Autofac*.dll;$(BuildDirectory)\Autofac*.xml" />
-    </ItemGroup>
-    <CreateProperty Value="@(DocTarget -&gt; '&lt;DocumentationSource sourceFile=%27%(FullPath)%27 /&gt;', '')">
-      <Output TaskParameter="Value" PropertyName="DocumentationSources" />
-    </CreateProperty>
-    <MSBuild ToolsVersion="Current" Projects="$(MSBuildProjectDirectory)\Documentation.shfbproj" Properties="DocumentationSources=$(DocumentationSources)" />
+    <!-- Clean artifacts and build directories -->
+    <RemoveDir Directories="$(MSBuildProjectDirectory)/artifacts;$(MSBuildProjectDirectory)/Placeholder/bin;$(MSBuildProjectDirectory)/Placeholder/obj;$(MSBuildProjectDirectory)/obj;$(MSBuildProjectDirectory)/.docfx" />
+
+    <!-- Restore .NET tools (includes docfx) -->
+    <Exec Command="dotnet tool restore" WorkingDirectory="$(MSBuildProjectDirectory)/.." />
+
+    <!-- Build both framework-specific assembly sets that DocFX reads -->
+    <Exec Command="dotnet build -f net10.0" WorkingDirectory="$(MSBuildProjectDirectory)/Placeholder" />
+    <Exec Command="dotnet build -f net472" WorkingDirectory="$(MSBuildProjectDirectory)/Placeholder" />
+
+    <!-- Build API documentation using DocFX -->
+    <Exec Command="dotnet docfx build-apidoc/docfx.json" WorkingDirectory="$(MSBuildProjectDirectory)/.." />
   </Target>
 </Project>
