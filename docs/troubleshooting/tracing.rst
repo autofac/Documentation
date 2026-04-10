@@ -1,21 +1,16 @@
-===========
-Diagnostics
-===========
-
-Autofac provides some diagnostics capabilities that allow you to monitor and trace the resolution of components within the container. This can help for troubleshooting issues with component registration and resolution, understanding the lifetime of components, and optimizing performance.
-
-.. warning::
-
-    Metrics and diagnostics aren't free. You will get better performance if you **don't** have a diagnostic listener attached to the container and if you **don't** have counters being collected. Further, tracers like ``DefaultDiagnosticTracer`` that generate a full trace of an operation will increase memory and resource usage as they have to hold onto data during the entire resolve operation in order to generate a complete trace. It is recommended you only use diagnostics in a non-production environment; or use diagnostics listeners that handle individual events without tracking full operations.
-
-.. contents:: Diagnostics Options
-  :local:
-  :depth: 1
-
+=======
 Tracing
 =======
 
+Autofac provides diagnostics support that allows you to monitor and trace the resolution of components within the container. This can help with troubleshooting issues in component registration and resolution, understanding component lifetimes, and optimizing performance.
+
+.. warning::
+
+    **Tracing isn't free.** You will get better performance if you **don't** have a diagnostic listener attached to the container. Further, tracers like ``DefaultDiagnosticTracer`` that generate a full trace of an operation will increase memory and resource usage as they have to hold onto data during the entire resolve operation in order to generate a complete trace. It is recommended you only use diagnostics in a non-production environment; or use diagnostics listeners that handle individual events without tracking full operations.
+
 Autofac 6.0 introduced diagnostics support in the form of `System.Diagnostics.DiagnosticSource <https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.diagnosticsource?view=netcore-3.1>`_. This allows you to intercept diagnostic events from Autofac.
+
+If you're interested in metrics for performance measurement, :doc:`Autofac also provides metrics <metrics>`.
 
 Quick Start
 -----------
@@ -359,147 +354,3 @@ When you get this low, you can control the subscriptions for your events separat
     // the tracer should get an event.
     var tracer = new ConsoleOperationTracer();
     container.DiagnosticSource.Subscribe(tracer, e => e == "Autofac.Operation.Start");
-
-Metrics
-=======
-
-Autofac 9.1 introduced opt-in performance metrics using `System.Diagnostics.Metrics <https://learn.microsoft.com/en-us/dotnet/core/diagnostics/metrics>`_, the standard .NET metrics API. These are separate from the ``DiagnosticSource``-based tracing above - they are lightweight, aggregatable counters and histograms rather than per-request event traces.
-
-.. warning::
-
-    Metrics aren't free. Collecting them will incur a performance hit, so this is **not** something you want to leave on in production. Enable metrics only when you need to measure and tune Autofac's behavior in your application.
-
-Enabling Metrics
-----------------
-
-Set the ``AUTOFAC_METRICS`` environment variable to ``true`` or ``1`` before your process starts. The variable is checked once at startup; changing it at runtime has no effect.
-
-.. code-block:: shell
-
-    # Unix/macOS
-    export AUTOFAC_METRICS=true
-
-    # Windows (PowerShell)
-    $env:AUTOFAC_METRICS = "true"
-
-    # Windows (cmd)
-    set AUTOFAC_METRICS=true
-
-Available Counters
-------------------
-
-Metrics are published under the meter name ``autofac`` (version ``1.0.0``). The following instruments are available:
-
-.. list-table::
-   :header-rows: 1
-   :widths: 40 15 10 35
-
-   * - Name
-     - Type
-     - Unit
-     - Description
-   * - ``autofac.middleware.duration``
-     - Histogram
-     - s
-     - Time spent executing resolve pipeline middleware.
-   * - ``autofac.middleware.count``
-     - Counter
-     -
-     - Number of resolve pipeline middleware executions.
-   * - ``autofac.reflection.activation.duration``
-     - Histogram
-     - s
-     - Time spent activating components via ``ReflectionActivator``.
-   * - ``autofac.collection.build.duration``
-     - Histogram
-     - s
-     - Time spent materializing implicit collection services.
-   * - ``autofac.collection.build.count``
-     - Counter
-     -
-     - Number of implicit collection builds performed.
-   * - ``autofac.collection.build.items``
-     - Counter
-     -
-     - Total elements added to implicit collections.
-   * - ``autofac.property.injection.duration``
-     - Histogram
-     - s
-     - Time spent performing property injection.
-   * - ``autofac.property.injection.count``
-     - Counter
-     -
-     - Number of instances that had property injection applied.
-   * - ``autofac.property.injection.assignments``
-     - Counter
-     -
-     - Number of individual property assignments performed.
-   * - ``autofac.lock.contention.duration``
-     - Histogram
-     - s
-     - Time threads waited to acquire Autofac internal locks.
-   * - ``autofac.lock.contention.count``
-     - Counter
-     -
-     - Number of lock contention events observed.
-   * - ``autofac.lock.contention.total_time``
-     - Counter
-     - s
-     - Cumulative time spent waiting on Autofac locks.
-
-.. note::
-
-    The lock contention metrics include per-service and per-lifetime-scope detail in their tags. This can produce high-cardinality data, so be mindful of the storage implications if you forward these to an external metrics backend.
-
-Collecting Metrics
-------------------
-
-Because Autofac uses the standard ``System.Diagnostics.Metrics`` API, you can collect these metrics with any compatible tool.
-
-**Using dotnet-counters (CLI)**
-
-The quickest way to spot-check metrics is `dotnet-counters <https://learn.microsoft.com/en-us/dotnet/core/diagnostics/dotnet-counters>`_:
-
-.. code-block:: shell
-
-    dotnet-counters monitor --counters autofac --process-id <pid>
-
-**Using MeterListener in code**
-
-You can subscribe programmatically to receive measurement callbacks:
-
-.. sourcecode:: csharp
-
-    var listener = new MeterListener();
-
-    listener.InstrumentPublished = (instrument, listener) =>
-    {
-        if (instrument.Meter.Name == "autofac")
-        {
-            listener.EnableMeasurementEvents(instrument);
-        }
-    };
-
-    listener.SetMeasurementEventCallback<double>((instrument, value, tags, state) =>
-    {
-        Console.WriteLine($"{instrument.Name}: {value:F6}s");
-    });
-
-    listener.SetMeasurementEventCallback<long>((instrument, value, tags, state) =>
-    {
-        Console.WriteLine($"{instrument.Name}: {value}");
-    });
-
-    listener.Start();
-
-**Using OpenTelemetry**
-
-If your application already uses `OpenTelemetry <https://opentelemetry.io/docs/languages/dotnet/>`_, add the ``autofac`` meter to your ``MeterProvider``:
-
-.. sourcecode:: csharp
-
-    using var meterProvider = Sdk.CreateMeterProviderBuilder()
-        .AddMeter("autofac")
-        // Add your exporter of choice:
-        .AddConsoleExporter()
-        .Build();
