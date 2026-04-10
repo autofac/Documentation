@@ -32,10 +32,20 @@ Diagnostics
 
    diagnostics.rst
 
-Autofac 6.0 introduced diagnostics support in the form of `System.Diagnostics.DiagnosticSource <https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.diagnosticsource?view=netcore-3.1>`_. This allows you to intercept diagnostic events from Autofac.
+Autofac has diagnostics support that allows for tracing and metrics to assist in troubleshooting issues with dependency resolution and component activation.
 
 We have :doc:`a page explaining how to hook into diagnostics and do deeper troubleshooting. <diagnostics>`
 
+
+Symbols and Sources
+-------------------
+
+.. toctree::
+   :hidden:
+
+   symbols.rst
+
+Autofac publishes its source code and symbols so you can debug right into the Autofac source. See the :doc:`Symbols and Sources <symbols>` page for more information.
 
 Support
 -------
