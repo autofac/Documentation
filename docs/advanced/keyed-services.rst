@@ -117,3 +117,75 @@ When you register a component that needs attribute filtering, you need to make s
     builder.RegisterType<ArtDisplay>().As<IDisplay>().WithAttributeFiltering();
 
 :doc:`See the metadata documentation <metadata>` for more info on working with attributes and filtering.
+
+AnyKey
+------
+
+``KeyedService.AnyKey`` is a special sentinel value that allows a single registration to respond to *any* key at resolution time. This is useful when one implementation should handle all keyed requests dynamically.
+
+.. sourcecode:: csharp
+
+    var builder = new ContainerBuilder();
+    builder.RegisterType<Service>().Keyed<IService>(KeyedService.AnyKey);
+
+    var container = builder.Build();
+
+    // Resolves successfully with any key
+    var s1 = container.ResolveKeyed<IService>("some-key");
+    var s2 = container.ResolveKeyed<IService>("another-key");
+
+An ``AnyKey`` registration does not respond to unkeyed resolution - ``Resolve<IService>()`` will still throw if there is no unkeyed registration.
+
+Resolving ``IEnumerable<IService>`` with ``KeyedService.AnyKey`` as the key returns all *explicitly-keyed* registrations in registration order; services registered under ``AnyKey`` are not included in that collection.
+
+.. sourcecode:: csharp
+
+    builder.RegisterType<Service>().Keyed<IService>(KeyedService.AnyKey);
+    builder.RegisterInstance(service1).Keyed<IService>("first");
+    builder.RegisterInstance(service2).Keyed<IService>("second");
+
+    // Returns service1 and service2 - NOT the AnyKey-registered Service
+    var all = container.ResolveKeyed<IEnumerable<IService>>(KeyedService.AnyKey);
+
+Injecting the Service Key
+-------------------------
+
+The ``[ServiceKey]`` attribute injects the key used during resolution directly into the component being created. This is especially useful alongside ``AnyKey`` registrations when the component needs to know which key it was resolved under.
+
+For constructor injection, decorate the parameter with ``[ServiceKey]``:
+
+.. sourcecode:: csharp
+
+    public class Service : IService
+    {
+        private readonly string _id;
+        public Service([ServiceKey] string id) => _id = id;
+    }
+
+    // Registration:
+    builder.RegisterType<Service>().Keyed<IService>(KeyedService.AnyKey);
+
+    // The key "my-service" is passed into the constructor automatically:
+    var svc = container.ResolveKeyed<IService>("my-service");
+
+The attribute also works on properties when using ``PropertiesAutowired()``:
+
+.. sourcecode:: csharp
+
+    public class Service : IService
+    {
+        [ServiceKey]
+        public string Key { get; set; }
+    }
+
+    builder.RegisterType<Service>().Keyed<IService>(KeyedService.AnyKey).PropertiesAutowired();
+
+In a lambda registration, use ``p.KeyedServiceKey<T>()`` to access the resolution key:
+
+.. sourcecode:: csharp
+
+    builder.Register<IService>((ctx, p) =>
+    {
+        var key = p.KeyedServiceKey<string>();
+        return new Service(key);
+    }).Keyed<IService>(KeyedService.AnyKey);
