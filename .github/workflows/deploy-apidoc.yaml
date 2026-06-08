@@ -2,7 +2,7 @@ name: Deploy API Documentation
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - build-apidoc/**
       - .github/workflows/deploy-apidoc.yaml

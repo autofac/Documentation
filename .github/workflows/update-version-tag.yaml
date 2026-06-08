@@ -2,12 +2,12 @@ name: Update Version Tag
 on:
   push:
     branches:
-      - master
+      - main
 jobs:
   update-version-tag:
     runs-on: ubuntu-latest
     env:
-      # This is the tag that will be kept up to date with master.
+      # This is the tag that will be kept up to date with main.
       DOC_VERSION: v9.0.0
     # Don't update the tag at the same time another update is running.
     concurrency: update-version-tag
