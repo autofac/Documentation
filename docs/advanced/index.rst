@@ -20,4 +20,4 @@ Advanced Topics
     pipelines.rst
     aggregate-services.rst
     interceptors.rst
-    cross-platform-apps.rst
+    native-aot-trimming.rst
