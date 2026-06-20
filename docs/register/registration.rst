@@ -316,6 +316,10 @@ When a matching service type is requested from the container, Autofac will map t
 
 Registration of a specialized service type (e.g. ``IRepository<Person>``) will override the open generic version.
 
+.. note::
+
+    Open generic registration builds closed types at runtime, so it isn't fully :doc:`Native AOT or trimming <../advanced/cross-platform-apps>` safe and will produce a warning in those apps. It works when closed over reference types but fails at runtime under Native AOT when closed over a value type (e.g. ``IRepository<int>``). Register the closed types explicitly if you need that in an AOT app.
+
 You can also use delegates to provide the closed generic type, if you have some custom behavior for choosing the closed generic implementation:
 
 .. sourcecode:: csharp
