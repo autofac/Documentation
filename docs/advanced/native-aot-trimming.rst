@@ -6,7 +6,7 @@ Autofac works with `trimming <https://learn.microsoft.com/dotnet/core/deploying/
 
 This page explains what works, what to avoid, and how to read the warnings you might see.
 
-The short version
+The Short Version
 =================
 
 A small amount of background helps everything else make sense. Autofac is a reflection-based container, and two things are hard for the trimmer and the AOT compiler:
@@ -16,7 +16,7 @@ A small amount of background helps everything else make sense. Autofac is a refl
 
 The good news: the most common way to use Autofac - registering concrete types and resolving them - is safe for both. The features that aren't safe are annotated, so you don't have to guess.
 
-What works
+What Works
 ==========
 
 These are safe under trimming and Native AOT and produce no warnings:
@@ -45,7 +45,7 @@ These are safe under trimming and Native AOT and produce no warnings:
 
     Lambda registrations (``Register(c => new Foo(...))``) are the most trim- and AOT-friendly way to register a component, because you construct the object yourself instead of relying on reflection. When in doubt, prefer them.
 
-What warns (and why)
+What Warns (and Why)
 ====================
 
 Some Autofac features rely on runtime code generation or on reflecting over types the trimmer can't track. These are annotated with ``[RequiresDynamicCode]`` or ``[RequiresUnreferencedCode]``, so when you build a trimmed or AOT app you'll get a warning (``IL3050`` or ``IL2026`` respectively) **at your call site** - not buried inside Autofac.
@@ -62,7 +62,7 @@ A warning doesn't necessarily mean the feature is broken - it means *the compile
 
     Resolving a relationship type like ``IEnumerable<T>`` or ``Lazy<T>`` does **not** warn at your call site, because that resolution goes through Autofac's built-in registration sources rather than an API you call directly. These work for reference types but can still fail at runtime for value-type cases (see below). "No warning" here doesn't guarantee "fully AOT-safe."
 
-What fails at runtime under Native AOT
+What Fails at Runtime under Native AOT
 ======================================
 
 A couple of scenarios compile cleanly but throw a ``DependencyResolutionException`` at runtime under Native AOT, because they need code that can only be generated at runtime:
@@ -74,7 +74,7 @@ The dividing line is *constructing a new type at runtime*, not value types in ge
 
 If you need these patterns in an AOT app, register the closed types explicitly instead of relying on the open generic, or use a lambda registration.
 
-Reading and resolving warnings
+Reading and Resolving Warnings
 ==============================
 
 When you publish a trimmed or AOT app you'll see warnings like::
