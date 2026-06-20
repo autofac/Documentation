@@ -13,21 +13,12 @@ The pattern and this example `are both further elaborated here <http://peterspat
 
 Aggregate services can be implemented by hand, e.g. by building a class with constructor-injected dependencies and exposing those as properties. Writing and maintaining aggregate service classes and accompanying tests can quickly get tedious though. The AggregateService extension to Autofac lets you generate aggregate services directly from interface definitions without having to write any implementation.
 
-Required References
--------------------
-
-The simplest way to add aggregate service support is `the Autofac.Extras.AggregateService NuGet package <https://nuget.org/packages/Autofac.Extras.AggregateService>`_, which brings in everything you need - including the source generator that produces the aggregate service implementations. If you reference assemblies manually instead, you'll need:
-
- * Autofac.dll (9.3.0 or later)
- * Autofac.Extras.AggregateService.dll
- * Castle.Core.dll (`from the Castle project <http://www.castleproject.org/download/>`_)
-
-``Castle.Core`` is only used by the runtime dynamic proxy fallback (see `How It Works`_); the default, source-generated path does not need it at runtime, but it remains a dependency for the cases that fall back.
-
 Getting Started
 ---------------
 
-Lets say we have a class with a number of constructor-injected dependencies that we store privately for later use:
+First, add a reference to `the Autofac.Extras.AggregateService NuGet package <https://nuget.org/packages/Autofac.Extras.AggregateService>`_, which brings in everything you need - including the source generator that produces the aggregate service implementations.
+
+Now, let's say we have a class with a number of constructor-injected dependencies that we store privately for later use:
 
 .. sourcecode:: csharp
 
