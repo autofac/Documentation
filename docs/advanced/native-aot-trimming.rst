@@ -29,6 +29,7 @@ These are safe under trimming and Native AOT and produce no warnings:
 * Modules (``RegisterModule<T>``).
 * Lifetime scopes, instance sharing, and disposal.
 * The reference-typed :doc:`relationship types <../resolve/relationships>` - ``IEnumerable<T>``, ``Lazy<T>``, ``Func<T>``, ``Meta<T>``, and ``Owned<T>`` - as long as the service type is a reference type.
+* :doc:`Aggregate services <aggregate-services>` registered with a statically-visible interface, which are produced by a source generator rather than a runtime proxy. (Open generic aggregate services and ``ref``/``out`` method parameters remain JIT-only.)
 
 .. sourcecode:: csharp
 
