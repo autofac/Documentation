@@ -13,19 +13,12 @@ The pattern and this example `are both further elaborated here <http://peterspat
 
 Aggregate services can be implemented by hand, e.g. by building a class with constructor-injected dependencies and exposing those as properties. Writing and maintaining aggregate service classes and accompanying tests can quickly get tedious though. The AggregateService extension to Autofac lets you generate aggregate services directly from interface definitions without having to write any implementation.
 
-Required References
--------------------
-
-You can add aggregate service support to your project using `the Autofac.Extras.AggregateService NuGet package <https://nuget.org/packages/Autofac.Extras.AggregateService>`_ or by manually adding references to these assemblies:
-
- * Autofac.dll
- * Autofac.Extras.AggregateService.dll
- * Castle.Core.dll (`from the Castle project <http://www.castleproject.org/download/>`_)
-
 Getting Started
 ---------------
 
-Lets say we have a class with a number of constructor-injected dependencies that we store privately for later use:
+First, add a reference to `the Autofac.Extras.AggregateService NuGet package <https://nuget.org/packages/Autofac.Extras.AggregateService>`_, which brings in everything you need - including the source generator that produces the aggregate service implementations.
+
+Now, let's say we have a class with a number of constructor-injected dependencies that we store privately for later use:
 
 .. sourcecode:: csharp
 
@@ -88,13 +81,15 @@ Finally, we register the aggregate service interface.
     builder.RegisterType<SomeController>();
     var container = builder.Build();
 
-The interface for the aggregate service will automatically have an implementation generated for you and the dependencies will be filled in as expected.
+The interface for the aggregate service will automatically have an implementation generated for you and the dependencies will be filled in as expected. By default that implementation is produced at compile time by a source generator; see `How It Works`_ for the details and for the cases where a runtime fallback is used instead.
 
 How Aggregate Services are Resolved
 -----------------------------------
 
+The members of an aggregate service interface are translated into resolutions according to their shape. The samples below show the functionally equivalent hand-written code for each case.
+
 Properties
-----------
+~~~~~~~~~~
 
 Read-only properties mirror the behavior of regular constructor-injected dependencies. The type of each property will be resolved and cached in the aggregate service when the aggregate service instance is constructed.
 
@@ -118,7 +113,7 @@ Here is a functionally equivalent sample:
     }
 
 Methods
--------
+~~~~~~~
 
 Methods will behave like factory delegates and will translate into a resolve call on each invocation. The method return type will be resolved, passing on any parameters to the resolve call.
 
@@ -136,16 +131,75 @@ A functionally equivalent sample of the method call:
     }
 
 Property Setters and Void Methods
----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Property setters and methods without return types does not make sense in the aggregate service. Their presence in the aggregate service interface does not prevent proxy generation. Calling such methods though will throw an exception.
+Property setters and methods without return types do not make sense in the aggregate service. Their presence in the aggregate service interface does not prevent the implementation from being generated. Calling such members, however, will throw an exception.
 
 How It Works
 ------------
 
-Under the covers, the AggregateService uses DynamicProxy2 from `the Castle Project <http://castleproject.org>`_. Given an interface (the aggregate of services into one), a proxy is generated implementing the interface. The proxy will translate calls to properties and methods into ``Resolve`` calls to an Autofac context.
+There are two ways an aggregate service implementation can be produced: a build-time source generator (the default and preferred path) and a runtime dynamic proxy (the fallback). Both produce the same behavior described above; they differ in *when* and *how* the implementation is created.
+
+Source Generation (Preferred)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``Autofac.Extras.AggregateService`` package includes a `C# source generator <https://learn.microsoft.com/dotnet/csharp/roslyn-sdk/source-generators-overview>`_ that ships as an analyzer inside the package. You don't need to reference anything extra - when you add the package, the generator is active automatically.
+
+At compile time, the generator scans your code for aggregate service registrations and creation calls:
+
+* ``builder.RegisterAggregateService<TInterface>()`` and ``builder.RegisterAggregateService(typeof(TInterface))``
+* ``AggregateServiceGenerator.CreateInstance<TInterface>(context)`` and ``AggregateServiceGenerator.CreateInstance(typeof(TInterface), context)``
+
+For each aggregate service interface it can identify from these call sites, it emits a concrete class implementing the interface - resolving properties in the constructor and translating method calls into ``Resolve`` calls, exactly like the hand-written examples above. The generated implementation is wired up automatically; your usage doesn't change at all.
+
+Because the implementation is ordinary, statically-compiled C#, this path involves no runtime proxy, no per-call reflection, and is compatible with trimming and Native AOT. See :ref:`aggregate_services_aot` below.
+
+Dynamic Proxy (Fallback)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When the generator can't statically determine the aggregate service interface, the implementation is generated at runtime instead, using DynamicProxy from `the Castle Project <http://castleproject.org>`_. Given the interface, a proxy is generated implementing it, translating calls to properties and methods into ``Resolve`` calls on an Autofac context.
+
+The fallback is used when the interface isn't visible to the generator at compile time, for example:
+
+* The interface ``Type`` is computed at runtime (``builder.RegisterAggregateService(someRuntimeType)``).
+* The registration goes through a generic pass-through helper where the type argument is an open type parameter (``void Register<T>(ContainerBuilder b) => b.RegisterAggregateService<T>()``).
+* The interface uses a member shape the generator doesn't emit (see below).
+
+The fallback preserves behavior in every case, but it relies on runtime code generation, so it is **not** compatible with trimming or Native AOT.
+
+What the Generator Supports
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The generator emits implementations for read-only properties, properties with setters (the setter throws, as described above), methods with return values (including generic methods and methods with generic constraints), ``void`` methods (which throw), and ``in``/``params`` method parameters. It also handles open generic aggregate service interfaces.
+
+A few shapes always use the dynamic proxy fallback:
+
+* ``ref`` and ``out`` method parameters - these can't be faithfully forwarded to a ``Resolve`` call.
+* Interfaces with events or indexers.
+
+When the generator skips an interface it can otherwise see, it reports an informational diagnostic (``AGSVC001``) at the registration call site so the fallback isn't silent.
 
 Performance Considerations
 --------------------------
 
-Due to the fact that method calls in the aggregate service pass through a dynamic proxy there is a small but non-zero amount of overhead on each method call. A performance study on Castle DynamicProxy2 vs other frameworks can be found `here <http://kozmic.pl/2009/03/31/dynamic-proxy-frameworks-comparison-update/>`_.
+When the source generator produces the implementation, method and property access is a direct, statically-compiled ``Resolve`` call with no proxy indirection - the fastest path and the recommended default.
+
+When the dynamic proxy fallback is used, method calls pass through a dynamic proxy, so there is a small but non-zero amount of overhead on each method call. A performance study on Castle DynamicProxy vs other frameworks can be found `here <http://kozmic.pl/2009/03/31/dynamic-proxy-frameworks-comparison-update/>`_.
+
+.. _aggregate_services_aot:
+
+Trimming and Native AOT
+-----------------------
+
+Aggregate services work with :doc:`trimming and Native AOT <native-aot-trimming>` as long as the implementation comes from the source generator rather than the dynamic proxy fallback. The generated implementations are ordinary compiled C# with no runtime code generation, so the common case is fully trim- and AOT-safe and produces no warnings.
+
+This requires **Autofac 9.3.0 or later**, which is the first version with the AOT annotations the generated code relies on.
+
+The dynamic proxy fallback is *not* AOT- or trim-safe (it generates a proxy at runtime). To stay on the generated, AOT-safe path, register aggregate services so the generator can see the interface statically - prefer ``RegisterAggregateService<TInterface>()`` or ``RegisterAggregateService(typeof(TInterface))`` with a concrete interface name over a runtime-computed ``Type`` or a generic pass-through helper.
+
+A few scenarios are generated but still need runtime code generation, so they remain JIT-only (they work normally on a regular runtime but are not supported under Native AOT):
+
+* **Open generic** aggregate service interfaces. Closing the open generic over a concrete type argument happens at runtime, which Native AOT can't do.
+* Methods with ``ref`` or ``out`` parameters (and interfaces with events or indexers), which use the dynamic proxy fallback.
+
+If you build a trimmed or AOT app and an aggregate service falls back to the dynamic proxy, the call site that needs runtime code generation will produce an ``IL2026`` / ``IL3050`` warning, and you'll see the ``AGSVC001`` diagnostic for interfaces the generator had to skip. See :doc:`native-aot-trimming` for how to read and resolve those warnings.

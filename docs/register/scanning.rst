@@ -4,6 +4,10 @@ Assembly Scanning
 
 Autofac can use conventions to find and register components in assemblies. You can scan and register individual types or you can scan specifically for :doc:`Autofac modules <../configuration/modules>`.
 
+.. note::
+
+    Assembly scanning relies on discovering types by reflection, so it isn't compatible with :doc:`trimming or Native AOT <../advanced/native-aot-trimming>` - the trimmer can't tell which scanned types to keep, and you'll get a warning in those apps. Register types explicitly if you need to trim or publish ahead of time.
+
 Scanning for Types
 ==================
 
