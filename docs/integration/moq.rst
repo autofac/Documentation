@@ -133,3 +133,48 @@ You can also configure the ``AutoMock`` to use any existing mock, through the ``
         // ...and the rest of the test
       }
     }
+
+Mixing Real Framework Services with Auto-Mocking
+================================================
+
+Be careful when adding real framework services - such as Entity Framework Core or
+``Microsoft.Extensions.Logging`` - into the ``AutoMock`` container.
+
+``AutoMock`` automatically supplies a mock for any service it cannot otherwise resolve. That
+includes the individual elements of an otherwise-empty collection dependency. For example, a
+framework that depends on ``IEnumerable<ILoggerProvider>`` would normally receive an *empty*
+collection when no providers are registered. Under ``AutoMock``, the empty collection instead
+gets a single mock element injected into it.
+
+A loosely-mocked element returns ``null`` from any member that hasn't been explicitly set up.
+When a framework consumes that collection and assumes the members return non-null values, this
+can surface as a confusing failure deep inside the framework's own code - frequently a
+``NullReferenceException`` that has nothing obviously to do with your test.
+
+A common example is constructing an Entity Framework Core ``DbContext`` inside an ``AutoMock``
+container that also has logging wired up. EF Core asks for the registered logger providers,
+receives the mock element whose ``CreateLogger`` returns ``null``, and then throws when it tries
+to use that logger.
+
+.. note::
+
+    You may see this behavior appear intermittently - for instance, only when tests run in a
+    particular order. That is usually because the framework caches internal state (EF Core, for
+    example, caches an internal service provider), which can mask the problem when a "good" code
+    path runs first. The underlying cause is the same regardless of ordering.
+
+If you need real framework services in your test, register concrete implementations for the
+services that framework consumes so ``AutoMock`` does not fill those slots with mocks. For
+example, provide a real logger factory:
+
+.. sourcecode:: csharp
+
+    using (var mock = AutoMock.GetLoose(cfg =>
+      cfg.RegisterInstance(NullLoggerFactory.Instance).As<ILoggerFactory>()))
+    {
+      // Real logging is used instead of a mock, so frameworks that consume
+      // the logger providers behave as they would outside of AutoMock.
+    }
+
+Alternatively, avoid mixing real framework wiring into the auto-mocking container - keep the
+auto-mock container focused on the system under test and its direct dependencies.
