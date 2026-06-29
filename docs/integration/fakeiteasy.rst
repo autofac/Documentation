@@ -89,17 +89,21 @@ You can configure the automatic fakes and/or assert calls on them as you would n
 Configuring Specific Dependencies
 =================================
 
-You can configure the ``AutoFake`` to provide a specific instance for a given service type:
+You can configure the ``AutoFake`` to provide a specific instance for a given service type (or apply any other registration behavior) by using the ``configureAction`` constructor argument, in a similar manner to configuring a new lifetime scope:
 
 .. sourcecode:: csharp
 
     [Test]
     public void Test()
     {
-      using (var fake = new AutoFake())
+      var dependency = new Dependency();
+      using (var fake = new AutoFake(configureAction: cfg => cfg.RegisterInstance(dependency).As<IDependency>()))
       {
-        var dependency = new Dependency();
-        fake.Provide(dependency);
+        // Returns your registered instance.
+        var dep = fake.Resolve<IDependency>();
+
+        // If the system under test depends on IDependency, it will get your dependency instance.
+        var sut = fake.Resolve<SystemUnderTest>();
 
         // ...and the rest of the test.
       }
@@ -112,22 +116,25 @@ You can also configure the ``AutoFake`` to provide a specific implementation typ
     [Test]
     public void Test()
     {
-      using (var fake = new AutoFake())
+      using (var fake = new AutoFake(configureAction: cfg =>
       {
         // Configure a component type that doesn't require
         // constructor parameters.
-        fake.Provide<IDependency, Dependency>();
+        cfg.RegisterType<Dependency>().As<IDependency>();
 
         // Configure a component type that has some
         // constructor parameters passed in. Use Autofac
-        // parameters in the list.
-        fake.Provide<IOtherDependency, OtherDependency>(
-                    new NamedParameter("id", "service-identifier"),
-                    new TypedParameter(typeof(Guid), Guid.NewGuid()));
-
+        // parameters in the registration.
+        cfg.RegisterType<OtherDependency>().As<IOtherDependency>()
+           .WithParameter(new NamedParameter("id", "service-identifier"))
+           .WithParameter(new TypedParameter(typeof(Guid), Guid.NewGuid()));
+      }))
+      {
         // ...and the rest of the test.
       }
     }
+
+The ``cfg`` argument passed to your callback is a regular Autofac ``ContainerBuilder`` instance, so you can do any of the registration behavior you're used to in a normal set up.
 
 Options for Fakes
 =================
@@ -144,9 +151,65 @@ You can specify options for fake creation using optional constructor parameters 
         callsBaseMethods: true,
 
         // Provide an action to perform upon the creation of each fake
-        onFakeCreated: f => { ... }))
+        configureFake: f => { ... }))
     {
       // Use the fakes/run the test.
     }
 
-Be careful when mixing these options. It makes no sense to specify ``callsBaseMethods`` with any other options, as it will override them. When both ``onFakeCreated`` and ``strict`` are specified, the configuration supplied to ``onFakeCreated`` will override ``strict``, as applicable.
+Be careful when mixing these options. It makes no sense to specify ``callsBaseMethods`` with any other options, as it will override them. When both ``configureFake`` and ``strict`` are specified, the configuration supplied to ``configureFake`` will override ``strict``, as applicable.
+
+Migrating from 7.0.0
+====================
+
+Version 8.0.0 removed the ``AutoFake.Provide<TService>(instance)`` and ``AutoFake.Provide<TService, TImplementation>()`` methods. Each ``Provide`` call started a new lifetime scope on top of the previous one, which meant any fake you resolved *before* calling ``Provide`` was a different instance than the one injected into your system under test *afterward*. Configuration applied to the earlier fake (for example, via ``A.CallTo(...)``) silently had no effect, which was a frequent source of confusing test failures.
+
+Register your specific dependencies through the ``configureAction`` constructor argument instead. Everything is registered into a single scope before the container is built, so the instances you configure are the instances that get injected.
+
+To migrate an instance registration, move the ``Provide`` call into ``configureAction`` and register the instance explicitly:
+
+.. sourcecode:: csharp
+
+    // Before (7.0.0)
+    using (var fake = new AutoFake())
+    {
+      var dependency = A.Fake<IDependency>();
+      fake.Provide(dependency);
+
+      var sut = fake.Resolve<SystemUnderTest>();
+    }
+
+    // After (8.0.0)
+    var dependency = A.Fake<IDependency>();
+    using (var fake = new AutoFake(configureAction: cfg => cfg.RegisterInstance(dependency).As<IDependency>()))
+    {
+      var sut = fake.Resolve<SystemUnderTest>();
+    }
+
+To migrate an implementation registration, register the implementation type in ``configureAction``. Autofac parameters that you used to pass to ``Provide`` move onto the registration via ``WithParameter``:
+
+.. sourcecode:: csharp
+
+    // Before (7.0.0)
+    using (var fake = new AutoFake())
+    {
+      fake.Provide<IDependency, Dependency>();
+      fake.Provide<IOtherDependency, OtherDependency>(
+                  new NamedParameter("id", "service-identifier"));
+
+      var sut = fake.Resolve<SystemUnderTest>();
+    }
+
+    // After (8.0.0)
+    using (var fake = new AutoFake(configureAction: cfg =>
+    {
+      cfg.RegisterType<Dependency>().As<IDependency>();
+      cfg.RegisterType<OtherDependency>().As<IOtherDependency>()
+         .WithParameter(new NamedParameter("id", "service-identifier"));
+    }))
+    {
+      var sut = fake.Resolve<SystemUnderTest>();
+    }
+
+If you previously relied on calling ``Provide`` to read back the resolved instance, resolve it from the ``AutoFake`` after construction instead (for example, ``var dependency = fake.Resolve<IDependency>();``).
+
+Version 8.0.0 also removed the ``builder`` constructor parameter that let you supply your own ``ContainerBuilder``. It was redundant with ``configureAction`` and bypassed the ordering ``AutoFake`` relies on when registering its fake handler. Move any registrations you performed on your own builder into the ``configureAction`` callback, which receives the ``ContainerBuilder`` that ``AutoFake`` configures and builds.
