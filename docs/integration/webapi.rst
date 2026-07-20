@@ -272,7 +272,7 @@ For each of the filter types, there are a couple of registration methods:
 
     Filter predicates are invoked once for each action/filter combination; they are not invoked on every request.
 
-You can apply as many filters as you want. Registering a filter of one type does not remove or replace previously registered filters.
+You can apply as many filters as you want. Basic filter registrations do not remove or replace previously registered filters.
 
 You can chain your filter registrations together to attach a filter against multiple controllers, like so:
 
@@ -289,15 +289,19 @@ Filter Overrides
 When registering filters, there are basic registration methods like ``AsWebApiActionFilterFor<TController>()`` and override registration methods
 like ``AsWebApiActionFilterOverrideFor<TController>()``.
 
-The point of the override methods is to provide a way to ensure certain filters execute first.
-You can have as many overrides as you want - these aren't *replacement* filters, just filters that run *first*.
+Override registrations follow the standard ASP.NET Web API ``IOverrideFilter`` behavior. An override causes Web API to ignore filters of the
+same type from less-specific scopes. The scopes, from least specific to most specific, are global, controller, and action.
 
-Filters will run in the order:
+For example, an action-scoped action filter override suppresses global and controller-scoped action filters for that action. Action filters at
+the same action scope remain in the pipeline. Changing the Autofac registration order does not change this scope-based behavior.
 
-- Controller-scoped overrides
-- Action-scoped overrides
-- Controller scoped filters
-- Action scoped filters
+The ``AsWebApi{FilterType}OverrideFor`` methods register a filter that also acts as an override. The corresponding
+``OverrideWebApi{FilterType}For`` methods add only an override marker, allowing less-specific filters to be suppressed without adding a
+replacement filter.
+
+Filter execution order is controlled by the ASP.NET Web API pipeline after overrides have been applied. In particular, exception filters run
+in reverse pipeline order so that more-specific exception filters execute before less-specific ones. Do not use an override registration merely
+to make a filter execute first.
 
 Setting the Response in an Autofac Action Filter
 ------------------------------------------------
