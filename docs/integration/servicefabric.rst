@@ -68,6 +68,86 @@ In your ``Main`` program method, build up your container and register services u
       }
     }
 
+Registration Requirements
+=========================
+
+Registered service and actor types are wrapped in a dynamic proxy so the integration can dispose the service's lifetime scope when Service Fabric closes or aborts the service. That places some requirements on the types you register:
+
+* The type must be a class, and it must not be ``sealed`` or ``abstract``.
+* Only ``virtual`` members can be intercepted.
+* The type must be visible to the proxy generator - see below if your service types are ``internal``.
+
+Internal Service Types
+----------------------
+
+Castle DynamicProxy generates proxies into an assembly named ``DynamicProxyGenAssembly2``, so an ``internal`` service or actor type has to grant that assembly access to its internals. Without it you'll see an error like ``Access is denied: 'MyNamespace.MyService'``.
+
+Which form of the attribute you need depends on whether **your** assembly is strong named. Castle only signs the generated assembly when the assembly containing the proxied type is itself signed.
+
+If your assembly is strong named, use the constant from ``Castle.Core.Internal``, which includes Castle's public key:
+
+.. sourcecode:: csharp
+
+    using System.Runtime.CompilerServices;
+    using Castle.Core.Internal;
+
+    [assembly: InternalsVisibleTo(InternalsVisible.ToDynamicProxyGenAssembly2)]
+
+If your assembly is *not* strong named, name the assembly without a public key:
+
+.. sourcecode:: csharp
+
+    using System.Runtime.CompilerServices;
+
+    [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
+
+.. note::
+
+   Using the keyed form from an unsigned assembly is the usual cause of ``Access is denied``. The public key in the attribute won't match the unsigned generated assembly, so the grant doesn't apply. This is unrelated to whether the ``Autofac.ServiceFabric`` package is signed.
+
+Service and Actor Lifetime Scopes
+=================================
+
+When Service Fabric creates a service or actor, the integration creates a child lifetime scope for it, tagged ``ServiceFabric`` by default, and resolves the instance from that scope. The scope is disposed when the service is closed or aborted.
+
+The context objects that Service Fabric supplies are registered into that child scope rather than into the root container. That includes ``ServiceContext`` and its ``StatelessServiceContext`` / ``StatefulServiceContext`` forms, along with ``ActorService`` and ``ActorId`` for actors.
+
+This has an important consequence: **a component that depends on ``ServiceContext`` cannot be registered as ``SingleInstance()``**. A single instance component is rooted in the container, where those context registrations don't exist, so resolving it fails with ``The requested service 'System.Fabric.ServiceContext' has not been registered``. Injecting ``Lazy<T>`` or ``Func<T>`` doesn't help, because the problem is where the component lives, not when it's created.
+
+Register such components against the service scope instead:
+
+.. sourcecode:: csharp
+
+    // This fails at resolve time - the root container has no ServiceContext.
+    builder.RegisterType<TelemetryLogger>()
+      .As<ILogger>()
+      .SingleInstance();
+
+    // This works, and gives you one instance per service or actor.
+    builder.RegisterType<TelemetryLogger>()
+      .As<ILogger>()
+      .InstancePerMatchingLifetimeScope("ServiceFabric");
+
+If you passed a custom ``lifetimeScopeTag`` when registering the service, match that tag instead of ``"ServiceFabric"``.
+
+Adding Registrations to the Service Scope
+-----------------------------------------
+
+Some components can only be built once the ``ServiceContext`` exists, which means they have to be registered while the service scope is being created. ``RegisterServiceFabricSupport`` takes a ``configurationAction`` for this - it runs during creation of every service and actor scope, after the context objects have been registered.
+
+The Application Insights ``FabricTelemetryInitializer`` is the canonical example, since it needs the ``ServiceContext`` to be constructed:
+
+.. sourcecode:: csharp
+
+    builder.RegisterServiceFabricSupport(
+      configurationAction: b =>
+        b.Register(c => FabricTelemetryInitializerExtension.CreateFabricTelemetryInitializer(
+            c.Resolve<ServiceContext>()))
+          .As<ITelemetryInitializer>()
+          .SingleInstance());
+
+Resolve the context from the ``IComponentContext`` passed to the registration delegate, as shown, rather than capturing it - the instance is registered just before the action runs, while the scope is still being built.
+
 Per-Request Scopes
 ==================
 
@@ -99,7 +179,17 @@ For example, say you have a user service that is stateless and it needs to read 
 
 While there's no "built in" semantics around per-request handling specifically, you can do a lot with the :doc:`implicit relationships <../resolve/relationships>` so it's worth becoming familiar with them.
 
-Example
-=======
+Service Fabric Package Versions
+===============================
 
-There is an example project showing Service Fabric integration `in the Autofac examples repository <https://github.com/autofac/Examples/tree/master/src/ServiceFabricDemo>`_.
+The ``Microsoft.ServiceFabric.*`` packages pin each other to exact versions. ``Microsoft.ServiceFabric.Actors``, for example, requires an exact match of ``Microsoft.ServiceFabric.Services.Remoting``, which in turn requires exact matches of its own dependencies, all the way down to the ``Microsoft.ServiceFabric`` runtime package.
+
+Because ``Autofac.ServiceFabric`` references those packages, the version it was built against effectively sets the Service Fabric package version for your project. Referencing a different version of any individual Service Fabric package will produce ``NU1608`` warnings:
+
+.. sourcecode:: text
+
+    warning NU1608: Detected package version outside of dependency constraint:
+    Microsoft.ServiceFabric.Actors 8.6.239 requires Microsoft.ServiceFabric.Data (= 8.6.239)
+    but version Microsoft.ServiceFabric.Data 8.5.216 was resolved.
+
+Reference the Service Fabric packages you use explicitly, and keep them all on the same version as the one ``Autofac.ServiceFabric`` depends on. This is a consequence of how Microsoft versions those packages, so it isn't something the Autofac integration can work around on your behalf.
