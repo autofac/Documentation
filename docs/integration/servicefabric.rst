@@ -184,7 +184,9 @@ Service Fabric Package Versions
 
 The ``Microsoft.ServiceFabric.*`` packages pin each other to exact versions. ``Microsoft.ServiceFabric.Actors``, for example, requires an exact match of ``Microsoft.ServiceFabric.Services.Remoting``, which in turn requires exact matches of its own dependencies, all the way down to the ``Microsoft.ServiceFabric`` runtime package.
 
-Because ``Autofac.ServiceFabric`` references those packages, the version it was built against effectively sets the Service Fabric package version for your project. Referencing a different version of any individual Service Fabric package will produce ``NU1608`` warnings:
+To keep that from dictating your Service Fabric version, ``Autofac.ServiceFabric`` references the *oldest* Service Fabric SDK it supports rather than the newest. NuGet treats package references as minimums, so your own Service Fabric version wins and you're free to use any newer SDK without waiting for a new release of the integration.
+
+What this does mean is that you should **reference the Service Fabric packages you use explicitly, and keep them consistent with each other**. Mixing versions among your own Service Fabric references is what produces ``NU1608``:
 
 .. sourcecode:: text
 
@@ -192,4 +194,8 @@ Because ``Autofac.ServiceFabric`` references those packages, the version it was 
     Microsoft.ServiceFabric.Actors 8.6.239 requires Microsoft.ServiceFabric.Data (= 8.6.239)
     but version Microsoft.ServiceFabric.Data 8.5.216 was resolved.
 
-Reference the Service Fabric packages you use explicitly, and keep them all on the same version as the one ``Autofac.ServiceFabric`` depends on. This is a consequence of how Microsoft versions those packages, so it isn't something the Autofac integration can work around on your behalf.
+If you don't reference the Service Fabric packages yourself, you'll silently get the oldest supported versions, which probably isn't what you want. The Service Fabric project templates add these references for you.
+
+.. note::
+
+   Building against an older SDK than you run against is expected and supported here - the Service Fabric assemblies keep the same assembly version across package releases, so there's no binding difference. Microsoft documents the SDK as backwards compatible, and which SDK versions pair with which cluster runtime is listed in the `Service Fabric versions <https://learn.microsoft.com/azure/service-fabric/service-fabric-versions>`_ reference.
