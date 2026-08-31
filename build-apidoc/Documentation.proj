@@ -9,7 +9,7 @@
 
     <!-- Build both framework-specific assembly sets that DocFX reads -->
     <Exec Command="dotnet build -f net10.0" WorkingDirectory="$(MSBuildProjectDirectory)/Placeholder" />
-    <Exec Command="dotnet build -f net472" WorkingDirectory="$(MSBuildProjectDirectory)/Placeholder" />
+    <Exec Command="dotnet build -f net481" WorkingDirectory="$(MSBuildProjectDirectory)/Placeholder" />
 
     <!-- Build API documentation using DocFX -->
     <Exec Command="dotnet docfx build-apidoc/docfx.json" WorkingDirectory="$(MSBuildProjectDirectory)/.." />

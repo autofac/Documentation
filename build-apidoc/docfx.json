@@ -71,20 +71,18 @@
       "src": [
         {
           "files": [
-            "Placeholder/bin/Debug/net472/Autofac.Integration.Mvc*.dll",
-            "Placeholder/bin/Debug/net472/Autofac.Integration.Mvc*.xml",
-            "Placeholder/bin/Debug/net472/Autofac.Integration.Owin.dll",
-            "Placeholder/bin/Debug/net472/Autofac.Integration.Owin.xml",
-            "Placeholder/bin/Debug/net472/Autofac.Integration.ServiceFabric.dll",
-            "Placeholder/bin/Debug/net472/Autofac.Integration.ServiceFabric.xml",
-            "Placeholder/bin/Debug/net472/Autofac.Integration.SignalR.dll",
-            "Placeholder/bin/Debug/net472/Autofac.Integration.SignalR.xml",
-            "Placeholder/bin/Debug/net472/Autofac.Integration.Wcf.dll",
-            "Placeholder/bin/Debug/net472/Autofac.Integration.Wcf.xml",
-            "Placeholder/bin/Debug/net472/Autofac.Integration.Web*.dll",
-            "Placeholder/bin/Debug/net472/Autofac.Integration.Web*.xml",
-            "Placeholder/bin/Debug/net472/Autofac.Multitenant.Wcf.dll",
-            "Placeholder/bin/Debug/net472/Autofac.Multitenant.Wcf.xml"
+            "Placeholder/bin/Debug/net481/Autofac.Integration.Mvc*.dll",
+            "Placeholder/bin/Debug/net481/Autofac.Integration.Mvc*.xml",
+            "Placeholder/bin/Debug/net481/Autofac.Integration.Owin.dll",
+            "Placeholder/bin/Debug/net481/Autofac.Integration.Owin.xml",
+            "Placeholder/bin/Debug/net481/Autofac.Integration.SignalR.dll",
+            "Placeholder/bin/Debug/net481/Autofac.Integration.SignalR.xml",
+            "Placeholder/bin/Debug/net481/Autofac.Integration.Wcf.dll",
+            "Placeholder/bin/Debug/net481/Autofac.Integration.Wcf.xml",
+            "Placeholder/bin/Debug/net481/Autofac.Integration.Web*.dll",
+            "Placeholder/bin/Debug/net481/Autofac.Integration.Web*.xml",
+            "Placeholder/bin/Debug/net481/Autofac.Multitenant.Wcf.dll",
+            "Placeholder/bin/Debug/net481/Autofac.Multitenant.Wcf.xml"
           ]
         }
       ]
