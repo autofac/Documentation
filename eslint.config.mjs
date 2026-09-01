@@ -5,7 +5,14 @@ import prettier from 'eslint-plugin-prettier/recommended';
 
 export default [
   {
-    ignores: ['**/artifacts/', '**/node_modules/', '**/out/', '**/dist/']
+    ignores: [
+      '**/_build/',
+      '**/.venv/',
+      '**/artifacts/',
+      '**/dist/',
+      '**/node_modules/',
+      '**/out/'
+    ]
   },
   eslint.configs.recommended,
   prettier,

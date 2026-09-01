@@ -61,4 +61,3 @@ charset = utf-8-bom
 # ReStructuredText - standard indentation format from examples
 [*.rst]
 indent_size = 2
-end_of_line = LF
