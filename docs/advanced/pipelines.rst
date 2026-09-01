@@ -306,6 +306,8 @@ Service middleware plus the ``Type`` overloads cover the "apply this to everythi
         });
     }
 
+All of the shapes above are collected in `a runnable example project <https://github.com/autofac/Examples/tree/main/src/MiddlewarePipelineExample>`_, including one that only works on the registration pipeline: middleware that substitutes parameters has to be added with ``ConfigurePipeline``, because ``ParameterSelection`` is not a phase a service pipeline accepts.
+
 Service Middleware Sources
 ==========================
 

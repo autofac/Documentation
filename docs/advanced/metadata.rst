@@ -392,3 +392,8 @@ Opting In Per Registration
            .WithAttributedMetadata();
 
 This works on reflection-based registrations, where the implementation type is known when the registration is made. Delegate registrations don't expose one, so those still need the module. Mixing the two is safe - the module doesn't overwrite metadata keys that are already present, so metadata is applied once either way.
+
+Example
+=======
+
+There is an example project showing all four ways to attach metadata, and filtering on it at the point of injection, `in the Autofac examples repository <https://github.com/autofac/Examples/tree/main/src/AttributeMetadataExample>`_.

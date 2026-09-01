@@ -107,3 +107,8 @@ In a complex application you may want to keep services registered using ``Popula
         }
       }
     }
+
+Example
+=======
+
+There is an example project showing Autofac under the generic host `in the Autofac examples repository <https://github.com/autofac/Examples/tree/main/src/GenericHostBuilderExample>`_.

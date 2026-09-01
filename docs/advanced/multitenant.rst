@@ -654,3 +654,5 @@ Example
 The Autofac example repository has a `multitenant WCF service <https://github.com/autofac/Examples/tree/main/src/MultitenantExample.WcfService>`_ and `associated client MVC application <https://github.com/autofac/Examples/tree/main/src/MultitenantExample.MvcApplication>`_ to illustrate how :doc:`multitenant service hosting <../advanced/multitenant>` works.
 
 There is also a `very simple console application <https://github.com/autofac/Examples/tree/main/src/MultitenantExample.ConsoleApplication>`_ example.
+
+For the ASP.NET Core side there is `a multitenant web application <https://github.com/autofac/Examples/tree/main/src/MultitenantExample.AspNetCore>`_ that identifies the tenant from the query string and shows an unconfigured tenant falling back to the container-wide default.
