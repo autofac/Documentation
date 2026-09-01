@@ -62,12 +62,50 @@ Other components can consume metadata using the ``Meta<T>`` type.
       }
     }
 
-To consume metadata without creating the target component, use ``Meta<Lazy<T>>`` or the .NET 4 ``Lazy<T, TMetadata>`` types as shown below.
+To consume metadata without creating the target component, use ``Meta<Lazy<T>>``, which exposes the same dictionary alongside a ``Lazy<T>``.
 
-Strongly-Typed Metadata
-=======================
+Metadata Views
+==============
 
-To avoid the use of string-based keys for describing metadata, a metadata class can be defined with a public read/write property for every metadata item:
+Indexing a dictionary by string key works, but it isn't checked at compile time and a typo surfaces at runtime. ``Meta<T, TMetadata>`` and ``Lazy<T, TMetadata>`` take a second type argument - a **metadata view** - that projects the dictionary onto a type of your choosing.
+
+Only three shapes can serve as a view:
+
+- ``IDictionary<string, object>``, which hands back the dictionary unchanged.
+- A concrete **class** with either a parameterless constructor or a constructor taking ``IDictionary<string, object>``.
+- An **interface**, which requires the :doc:`Autofac.Mef <../integration/mef>` package.
+
+Registration and consumption are independent, so metadata registered with string keys can be consumed through a typed view and vice versa.
+
+Dictionary Views
+----------------
+
+Naming ``IDictionary<string, object>`` as the view hands you the raw dictionary. There's no type to define and no extra package needed, so this is the escape hatch when a view type would be ceremony for its own sake:
+
+.. sourcecode:: csharp
+
+    public class Log
+    {
+      readonly IEnumerable<Lazy<ILogAppender, IDictionary<string, object>>> _appenders;
+
+      public Log(IEnumerable<Lazy<ILogAppender, IDictionary<string, object>>> appenders)
+      {
+        _appenders = appenders;
+      }
+
+      public void Write(string destination, string message)
+      {
+        var appender = _appenders.First(a => a.Metadata["AppenderName"].Equals(destination));
+        appender.Value.Write(message);
+      }
+    }
+
+You give up compile-time checking of the keys, which is the whole reason the other two shapes exist.
+
+Class Views
+-----------
+
+A metadata class declares a public read/write property for every metadata item:
 
 .. sourcecode:: csharp
 
@@ -76,7 +114,7 @@ To avoid the use of string-based keys for describing metadata, a metadata class 
       public string AppenderName { get; set; }
     }
 
-At registration time, the class is used with the overloaded ``WithMetadata`` method to associate values:
+At registration time, the class is used with the overloaded ``WithMetadata`` method to associate values. Notice the strongly-typed ``AppenderName`` property:
 
 .. sourcecode:: csharp
 
@@ -85,29 +123,15 @@ At registration time, the class is used with the overloaded ``WithMetadata`` met
         .WithMetadata<AppenderMetadata>(m =>
             m.For(am => am.AppenderName, "screen"));
 
-Notice the use of the strongly-typed ``AppenderName`` property.
-
-Registration and consumption of metadata are separate, so strongly-typed metadata can be consumed via the weakly-typed techniques and vice-versa.
-
-You can also provide default values using the ``DefaultValue`` attribute:
-
-.. sourcecode:: csharp
-
-    public class AppenderMetadata
-    {
-      [DefaultValue("screen")]
-      public string AppenderName { get; set; }
-    }
-
-If you are able to reference ``System.ComponentModel.Composition`` you can use the ``System.Lazy<T, TMetadata>`` type for consuming values from the strongly-typed metadata class:
+Consume it by naming the class as the view:
 
 .. sourcecode:: csharp
 
     public class Log
     {
-      readonly IEnumerable<Lazy<ILogAppender, LogAppenderMetadata>> _appenders;
+      readonly IEnumerable<Lazy<ILogAppender, AppenderMetadata>> _appenders;
 
-      public Log(IEnumerable<Lazy<ILogAppender, LogAppenderMetadata>> appenders)
+      public Log(IEnumerable<Lazy<ILogAppender, AppenderMetadata>> appenders)
       {
         _appenders = appenders;
       }
@@ -119,7 +143,17 @@ If you are able to reference ``System.ComponentModel.Composition`` you can use t
       }
     }
 
-Another neat trick is the ability to pass the metadata dictionary into the constructor of your metadata class:
+Autofac fills the properties by matching each metadata key to a property name, so **every property needs a value**. Supply a fallback with the ``DefaultValue`` attribute for any that might be absent:
+
+.. sourcecode:: csharp
+
+    public class AppenderMetadata
+    {
+      [DefaultValue("screen")]
+      public string AppenderName { get; set; }
+    }
+
+Alternatively, give the class a constructor taking the metadata dictionary and do the mapping yourself. Autofac prefers this constructor over a parameterless one when both are present, and it does no property population at all in that case:
 
 .. sourcecode:: csharp
 
@@ -133,12 +167,10 @@ Another neat trick is the ability to pass the metadata dictionary into the const
       public string AppenderName { get; set; }
     }
 
-Interface-Based Metadata
-========================
+Interface Views
+---------------
 
-If you have access to ``System.ComponentModel.Composition`` and include a reference to the :doc:`Autofac.Mef <../integration/mef>` package you can use an interface for your metadata instead of a class.
-
-The interface should be defined with a readable property for every metadata item:
+An interface view is the least ceremony to declare - readable properties only, no setters and no constructor:
 
 .. sourcecode:: csharp
 
@@ -147,13 +179,13 @@ The interface should be defined with a readable property for every metadata item
       string AppenderName { get; }
     }
 
-You must also call the ``RegisterMetadataRegistrationSources`` method on the ``ContainerBuilder`` before registering the metadata against the interface type.
+**Interfaces are not handled by core Autofac.** They come from the MEF metadata registration sources, so you need a reference to the :doc:`Autofac.Mef <../integration/mef>` package and a call to ``RegisterMetadataRegistrationSources()`` before registering metadata against the interface:
 
 .. sourcecode:: csharp
 
     builder.RegisterMetadataRegistrationSources();
 
-At registration time, the interface is used with the overloaded ``WithMetadata`` method to associate values:
+At registration time the interface is used with the same overloaded ``WithMetadata`` method:
 
 .. sourcecode:: csharp
 
@@ -162,7 +194,26 @@ At registration time, the interface is used with the overloaded ``WithMetadata``
         .WithMetadata<IAppenderMetadata>(m =>
             m.For(am => am.AppenderName, "screen"));
 
-Resolving the value can be done in the same manner as for class based metadata.
+Consumption is identical to a class view - name the interface as the second type argument.
+
+When a View Can't Be Used
+-------------------------
+
+If the view type is none of the three supported shapes, resolution fails with::
+
+    The type 'IAppenderMetadata' cannot be used as a metadata view.
+    A metadata view must be a concrete class with a parameterless or
+    dictionary constructor.
+
+**That message names the view type, but the usual cause is a missing** ``RegisterMetadataRegistrationSources()`` **call.** An interface view without the MEF sources falls through to the core provider, which only accepts classes, so it reports your interface as the problem.
+
+A class with neither a parameterless nor a dictionary constructor produces the identical message - which is why adding a parameterless constructor can look like it fixed an interface-shaped problem when it hasn't.
+
+The other failure comes from a class view missing a value::
+
+    Export metadata for 'AppenderName' is missing and no default value was supplied.
+
+That means a property had no matching metadata key and no ``DefaultValue`` attribute to fall back on.
 
 Attribute-Based Metadata
 ========================
@@ -289,7 +340,7 @@ That component will require you to register a service with the specified metadat
     builder.RegisterModule<AttributedMetadataModule>();
     builder.RegisterType<CenturyArtwork>().As<IArtwork>();
 
-    // Specify WithAttributeFilter for the consumer
+    // Specify WithAttributeFiltering for the consumer
     builder.RegisterType<ArtDisplay>().As<IDisplay>().WithAttributeFiltering();
 
     // ...
@@ -316,13 +367,28 @@ The metadata attributes you create aren't just used by default. In order to tell
     // ...
     var container = builder.Build();
 
-If you're using metadata filters (``KeyFilterAttribute`` or ``WithAttributeFiltering`` in your constructors), you need to register those components using the ``WithAttributeFiltering`` extension. Note that if you're *only* using filters but not attributed metadata, you don't actually need the ``AttributedMetadataModule``. Metadata filters stand on their own.
+If you're using metadata filters (``KeyFilterAttribute`` or ``MetadataFilterAttribute`` in your constructors), you need to register those components using the ``WithAttributeFiltering`` extension. Note that if you're *only* using filters but not attributed metadata, you don't actually need the ``AttributedMetadataModule``. Metadata filters stand on their own.
 
 .. sourcecode:: csharp
 
     var builder = new ContainerBuilder();
 
-    // Specify WithAttributeFilter for the consumer
+    // Specify WithAttributeFiltering for the consumer
     builder.RegisterType<ArtDisplay>().As<IDisplay>().WithAttributeFiltering();
     // ...
     var container = builder.Build();
+
+Opting In Per Registration
+--------------------------
+
+``AttributedMetadataModule`` reads metadata attributes for everything in the container. If you'd rather opt in one registration at a time, ``WithAttributedMetadata()`` does the same job for a single reflection-based registration - so ``RegisterType`` and ``RegisterAssemblyTypes`` opt in the same way:
+
+.. sourcecode:: csharp
+
+    builder.RegisterType<CenturyArtwork>().As<IArtwork>().WithAttributedMetadata();
+
+    builder.RegisterAssemblyTypes(typeof(CenturyArtwork).Assembly)
+           .As<IArtwork>()
+           .WithAttributedMetadata();
+
+This works on reflection-based registrations, where the implementation type is known when the registration is made. Delegate registrations don't expose one, so those still need the module. Mixing the two is safe - the module doesn't overwrite metadata keys that are already present, so metadata is applied once either way.
