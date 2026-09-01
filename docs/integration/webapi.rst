@@ -4,8 +4,6 @@ Web API
 
 Web API 2 integration requires the `Autofac.WebApi2 NuGet package <https://www.nuget.org/packages/Autofac.WebApi2>`_.
 
-Web API integration requires the `Autofac.WebApi NuGet package <https://www.nuget.org/packages/Autofac.WebApi/>`_.
-
 Web API integration provides dependency injection integration for controllers, model binders, and action filters. It also adds :doc:`per-request lifetime support <../faq/per-request-scope>`.
 
 **This page explains ASP.NET classic Web API integration.** If you are using ASP.NET Core, :doc:`see the ASP.NET Core integration page <aspnetcore>`.
@@ -201,7 +199,7 @@ For the filter to execute you need to register it with the container and inform 
 - AuthenticationFilter
 - AuthenticationFilterOverride
 - AuthorizationFilter
-- AuthorizationFilterOverrideW
+- AuthorizationFilterOverride
 - ExceptionFilter
 - ExceptionFilterOverride
 
@@ -293,8 +291,9 @@ In the same way as with standard Web API filters,  you are able to set the ``Htt
       return Task.FromResult(0);
     }
 
-    public void Task OnActionExecutedAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
+    public Task OnActionExecutedAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
     {
+      return Task.CompletedTask;
     }
   }
 
@@ -457,7 +456,7 @@ If you are using per-controller-type services, it is not possible to take depend
 Batching
 ========
 
-If you choose to use the `Web API batching functionality <https://blogs.msdn.microsoft.com/webdev/2013/11/01/introducing-batch-support-in-web-api-and-web-api-odata/>`_, be aware that the initial multipart request to the batch endpoint is where Web API creates the request lifetime scope. The child requests that are part of the batch all take place in-memory and will share that same request lifetime scope - you won't get a different scope for each child request in the batch.
+If you choose to use the `Web API batching functionality <https://learn.microsoft.com/en-us/aspnet/web-api/overview/releases/whats-new-in-aspnet-web-api-22#batch>`_, be aware that the initial multipart request to the batch endpoint is where Web API creates the request lifetime scope. The child requests that are part of the batch all take place in-memory and will share that same request lifetime scope - you won't get a different scope for each child request in the batch.
 
 This is due to the way the batch handling is designed within Web API and copies properties from the parent request to the child request. One of the properties that is intentionally copied by the ASP.NET Web API framework from parent to children is the request lifetime scope. There is no workaround for this and is outside the control of Autofac.
 

@@ -332,6 +332,23 @@ It is possible to manually perform constructor injection for service marked with
     // Pass it into the ServiceHost preventing it from creating an instance with the default constructor.
     var host = new ServiceHost(service, new Uri("http://localhost:8080/Service1"));
 
+Singletons With Interception
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Hosting a singleton that also uses :doc:`interception <../advanced/interceptors>` works, and it's worth knowing why it needs help. WCF refuses to host a class that both *declares* and *inherits* ``ServiceContractAttribute``. Castle's dynamic proxy copies type-level attributes from the proxied interface onto the generated class, so an intercepted singleton is exactly that shape - and host construction used to fail.
+
+``AutofacServiceHostFactory`` now wraps such an instance in a ``DispatchProxy`` that implements the contract and forwards every call. A ``DispatchProxy`` type only inherits the contract through the interface it implements, never declaring it on the class, so WCF accepts it while calls - and therefore the interceptors - still run against the resolved instance.
+
+.. sourcecode:: csharp
+
+    builder.RegisterType<Service1>()
+           .As<IService1>()
+           .EnableInterfaceInterceptors()
+           .InterceptedBy(typeof(CallLogger))
+           .SingleInstance();
+
+Wrapping only happens when it's needed. A service class carries its contract on the interface rather than on itself, so an ordinary singleton is handed to WCF directly with no proxy in between.
+
 Simulating a Request Lifetime Scope
 -----------------------------------
 

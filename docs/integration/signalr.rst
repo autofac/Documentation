@@ -2,11 +2,11 @@
 SignalR
 =======
 
-SignalR integration requires the `Autofac.SignalR NuGet package <https://nuget.org/packages/Autofac.SignalR/>`_.
+SignalR integration requires the `Autofac.SignalR2 NuGet package <https://www.nuget.org/packages/Autofac.SignalR2/>`_.
 
 SignalR integration provides dependency injection integration for SignalR hubs. **Due to SignalR internals, there is no support in SignalR for per-request lifetime dependencies.**
 
-Along with this documentation that's Autofac specific, you may also be interested in the `Microsoft documentation on SignalR and dependency injection. <http://www.asp.net/signalr/overview/advanced/dependency-injection>`_
+Along with this documentation that's Autofac specific, you may also be interested in the `Microsoft documentation on SignalR and dependency injection. <https://learn.microsoft.com/en-us/aspnet/signalr/overview/advanced/dependency-injection>`_
 
 .. contents::
   :local:
@@ -151,4 +151,4 @@ If you are using SignalR :doc:`as part of an OWIN application <owin>`, you need 
       }
     }
 
-A common error in OWIN integration is use of the ``GlobalHost``. **In OWIN you create the configuration from scratch.** You should not reference ``GlobalHost`` anywhere when using the OWIN integration. `Microsoft has documentation about this and other IoC integration concerns here. <http://www.asp.net/signalr/overview/advanced/dependency-injection>`_
+A common error in OWIN integration is use of the ``GlobalHost``. **In OWIN you create the configuration from scratch.** You should not reference ``GlobalHost`` anywhere when using the OWIN integration. `Microsoft has documentation about this and other IoC integration concerns here. <https://learn.microsoft.com/en-us/aspnet/signalr/overview/advanced/dependency-injection>`_
