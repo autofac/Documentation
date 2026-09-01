@@ -490,4 +490,10 @@ Using a child lifetime scope as the root is not compatible with multitenant supp
 Example
 =======
 
-There is an example project showing ASP.NET Core integration `in the Autofac examples repository <https://github.com/autofac/Examples/tree/main/src/AspNetCoreExample>`_.
+The Autofac examples repository has a runnable project for each style described above:
+
+* `AspNetCoreExample <https://github.com/autofac/Examples/tree/main/src/AspNetCoreExample>`_ - a ``Startup`` class with ``ConfigureContainer``
+* `AspNetCoreNoStartupExample <https://github.com/autofac/Examples/tree/main/src/AspNetCoreNoStartupExample>`_ - the same application under minimal hosting, with no ``Startup`` class
+* `AspNetCoreChildLifetimeScope <https://github.com/autofac/Examples/tree/main/src/AspNetCoreChildLifetimeScope>`_ - two hosts sharing one container, each rooted in its own child lifetime scope
+
+Multitenancy has its own example, `MultitenantExample.AspNetCore <https://github.com/autofac/Examples/tree/main/src/MultitenantExample.AspNetCore>`_, covered on the :doc:`multitenant applications <../advanced/multitenant>` page.
