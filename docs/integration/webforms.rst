@@ -302,4 +302,4 @@ The returned ``IInjectionBehavior`` can be one of the predefined ``NoInjection``
 Example
 =======
 
-There is an example project showing ASP.NET web forms integration `in the Autofac examples repository <https://github.com/autofac/Examples/tree/master/src/WebFormsExample>`_.
+There is an example project showing ASP.NET web forms integration `in the Autofac examples repository <https://github.com/autofac/Examples/tree/main/src/WebFormsExample>`_.

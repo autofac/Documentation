@@ -394,4 +394,4 @@ The :doc:`per-request lifetime scope <../faq/per-request-scope>` topic outlines 
 Example
 =======
 
-There is an example project showing ASP.NET MVC integration `in the Autofac examples repository <https://github.com/autofac/Examples/tree/master/src/MvcExample>`_.
+There is an example project showing ASP.NET MVC integration `in the Autofac examples repository <https://github.com/autofac/Examples/tree/main/src/MvcExample>`_.

@@ -516,4 +516,4 @@ The :doc:`per-request lifetime scope <../faq/per-request-scope>` topic outlines 
 Example
 =======
 
-There is an example project showing Web API in conjunction with OWIN self hosting `in the Autofac examples repository <https://github.com/autofac/Examples/tree/master/src/WebApiExample.OwinSelfHost>`_.
+There is an example project showing Web API in conjunction with OWIN self hosting `in the Autofac examples repository <https://github.com/autofac/Examples/tree/main/src/WebApiExample.OwinSelfHost>`_.

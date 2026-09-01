@@ -263,7 +263,7 @@ This means you don't necessarily have to use :doc:`Autofac configuration <../con
       }
     }
 
-This is a feature of the application hosting in ASP.NET Core - it is not an Autofac behavior. The `StartupLoader class in ASP.NET Core <https://github.com/aspnet/Hosting/blob/rel/1.1.0/src/Microsoft.AspNetCore.Hosting/Internal/StartupLoader.cs>`_ is what locates the methods to call during app startup. Check that class out if you want a more in-depth understanding of how this works.
+This is a feature of the application hosting in ASP.NET Core - it is not an Autofac behavior. The `StartupLoader class in ASP.NET Core <https://github.com/dotnet/aspnetcore/blob/main/src/Hosting/Hosting/src/Internal/StartupLoader.cs>`_ is what locates the methods to call during app startup. Check that class out if you want a more in-depth understanding of how this works.
 
 Dependency Injection Hooks
 ==========================
@@ -518,4 +518,4 @@ Using a child lifetime scope as the root is not compatible with multitenant supp
 Example
 =======
 
-There is an example project showing ASP.NET Core integration `in the Autofac examples repository <https://github.com/autofac/Examples/tree/master/src/AspNetCoreExample>`_.
+There is an example project showing ASP.NET Core integration `in the Autofac examples repository <https://github.com/autofac/Examples/tree/main/src/AspNetCoreExample>`_.

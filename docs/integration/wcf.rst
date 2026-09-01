@@ -366,6 +366,6 @@ Again, you only need to do this if you're decorating the service implementation 
 Example
 -------
 
-The Autofac example repository has a `WCF service implementation example <https://github.com/autofac/Examples/tree/master/src/WcfExample>`_ as well as `an MVC application that acts as a client for that service <https://github.com/autofac/Examples/tree/master/src/MvcExample>`_.
+The Autofac example repository has a `WCF service implementation example <https://github.com/autofac/Examples/tree/main/src/WcfExample>`_ as well as `an MVC application that acts as a client for that service <https://github.com/autofac/Examples/tree/main/src/MvcExample>`_.
 
-There are also examples showing a `multitenant WCF service <https://github.com/autofac/Examples/tree/master/src/MultitenantExample.WcfService>`_ and `associated client <https://github.com/autofac/Examples/tree/master/src/MultitenantExample.MvcApplication>`_ to illustrate how :doc:`multitenant service hosting <../advanced/multitenant>` works.
+There are also examples showing a `multitenant WCF service <https://github.com/autofac/Examples/tree/main/src/MultitenantExample.WcfService>`_ and `associated client <https://github.com/autofac/Examples/tree/main/src/MultitenantExample.MvcApplication>`_ to illustrate how :doc:`multitenant service hosting <../advanced/multitenant>` works.

@@ -86,4 +86,4 @@ If you want more control over when DI-enabled middleware is added to the pipelin
 Example
 =======
 
-There is an example project showing Web API in conjunction with OWIN self hosting `in the Autofac examples repository <https://github.com/autofac/Examples/tree/master/src/WebApiExample.OwinSelfHost>`_.
+There is an example project showing Web API in conjunction with OWIN self hosting `in the Autofac examples repository <https://github.com/autofac/Examples/tree/main/src/WebApiExample.OwinSelfHost>`_.

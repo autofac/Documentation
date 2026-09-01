@@ -22,7 +22,7 @@ Being an owner is accepting that trust and always trying your best to do the rig
 Code of Conduct
 ===============
 
-`Our code of conduct is posted on GitHub <https://github.com/autofac/Autofac/blob/develop/CODE_OF_CONDUCT.md>`_. All owners must follow the code of conduct. Owners are responsible for enforcing the code of conduct on each other and on contributors.
+`Our code of conduct is posted on GitHub <https://github.com/autofac/.github/blob/main/CODE_OF_CONDUCT.md>`_. All owners must follow the code of conduct. Owners are responsible for enforcing the code of conduct on each other and on contributors.
 
 Responsibilities
 ================
