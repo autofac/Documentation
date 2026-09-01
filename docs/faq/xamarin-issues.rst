@@ -2,9 +2,9 @@
 Why are things in my Xamarin app misbehaving?
 =============================================
 
-**Autofac targets .NET Framework and .NET Standard.** `This makes the code fairly portable across platforms. <https://docs.microsoft.com/en-us/dotnet/standard/net-standard>`__ It can be used in, among other things, Mono, Xamarin, and Universal Windows Platform apps.
+**Autofac targets .NET Framework and .NET Standard.** `This makes the code fairly portable across platforms. <https://learn.microsoft.com/en-us/dotnet/standard/net-standard>`__ It can be used in, among other things, Mono, Xamarin, and Universal Windows Platform apps.
 
-`Xamarin provides a cross-platform compiler <https://docs.microsoft.com/en-us/xamarin/cross-platform/get-started/introduction-to-mobile-development>`__ that can take C# and .NET code and compile that into native applications. From `the docs <https://docs.microsoft.com/en-us/xamarin/cross-platform/get-started/introduction-to-mobile-development>`__:
+`Xamarin provides a cross-platform compiler <https://learn.microsoft.com/en-us/xamarin/cross-platform/get-started/introduction-to-mobile-development>`__ that can take C# and .NET code and compile that into native applications. From `the docs <https://learn.microsoft.com/en-us/xamarin/cross-platform/get-started/introduction-to-mobile-development>`__:
 
   On iOS, Xamarin’s Ahead-of-Time (AOT) Compiler compiles Xamarin.iOS applications directly to native ARM assembly code. On Android, Xamarin’s compiler compiles down to Intermediate Language (IL), which is then Just-in-Time (JIT) compiled to native assembly when the application launches.
 

@@ -2,9 +2,9 @@
 Symbols and Sources
 ===================
 
-Autofac packages have been updated `to use Source Link <https://github.com/dotnet/sourcelink>`_ so you can debug right from your code into the Autofac source. Packages may have the symbols right inside or they may be in the `NuGet Symbol Server <https://docs.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg#nugetorg-symbol-server>`_.
+Autofac packages have been updated `to use Source Link <https://github.com/dotnet/sourcelink>`_ so you can debug right from your code into the Autofac source. Packages may have the symbols right inside or they may be in the `NuGet Symbol Server <https://learn.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg#nugetorg-symbol-server>`_.
 
-**In Visual Studio**, there's an option to enable searching the NuGet symbol server. `See the documentation from Microsoft explaining how to configure Visual Studio to make symbol servers work. <https://docs.microsoft.com/en-us/visualstudio/debugger/specify-symbol-dot-pdb-and-source-files-in-the-visual-studio-debugger>`_
+**In Visual Studio**, there's an option to enable searching the NuGet symbol server. `See the documentation from Microsoft explaining how to configure Visual Studio to make symbol servers work. <https://learn.microsoft.com/en-us/visualstudio/debugger/specify-symbol-dot-pdb-and-source-files-in-the-visual-studio-debugger>`_
 
 **In VS Code**, you may need to set the debugging options up in ``settings.json`` or ``launch.json``.
 

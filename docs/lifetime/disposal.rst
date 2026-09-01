@@ -49,7 +49,7 @@ To take advantage of automatic deterministic disposal, your component must imple
 Asynchronous Disposal Support
 -----------------------------
 
-If your components' disposal behavior requires some I/O activity, such as flushing a buffer to a file, or sending a packet over the network to close a connection, then you may want to consider implementing the new .NET `IAsyncDisposable <https://docs.microsoft.com/en-us/dotnet/api/system.iasyncdisposable?view=netstandard-2.1>`_ interface.
+If your components' disposal behavior requires some I/O activity, such as flushing a buffer to a file, or sending a packet over the network to close a connection, then you may want to consider implementing the new .NET `IAsyncDisposable <https://learn.microsoft.com/en-us/dotnet/api/system.iasyncdisposable>`_ interface.
 
 In Autofac 5.0, support was added for the ``IAsyncDisposable`` interface, so lifetime scopes can now be disposed of asynchronously:
 

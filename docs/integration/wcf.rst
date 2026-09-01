@@ -278,7 +278,7 @@ The alternative approach is to place a code file in your ``App_Code`` folder tha
       }
     }
 
-You can read more about ``AppInitialize()`` in "`How to Initialize Hosted WCF Services <https://docs.microsoft.com/en-us/archive/blogs/wenlong/how-to-initialize-hosted-wcf-services>`_".
+You can read more about ``AppInitialize()`` in "`How to Initialize Hosted WCF Services <https://learn.microsoft.com/en-us/archive/blogs/wenlong/how-to-initialize-hosted-wcf-services>`_".
 
 Self-Hosting
 ------------
@@ -337,15 +337,15 @@ Simulating a Request Lifetime Scope
 
 As noted earlier, **due to WCF internals, there is no explicit support in WCF for per-request lifetime dependencies.**
 
-The way Autofac hooks into WCF, it uses an `instance provider <https://msdn.microsoft.com/en-us/library/system.servicemodel.dispatcher.iinstanceprovider(v=vs.110).aspx>`_ to resolve your service and dependencies. The instance provider makes use of the service instance context to track the lifetime scope in which your service and its dependencies live.
+The way Autofac hooks into WCF, it uses an `instance provider <https://learn.microsoft.com/en-us/dotnet/api/system.servicemodel.dispatcher.iinstanceprovider>`_ to resolve your service and dependencies. The instance provider makes use of the service instance context to track the lifetime scope in which your service and its dependencies live.
 
-What that boils down to: A lifetime scope is created based on the `instance context mode <https://msdn.microsoft.com/en-us/library/system.servicemodel.servicebehaviorattribute.instancecontextmode(v=vs.110).aspx>`_ of your service.
+What that boils down to: A lifetime scope is created based on the `instance context mode <https://learn.microsoft.com/en-us/dotnet/api/system.servicemodel.servicebehaviorattribute.instancecontextmode>`_ of your service.
 
-`If you leave it default, that's "per session." <https://msdn.microsoft.com/en-us/library/system.servicemodel.servicebehaviorattribute.instancecontextmode(v=vs.110).aspx>`_ One instance of your service will be created when a client calls it, and subsequent calls from that client will get the same instance.
+`If you leave it default, that's "per session." <https://learn.microsoft.com/en-us/dotnet/api/system.servicemodel.servicebehaviorattribute.instancecontextmode>`_ One instance of your service will be created when a client calls it, and subsequent calls from that client will get the same instance.
 
 However, if you want to simulate a per-request lifetime scope, you can:
 
-- Set your service to be instance-per-call using the `WCF ServiceBehaviorAttribute <https://msdn.microsoft.com/en-us/library/system.servicemodel.servicebehaviorattribute.instancecontextmode(v=vs.110).aspx>`_.
+- Set your service to be instance-per-call using the `WCF ServiceBehaviorAttribute <https://learn.microsoft.com/en-us/dotnet/api/system.servicemodel.servicebehaviorattribute.instancecontextmode>`_.
 - Register your service and dependencies to be instance-per-lifetime-scope.
 
 Doing those two things, you'll get a new lifetime scope for every call (because the WCF instance context will want to create a new service instance per call). Your service and dependencies will then be resolved as just one time within that instance context lifetime scope - effectively a per-request lifetime.

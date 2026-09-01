@@ -154,7 +154,7 @@ In your Startup class (which is basically the same across all the versions of AS
       {
         // In ASP.NET Core 3.x, using `Host.CreateDefaultBuilder` (as in the preceding Program.cs snippet) will
         // set up some configuration for you based on your appsettings.json and environment variables. See "Remarks" at
-        // https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.host.createdefaultbuilder for details.
+        // https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.host.createdefaultbuilder for details.
         this.Configuration = configuration;
       }
 

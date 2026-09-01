@@ -126,7 +126,7 @@ If you, in fact, do want your pool to have custom behavior like blocking until a
 
 .. note::
 
-    The Autofac Pooling behavior is built on top of the `Object Pool <https://docs.microsoft.com/en-us/aspnet/core/performance/objectpool>`_ implementation
+    The Autofac Pooling behavior is built on top of the `Object Pool <https://learn.microsoft.com/en-us/aspnet/core/performance/objectpool>`_ implementation
     available from `the Microsoft.Extensions.ObjectPool package <https://www.nuget.org/packages/Microsoft.Extensions.ObjectPool/>`_.
 
     The behavior of that pool informs a lot of the behavior of Autofac.Pooling.

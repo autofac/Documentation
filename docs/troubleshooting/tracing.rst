@@ -8,7 +8,7 @@ Autofac provides diagnostics support that allows you to monitor and trace the re
 
     **Tracing isn't free.** You will get better performance if you **don't** have a diagnostic listener attached to the container. Further, tracers like ``DefaultDiagnosticTracer`` that generate a full trace of an operation will increase memory and resource usage as they have to hold onto data during the entire resolve operation in order to generate a complete trace. It is recommended you only use diagnostics in a non-production environment; or use diagnostics listeners that handle individual events without tracking full operations.
 
-Autofac 6.0 introduced diagnostics support in the form of `System.Diagnostics.DiagnosticSource <https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.diagnosticsource?view=netcore-3.1>`_. This allows you to intercept diagnostic events from Autofac.
+Autofac 6.0 introduced diagnostics support in the form of `System.Diagnostics.DiagnosticSource <https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.diagnosticsource>`_. This allows you to intercept diagnostic events from Autofac.
 
 If you're interested in metrics for performance measurement, :doc:`Autofac also provides metrics <metrics>`.
 

@@ -202,7 +202,7 @@ You are allowed to register *the same module multiple times using different para
 
 Type Names
 ----------
-In all cases where you see a type name (component type, service types, module type) it is expected to be `the standard, assembly qualified type name <https://msdn.microsoft.com/en-us/library/yfsftwz6(v=vs.110).aspx>`_ that you would normally be able to pass to ``Type.GetType(string typename)``. If the type is in the ``defaultAssembly`` you can leave the assembly name off, but it doesn't hurt to put it there regardless.
+In all cases where you see a type name (component type, service types, module type) it is expected to be `the standard, assembly qualified type name <https://learn.microsoft.com/en-us/dotnet/framework/reflection-and-codedom/specifying-fully-qualified-type-names>`_ that you would normally be able to pass to ``Type.GetType(string typename)``. If the type is in the ``defaultAssembly`` you can leave the assembly name off, but it doesn't hurt to put it there regardless.
 
 Assembly qualified type names have the full type with namespace, a comma, and the name of the assembly, like ``Autofac.Example.Calculator.OperationModule, Autofac.Example.Calculator``. In that case, ``Autofac.Example.Calculator.OperationModule`` is the type and it's in the ``Autofac.Example.Calculator`` assembly.
 

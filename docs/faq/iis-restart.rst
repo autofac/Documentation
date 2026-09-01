@@ -6,7 +6,7 @@ Sometimes you want to use the :doc:`assembly scanning <../register/scanning>` me
 
 When hosting applications in IIS all assemblies are loaded into the ``AppDomain`` when the application first starts, but **when the AppDomain is recycled by IIS the assemblies are then only loaded on demand.**
 
-To avoid this issue use the `GetReferencedAssemblies() <https://msdn.microsoft.com/en-us/library/system.web.compilation.buildmanager.getreferencedassemblies.aspx>`_ method on `System.Web.Compilation.BuildManager <https://msdn.microsoft.com/en-us/library/system.web.compilation.buildmanager.aspx>`_ to get a list of the referenced assemblies instead:
+To avoid this issue use the `GetReferencedAssemblies() <https://learn.microsoft.com/en-us/dotnet/api/system.web.compilation.buildmanager.getreferencedassemblies>`_ method on `System.Web.Compilation.BuildManager <https://learn.microsoft.com/en-us/dotnet/api/system.web.compilation.buildmanager>`_ to get a list of the referenced assemblies instead:
 
 .. sourcecode:: csharp
 

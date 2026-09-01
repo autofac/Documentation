@@ -80,7 +80,7 @@ The sections below go into further detail about what each of these features do a
 Add Modules to Web.config
 =========================
 
-The way that Autofac manages component lifetimes and adds dependency injection into the ASP.NET pipeline is through the use of `IHttpModule <https://msdn.microsoft.com/en-us/library/system.web.ihttpmodule.aspx>`_ implementations. You need to configure these modules in ``web.config``.
+The way that Autofac manages component lifetimes and adds dependency injection into the ASP.NET pipeline is through the use of `IHttpModule <https://learn.microsoft.com/en-us/dotnet/api/system.web.ihttpmodule>`_ implementations. You need to configure these modules in ``web.config``.
 
 The following snippet config shows the modules configured.
 

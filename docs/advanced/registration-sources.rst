@@ -22,7 +22,7 @@ You can use the ``Autofac.Features.ResolveAnything.AnyConcreteTypeNotAlreadyRegi
 
 Contravariant Registration Source
 =================================
-The ``ContravariantRegistrationSource`` is helpful in registering types that need to be later resolved in a `contravariant context <https://docs.microsoft.com/en-us/dotnet/standard/generics/covariance-and-contravariance>`_ (using a more generic / less derived type than originally specified).
+The ``ContravariantRegistrationSource`` is helpful in registering types that need to be later resolved in a `contravariant context <https://learn.microsoft.com/en-us/dotnet/standard/generics/covariance-and-contravariance>`_ (using a more generic / less derived type than originally specified).
 
 **If you use this source, register it before registering other things.** Just as with standard registrations, registration sources are evaluated in the order of registration. If you register an open generic (which is *also* a registration source under the covers) and *then* register ``ContravariantRegistrationSource``, you will not get the outcome you expect.
 
