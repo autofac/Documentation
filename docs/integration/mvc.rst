@@ -172,7 +172,7 @@ When using the web forms view engine you set the ``Inherits`` attribute on the `
 Enable Property Injection for Action Filters
 ============================================
 
-To make use of property injection for your filter attributes call the ``RegisterFilterProvider()`` method on the ``ContainerBuilder`` before building your container and providing it to the ``AutofacDependencyResolver``.
+To make use of property injection for your filter attributes call the ``RegisterFilterProvider()`` method on the ``ContainerBuilder`` before building your container and providing it to the ``AutofacDependencyResolver``. The same call is what enables :ref:`registering a component as a filter <mvc-filters-via-di>`, so one is enough for both.
 
 .. sourcecode:: csharp
 
@@ -214,10 +214,96 @@ After applying the attributes to your actions as usual your work is done.
 .. sourcecode:: csharp
 
     [CustomActionFilter]
-    [CustomAuthorizeAttribute]
+    [CustomAuthorize]
     public ActionResult Index()
     {
+      return this.View();
     }
+
+.. _mvc-filters-via-di:
+
+Provide Filters via Dependency Injection
+========================================
+
+Property injection covers the case where you want to keep using filter attributes. The alternative is to skip attributes entirely and register an ordinary class as a filter, which lets the filter take its dependencies through its constructor and lets you decide at registration time which controllers and actions it applies to.
+
+Implement the Filter Interface
+------------------------------
+
+Write a class implementing the MVC filter interface you want - ``IActionFilter``, ``IAuthenticationFilter``, ``IAuthorizationFilter``, ``IExceptionFilter`` or ``IResultFilter`` from ``System.Web.Mvc``. These are the framework's own interfaces; unlike :doc:`Web API <webapi>`, MVC needs no Autofac-specific filter interface, because the MVC filter provider resolves a fresh filter per request rather than caching one instance.
+
+.. sourcecode:: csharp
+
+    public class LoggingActionFilter : IActionFilter
+    {
+      private readonly ILogger _logger;
+
+      public LoggingActionFilter(ILogger logger)
+      {
+        this._logger = logger;
+      }
+
+      public void OnActionExecuting(ActionExecutingContext filterContext)
+      {
+        this._logger.Write(filterContext.ActionDescriptor.ActionName);
+      }
+
+      public void OnActionExecuted(ActionExecutedContext filterContext)
+      {
+      }
+    }
+
+Register the Filter
+-------------------
+
+Register the class and say what it applies to. There is a method per filter type - ``AsActionFilterFor``, ``AsAuthenticationFilterFor``, ``AsAuthorizationFilterFor``, ``AsExceptionFilterFor`` and ``AsResultFilterFor`` - and each takes the controller as a type parameter. Autofac exposes the registration as the filter interface for you, so no ``As()`` call is needed.
+
+.. sourcecode:: csharp
+
+    // Every action on HomeController.
+    builder.RegisterType<LoggingActionFilter>()
+           .AsActionFilterFor<HomeController>()
+           .InstancePerRequest();
+
+Pass a lambda to target a single action instead of the whole controller. Use ``default`` for any parameters, since the expression only identifies the method:
+
+.. sourcecode:: csharp
+
+    builder.RegisterType<LoggingActionFilter>()
+           .AsActionFilterFor<HomeController>(c => c.Index(default(int)))
+           .InstancePerRequest();
+
+Naming a base controller applies the filter to everything deriving from it.
+
+Each method also takes an optional ``order``, defaulting to ``Filter.DefaultOrder``, which behaves the same way as the ``Order`` property on a filter attribute.
+
+One component can target several controllers or actions by chaining the calls:
+
+.. sourcecode:: csharp
+
+    builder.RegisterType<LoggingActionFilter>()
+           .AsActionFilterFor<HomeController>()
+           .AsActionFilterFor<AccountController>(c => c.Login(default(string)))
+           .InstancePerRequest();
+
+The targets aren't deduplicated, and the filter is applied once using the first entry that matches. If you register the same component against the same target twice with different ``order`` values, the first one wins.
+
+Filter Overrides
+----------------
+
+Alongside each registration method is an override form - ``AsActionFilterOverrideFor`` and so on - which registers the filter *and* marks it as an override. MVC then ignores filters of the same type coming from less specific scopes, where the scopes from least to most specific are global, controller, then action.
+
+.. sourcecode:: csharp
+
+    builder.RegisterType<LoggingActionFilter>()
+           .AsActionFilterOverrideFor<HomeController>(c => c.Index(default(int)))
+           .InstancePerRequest();
+
+If you only want to suppress the less specific filters without adding a replacement, the ``Override*For`` methods on ``ContainerBuilder`` add the marker on its own:
+
+.. sourcecode:: csharp
+
+    builder.OverrideActionFilterFor<HomeController>(c => c.Index(default(int)));
 
 Enable Injection of Action Parameters
 =====================================
