@@ -108,8 +108,8 @@ The `Placeholder` project in `build-apidoc/` holds NuGet references to the vario
 ### Adding/Updating Doc Sources
 
 1. Update the NuGet package version in `build-apidoc/Placeholder/Placeholder.csproj`.
-2. The `Microsoft.NETFramework.ReferenceAssemblies.net472` package enables cross-platform compilation, so you can build on Windows, macOS, or Linux.
-3. Add package references under the framework-specific item group that matches compatibility (`net10.0` for modern packages, `net472` for legacy ASP.NET/.NET Framework integrations).
+2. The `Microsoft.NETFramework.ReferenceAssemblies` package enables cross-platform compilation, so you can build on Windows, macOS, or Linux.
+3. Add package references under the framework-specific item group that matches compatibility (`net10.0` for modern packages, `net481` for legacy ASP.NET/.NET Framework integrations).
 4. Ensure target packages have XML documentation files (most Autofac packages do).
 
 ### Building the Documentation
@@ -130,7 +130,7 @@ This will:
 
 1. Restore .NET tools (including `docfx`)
 2. Clean previous build artifacts
-3. Restore NuGet packages and build API metadata for both `net10.0` and `net472`
+3. Restore NuGet packages and build API metadata for both `net10.0` and `net481`
 4. Merge metadata into one logical DocFX output
 5. Generate HTML documentation
 
