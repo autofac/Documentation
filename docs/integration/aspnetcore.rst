@@ -23,7 +23,7 @@ Quick Start
 
 The ``IServiceProvider`` gets created for you, so there's nothing to do but *register things*. Autofac calls ``Populate`` on your behalf to move what's in the service collection into the container.
 
-**You cannot return an ``IServiceProvider`` from ``ConfigureServices``, and you cannot add the factory to the service collection.** It has to be handed to the host builder directly. That is the one rule that trips people up, whichever hosting style you use.
+**You cannot return an** ``IServiceProvider`` **from** ``ConfigureServices``\ **, and you cannot add the factory to the service collection.** It has to be handed to the host builder directly. That is the one rule that trips people up, whichever hosting style you use.
 
 Minimal Hosting
 ---------------
