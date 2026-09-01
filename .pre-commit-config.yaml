@@ -2,25 +2,25 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: "3e8a8703264a2f4a69428a0aa4dcb512790b2c8c"  # frozen: v6.0.0
     hooks:
-      - id: check-yaml
       - id: check-json
+      - id: check-yaml
       - id: check-merge-conflict
       - id: end-of-file-fixer
       - id: trailing-whitespace
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: "76b3d32d3f4b965e1d6425253c59407420ae2c43"  # frozen: v0.47.0
+    rev: "5b5dddc4fb0f83c3ea1fc5616fa63e115dce83e0"  # frozen: v0.49.1
     hooks:
       - id: markdownlint
         args:
           - --fix
   - repo: https://github.com/PyCQA/doc8
-    rev: 2a7a5eef1de341fab48019faf3de8a64ac2ad900  # frozen: v2.0.0
+    rev: "2a7a5eef1de341fab48019faf3de8a64ac2ad900"  # frozen: v2.0.0
     hooks:
       - id: doc8
         args: [--config, doc8.ini]
         files: docs/.*\.rst$
   - repo: https://github.com/tillig/json-sort-cli
-    rev: "009ab2ab49e1f2fa9d6b9dfc31009ceeca055204"  # frozen: v3.0.0
+    rev: "2b7e147e0933bd30b58133b6f287e5c695ff4f0e"  # frozen: v3.0.1
     hooks:
       - id: json-sort
         args:

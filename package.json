@@ -4,24 +4,27 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "chokidar": "^5.0.0",
-    "eslint": "^10.1.0",
+    "eslint": "^10.9.1",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-jsdoc": "^62.8.1",
-    "eslint-plugin-prettier": "^5.5.4",
-    "globals": "^17.4.0",
-    "markdownlint-cli2": "^0.22.0",
+    "eslint-plugin-jsdoc": "^64.3.3",
+    "eslint-plugin-prettier": "^5.5.6",
+    "globals": "^17.11.0",
+    "markdownlint-cli2": "^0.23.2",
     "node-plantuml-latest": "^2.4.0"
   },
   "license": "MIT",
   "main": "index.js",
   "name": "plantuml-in-autofac-docs",
   "overrides": {
-    "balanced-match": "^4.0.4"
+    "balanced-match": "^4.0.4",
+    "flatted": "^3.4.2",
+    "js-yaml": "^5.4.1",
+    "markdown-it": "^14.3.1"
   },
   "scripts": {
     "browse-apidoc": "python -m http.server 8080 --directory ./build-apidoc/artifacts/doc/Website",
     "browse-doc": "python -m http.server 8081 --directory ./docs/_build/html",
-    "lint": "npm exec eslint . && npm exec markdownlint-cli2 \"**/*.md\" \"#node_modules\" && python -m doc8 docs/",
+    "lint": "npm exec eslint . && npm exec markdownlint-cli2 \"**/*.md\" \"#.venv\" \"#docs/_build\" \"#node_modules\" && python -m doc8 docs/",
     "watch": "node index.js"
   },
   "version": "1.0.0"

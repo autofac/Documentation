@@ -15,7 +15,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.12'
+          python-version: '3.13'
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
@@ -29,3 +29,7 @@ jobs:
         run: |
           pre-commit run --all-files
           npm run lint
+      # The linters don't resolve cross-references, so a broken :doc: link only
+      # surfaces in a real build. Matches Read the Docs' fail_on_warning.
+      - name: Build docs
+        run: python -m sphinx -b html -W --keep-going -d docs/_build/doctrees docs docs/_build/html
