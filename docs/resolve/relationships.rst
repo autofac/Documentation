@@ -391,6 +391,8 @@ Enumeration (IEnumerable<B>, IList<B>, ICollection<B>)
 ------------------------------------------------------
 Dependencies of an *enumerable type* provide multiple implementations of the same service (interface). This is helpful in cases like message handlers, where a message comes in and more than one handler is registered to process the message.
 
+Along with ``IEnumerable<B>``, ``IList<B>`` and ``ICollection<B>``, Autofac also supplies ``IReadOnlyCollection<B>``, ``IReadOnlyList<B>`` and ``B[]``. All of them resolve whether or not anything is registered - you get an empty collection rather than an exception, which is what makes them safe to depend on.
+
 Let's say you have a dependency interface defined like this:
 
 .. sourcecode:: csharp
