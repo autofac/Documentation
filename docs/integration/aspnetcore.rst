@@ -2,7 +2,7 @@
 ASP.NET Core
 ============
 
-ASP.NET Core (previously ASP.NET 5) changes the way dependency injection frameworks have previously integrated into ASP.NET execution. Previously, each functionality - MVC, Web API, etc. - had its own "dependency resolver" mechanism and just slightly different ways to hook in. ASP.NET Core introduces a `conforming container <https://blog.ploeh.dk/2014/05/19/conforming-container/>`__ mechanism via `Microsoft.Extensions.DependencyInjection <https://github.com/aspnet/DependencyInjection>`_, including a unified notion of request lifetime scope, service registration, and so forth.
+ASP.NET Core (previously ASP.NET 5) changes the way dependency injection frameworks have previously integrated into ASP.NET execution. Previously, each functionality - MVC, Web API, etc. - had its own "dependency resolver" mechanism and just slightly different ways to hook in. ASP.NET Core introduces a `conforming container <https://blog.ploeh.dk/2014/05/19/conforming-container/>`__ mechanism via `Microsoft.Extensions.DependencyInjection <https://github.com/dotnet/runtime/tree/main/src/libraries/Microsoft.Extensions.DependencyInjection>`_, including a unified notion of request lifetime scope, service registration, and so forth.
 
 Further, as of ASP.NET Core 3.0, there's a "generic app hosting" mechanism in play that can be used in non-ASP.NET Core apps.
 
@@ -17,16 +17,49 @@ Quick Start
 ===========
 
 * Reference the ``Autofac.Extensions.DependencyInjection`` package from NuGet.
-* In your ``Program.Main`` method, attach the hosting mechanism to Autofac.
-* In the ``ConfigureServices`` method of your ``Startup`` class register things into the ``IServiceCollection`` using extension methods provided by other libraries.
-* In the ``ConfigureContainer`` method of your ``Startup`` class register things directly into an Autofac ``ContainerBuilder``.
+* Attach the Autofac service provider factory to the host.
+* Register services with the ``IServiceCollection`` using the extension methods other libraries provide.
+* Register your own components directly with an Autofac ``ContainerBuilder``.
 
-The ``IServiceProvider`` will automatically be created for you, so there's nothing you have to do but *register things*.
+The ``IServiceProvider`` gets created for you, so there's nothing to do but *register things*. Autofac calls ``Populate`` on your behalf to move what's in the service collection into the container.
 
-Attaching to the Host
----------------------
+**You cannot return an** ``IServiceProvider`` **from** ``ConfigureServices``\ **, and you cannot add the factory to the service collection.** It has to be handed to the host builder directly. That is the one rule that trips people up, whichever hosting style you use.
 
-Attach the Autofac service provider factory to the host. You cannot return an ``IServiceProvider`` from ``ConfigureServices``, and you cannot add the factory to the service collection - it has to be supplied to the host builder directly.
+Minimal Hosting
+---------------
+
+This is what the current project templates give you - no ``Startup`` class, everything in ``Program.cs``. ``ConfigureContainer`` runs after the service collection is populated, so registrations here override what came from ``builder.Services``.
+
+.. sourcecode:: csharp
+
+    var builder = WebApplication.CreateBuilder(args);
+
+    // Swap in Autofac as the service provider factory.
+    builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+    // Register directly with Autofac. Don't call Populate() - the factory
+    // does that for you.
+    builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+    {
+        containerBuilder.RegisterModule(new MyApplicationModule());
+    });
+
+    builder.Services.AddControllers();
+
+    var app = builder.Build();
+    app.MapControllers();
+    app.Run();
+
+If you need the container itself - to inspect it, or to create a scope by hand - ``GetAutofacRoot()`` will get it from the built application:
+
+.. sourcecode:: csharp
+
+    var container = app.Services.GetAutofacRoot();
+
+Startup Class
+-------------
+
+The ``Startup`` class style still works, and is worth knowing about because plenty of existing applications use it. Attach the factory to the host builder, then use ``ConfigureContainer`` on the ``Startup`` class to register directly with Autofac.
 
 .. sourcecode:: csharp
 
@@ -41,7 +74,6 @@ Attach the Autofac service provider factory to the host. You cannot return an ``
             .ConfigureWebHostDefaults(webHostBuilder => {
               webHostBuilder
                 .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
                 .UseStartup<Startup>();
             })
             .Build();
@@ -50,10 +82,7 @@ Attach the Autofac service provider factory to the host. You cannot return an ``
       }
     }
 
-Startup Class
--------------
-
-In your Startup class you then use ``ConfigureContainer`` to access the Autofac container builder and register things directly with Autofac.
+In the ``Startup`` class you then use ``ConfigureContainer`` to access the Autofac container builder and register things directly with Autofac.
 
 .. sourcecode:: csharp
 
@@ -98,24 +127,21 @@ In your Startup class you then use ``ConfigureContainer`` to access the Autofac 
       // Configure is where you add middleware. This is called after
       // ConfigureContainer. You can use IApplicationBuilder.ApplicationServices
       // here if you need to resolve things from the container.
-      public void Configure(
-        IApplicationBuilder app,
-        ILoggerFactory loggerFactory)
+      public void Configure(IApplicationBuilder app)
       {
         // If, for some reason, you need a reference to the built container, you
         // can use the convenience extension method GetAutofacRoot.
         this.AutofacContainer = app.ApplicationServices.GetAutofacRoot();
 
-        loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
-        loggerFactory.AddDebug();
-        app.UseMvc();
+        app.UseRouting();
+        app.UseEndpoints(endpoints => endpoints.MapControllers());
       }
     }
 
 Configuration Method Naming Conventions
 =======================================
 
-The ``Configure``, ``ConfigureServices``, and ``ConfigureContainer`` methods all support environment-specific naming conventions based on the ``IHostingEnvironment.EnvironmentName`` in your app. By default, the names are ``Configure``, ``ConfigureServices``, and ``ConfigureContainer``. If you want environment-specific setup you can put the environment name after the ``Configure`` part, like ``ConfigureDevelopment``, ``ConfigureDevelopmentServices``, and ``ConfigureDevelopmentContainer``. If a method isn't present with a name matching the environment it'll fall back to the default.
+The ``Configure``, ``ConfigureServices``, and ``ConfigureContainer`` methods all support environment-specific naming conventions based on the ``IWebHostEnvironment.EnvironmentName`` in your app. By default, the names are ``Configure``, ``ConfigureServices``, and ``ConfigureContainer``. If you want environment-specific setup you can put the environment name after the ``Configure`` part, like ``ConfigureDevelopment``, ``ConfigureDevelopmentServices``, and ``ConfigureDevelopmentContainer``. If a method isn't present with a name matching the environment it'll fall back to the default.
 
 This means you don't necessarily have to use :doc:`Autofac configuration <../configuration/index>` to switch configuration between a development and production environment; you can set it up programmatically in ``Startup``.
 
@@ -123,7 +149,7 @@ This means you don't necessarily have to use :doc:`Autofac configuration <../con
 
     public class Startup
     {
-      public Startup(IHostingEnvironment env)
+      public Startup(IWebHostEnvironment env)
       {
         // Do Startup-ish things like read configuration.
       }
@@ -159,14 +185,14 @@ This means you don't necessarily have to use :doc:`Autofac configuration <../con
       }
 
       // This is the default if you don't have an environment specific method.
-      public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
+      public void Configure(IApplicationBuilder app)
       {
         // Set up the application.
       }
 
       // This only gets called if your environment is Staging. The
       // default Configure won't be automatically called if this one is called.
-      public void ConfigureStaging(IApplicationBuilder app, ILoggerFactory loggerFactory)
+      public void ConfigureStaging(IApplicationBuilder app)
       {
         // Set up the application for staging.
       }
@@ -177,19 +203,60 @@ This is a feature of the application hosting in ASP.NET Core - it is not an Auto
 Dependency Injection Hooks
 ==========================
 
-Unlike :doc:`ASP.NET classic integration <aspnet>`, ASP.NET Core is designed specifically with dependency injection in mind. What that means is if you're trying to figure out, say, `how to inject services into MVC views <https://docs.asp.net/en/latest/mvc/views/dependency-injection.html>`_ that's now controlled by (and documented by) ASP.NET Core - there's not anything Autofac-specific you need to do other than set up your service provider as outlined above.
+Unlike :doc:`ASP.NET classic integration <aspnet>`, ASP.NET Core is designed specifically with dependency injection in mind. Injecting services into views, filters, middleware and authorization handlers is all controlled and documented by ASP.NET Core itself - there is nothing Autofac-specific to do beyond setting up the service provider as outlined above.
 
-Here are some helpful links into the ASP.NET Core documentation with specific insight into DI integration:
+`Microsoft's dependency injection documentation <https://learn.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection>`_ is the place to start for any of that.
 
-* `ASP.NET Core dependency injection fundamentals <https://docs.asp.net/en/latest/fundamentals/dependency-injection.html>`_
-* `Controller injection <https://docs.asp.net/en/latest/mvc/controllers/dependency-injection.html>`_
-* `The Subtle Perils of Controller Dependency Injection in ASP.NET Core MVC <https://www.strathweb.com/2016/03/the-subtle-perils-of-controller-dependency-injection-in-asp-net-core-mvc/>`_
-* `Filter injection <https://docs.asp.net/en/latest/mvc/controllers/filters.html#configuring-filters>`_
-* `View injection <https://docs.asp.net/en/latest/mvc/views/dependency-injection.html>`_
-* `Authorization requirement handlers injection <https://docs.asp.net/en/latest/security/authorization/dependencyinjection.html>`_
-* `Middleware options injection <https://docs.asp.net/en/latest/migration/http-modules.html#loading-middleware-options-through-direct-injection>`_
-* `Middleware 'Invoke' method injection <https://docs.asp.net/en/latest/fundamentals/middleware.html>`_
-* `Wiring up EF 6 with ASP.NET Core <https://docs.asp.net/en/latest/data/entity-framework-6.html#setup-connection-strings-and-dependency-injection>`_
+Keyed Services
+==============
+
+The keyed service APIs in ``Microsoft.Extensions.DependencyInjection`` work through Autofac, backed by :doc:`Autofac's own keyed service support <../advanced/keyed-services>`. Register with the Microsoft syntax and consume with ``[FromKeyedServices]``:
+
+.. sourcecode:: csharp
+
+    builder.Services.AddKeyedSingleton<IStorage, BlobStorage>("blob");
+    builder.Services.AddKeyedSingleton<IStorage, FileStorage>("file");
+
+.. sourcecode:: csharp
+
+    public class ReportService
+    {
+      public ReportService([FromKeyedServices("blob")] IStorage storage, IClock clock)
+      {
+      }
+    }
+
+Keyed and unkeyed parameters mix freely in the same constructor. ``KeyedService.AnyKey`` works too, so ``GetKeyedServices<IStorage>(KeyedService.AnyKey)`` returns every explicitly-keyed registration.
+
+Parameter Binding and IServiceProviderIsService
+===============================================
+
+.. warning::
+
+   This one changes behavior in a way that is easy to miss, because nothing throws.
+
+Starting with .NET 7, ASP.NET Core asks the container whether a parameter type is a service - through ``IServiceProviderIsService`` - to decide whether to bind it from the request body or inject it. **Autofac answers yes for every collection type**, because :doc:`collections are always resolvable in Autofac <../resolve/relationships>` and simply come back empty when nothing is registered.
+
+The result is that a parameter like this stops binding from the body and starts arriving as an empty collection:
+
+.. sourcecode:: csharp
+
+    // On .NET 6 this bound from the request body.
+    // On .NET 7+ it arrives empty, because Autofac reports
+    // IReadOnlyCollection<WeatherForecast> as a service.
+    [HttpPost]
+    public IActionResult Post(IReadOnlyCollection<WeatherForecast> forecasts)
+
+It affects every collection shape Autofac supplies - ``IEnumerable<T>``, ``IList<T>``, ``ICollection<T>``, ``IReadOnlyCollection<T>``, ``IReadOnlyList<T>`` and arrays.
+
+**Be explicit with** ``[FromBody]`` **on collection parameters you want bound from the request:**
+
+.. sourcecode:: csharp
+
+    [HttpPost]
+    public IActionResult Post([FromBody] IReadOnlyCollection<WeatherForecast> forecasts)
+
+Autofac deliberately doesn't special-case empty collections here. Reporting a collection as "not a service" when nothing happens to be registered would make the answer depend on registration order, break the case where you *do* want to inject an empty set, and contradict the documented behavior that collection relationships always resolve.
 
 Differences From ASP.NET Classic
 ================================
@@ -200,7 +267,7 @@ If you've used Autofac's other :doc:`ASP.NET integration <aspnet>` then you may 
 * **No more DependencyResolver.** Other ASP.NET integration mechanisms required setting up a custom Autofac-based dependency resolver in various locations. With ``Microsoft.Extensions.DependencyInjection`` and the ``Startup.ConfigureServices`` method, you now just return the ``IServiceProvider`` and "magic happens." Within controllers, classes, etc. if you need to manually do service location, get an ``IServiceProvider``.
 * **No special middleware.** The :doc:`OWIN integration <owin>` previously required registration of a special Autofac middleware to manage the request lifetime scope. ``Microsoft.Extensions.DependencyInjection`` does the heavy lifting now, so there's no additional middleware to register.
 * **No manual controller registration.** You used to be required to register all of your controllers with Autofac so DI would work. The ASP.NET Core framework now automatically passes all controllers through service resolution so you don't have to do that.
-* **No extensions for invoking middleware via dependency injection.** The :doc:`OWIN integration <owin>` had extensions like ``UseAutofacMiddleware()`` to allow DI into middleware. This happens automatically now through a combination of `auto-injected constructor parameters and dynamically resolved parameters to the Invoke method of middleware <https://docs.asp.net/en/latest/fundamentals/middleware.html>`_. The ASP.NET Core framework takes care of it all.
+* **No extensions for invoking middleware via dependency injection.** The :doc:`OWIN integration <owin>` had extensions like ``UseAutofacMiddleware()`` to allow DI into middleware. This happens automatically now through a combination of `auto-injected constructor parameters and dynamically resolved parameters to the Invoke method of middleware <https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/write>`_. The ASP.NET Core framework takes care of it all.
 * **MVC and Web API are one thing.** There used to be different ways to hook into DI based on whether you were using MVC or Web API. These two things are combined in ASP.NET Core so there's only one dependency resolver to set up, only one configuration to maintain.
 * **Controllers aren't resolved from the container; just controller constructor parameters.** That means controller lifecycles, property injection, and other things aren't managed by Autofac - they're managed by ASP.NET Core. You can change that using ``AddControllersAsServices()`` - see the discussion below.
 
@@ -233,8 +300,6 @@ You can change this by specifying ``AddControllersAsServices()`` when you regist
         builder.RegisterType<MyController>().PropertiesAutowired();
       }
     }
-
-There is a more detailed article `with a walkthrough on Filip Woj's blog <https://www.strathweb.com/2016/03/the-subtle-perils-of-controller-dependency-injection-in-asp-net-core-mvc/>`_. Note one of the commenters there `found some changes based on how RC2 handles controllers as services <https://www.strathweb.com/2016/03/the-subtle-perils-of-controller-dependency-injection-in-asp-net-core-mvc/#comment-2702995712>`_.
 
 Multitenant Support
 ===================
@@ -314,7 +379,7 @@ In standard ASP.NET Core integration and generic hosted application support ther
         // create the root-container and register global dependencies
         var containerBuilder = new ContainerBuilder();
 
-        builder.RegisterType<SomeGlobalDependency>()
+        containerBuilder.RegisterType<SomeGlobalDependency>()
           .As<ISomeGlobalDependency>()
           .InstancePerLifetimeScope();
 
@@ -322,15 +387,15 @@ In standard ASP.NET Core integration and generic hosted application support ther
 
         // The UseServiceProviderFactory call attaches the
         // Autofac provider to the generic hosting mechanism.
-          var hostOne = Host
+        var hostOne = Host
             .CreateDefaultBuilder(args)
             .UseServiceProviderFactory(new AutofacChildLifetimeScopeServiceProviderFactory(container.BeginLifetimeScope("root-one")))
             .ConfigureWebHostDefaults(webHostBuilder => {
               webHostBuilder
                 .UseContentRoot(AppContext.BaseDirectory)
                 // Each host listens to a different URL, they have the same root container to share SingleInstance
-                // things, but they each have  their own logical root lifetime scope. Registering things
-                // as `InstancePerMatchingLifetimeScope("root-one")` (the name of the scope given above)
+                // things, but they each have their own logical root lifetime scope. Registering things
+                // as InstancePerMatchingLifetimeScope("root-one") (the name of the scope given above)
                 // will result in a singleton that's ONLY used by this first host.
                 .UseUrls("http://localhost:5000")
                 .UseStartup<StartupOne>();
@@ -339,21 +404,21 @@ In standard ASP.NET Core integration and generic hosted application support ther
 
         // The UseServiceProviderFactory call attaches the
         // Autofac provider to the generic hosting mechanism.
-          var hostTwo = Host
+        var hostTwo = Host
             .CreateDefaultBuilder(args)
             .UseServiceProviderFactory(new AutofacChildLifetimeScopeServiceProviderFactory(container.BeginLifetimeScope("root-two")))
             .ConfigureWebHostDefaults(webHostBuilder => {
               webHostBuilder
                 .UseContentRoot(AppContext.BaseDirectory)
                 // As with the first host, the second host will share the root container but have its own
-                // root lifetime scope `root-two`. Things registered `InstancePerMatchingLifetimeScope("root-two")`
+                // root lifetime scope "root-two". Things registered InstancePerMatchingLifetimeScope("root-two")
                 // will be singletons ONLY used by this second host.
                 .UseUrls("http://localhost:5001")
                 .UseStartup<StartupTwo>();
             })
             .Build();
 
-        await Task.WhenAll(hostOne.RunAsync(), hostTwo.RunAsync())
+        await Task.WhenAll(hostOne.RunAsync(), hostTwo.RunAsync());
       }
     }
 
@@ -363,8 +428,7 @@ This will change how your ``Startup`` class works - you won't use a ``ContainerB
 
     public class StartupOne
     {
-      // IHostingEnvironment when running applications below ASP.NET Core 3.0
-      public Startup(IWebHostEnvironment env)
+      public StartupOne(IWebHostEnvironment env)
       {
         // Fill this in if needed...
       }
@@ -391,8 +455,7 @@ This will change how your ``Startup`` class works - you won't use a ``ContainerB
 
     public class StartupTwo
     {
-      // IHostingEnvironment when running applications below ASP.NET Core 3.0
-      public Startup(IWebHostEnvironment env)
+      public StartupTwo(IWebHostEnvironment env)
       {
         // Fill this in if needed...
       }
@@ -427,4 +490,10 @@ Using a child lifetime scope as the root is not compatible with multitenant supp
 Example
 =======
 
-There is an example project showing ASP.NET Core integration `in the Autofac examples repository <https://github.com/autofac/Examples/tree/main/src/AspNetCoreExample>`_.
+The Autofac examples repository has a runnable project for each style described above:
+
+* `AspNetCoreExample <https://github.com/autofac/Examples/tree/main/src/AspNetCoreExample>`_ - a ``Startup`` class with ``ConfigureContainer``
+* `AspNetCoreNoStartupExample <https://github.com/autofac/Examples/tree/main/src/AspNetCoreNoStartupExample>`_ - the same application under minimal hosting, with no ``Startup`` class
+* `AspNetCoreChildLifetimeScope <https://github.com/autofac/Examples/tree/main/src/AspNetCoreChildLifetimeScope>`_ - two hosts sharing one container, each rooted in its own child lifetime scope
+
+Multitenancy has its own example, `MultitenantExample.AspNetCore <https://github.com/autofac/Examples/tree/main/src/MultitenantExample.AspNetCore>`_, covered on the :doc:`multitenant applications <../advanced/multitenant>` page.

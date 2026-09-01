@@ -112,7 +112,7 @@ When Service Fabric creates a service or actor, the integration creates a child 
 
 The context objects that Service Fabric supplies are registered into that child scope rather than into the root container. That includes ``ServiceContext`` and its ``StatelessServiceContext`` / ``StatefulServiceContext`` forms, along with ``ActorService`` and ``ActorId`` for actors.
 
-This has an important consequence: **a component that depends on ``ServiceContext`` cannot be registered as ``SingleInstance()``**. A single instance component is rooted in the container, where those context registrations don't exist, so resolving it fails with ``The requested service 'System.Fabric.ServiceContext' has not been registered``. Injecting ``Lazy<T>`` or ``Func<T>`` doesn't help, because the problem is where the component lives, not when it's created.
+This has an important consequence: **a component that depends on** ``ServiceContext`` **cannot be registered as** ``SingleInstance()``. A single instance component is rooted in the container, where those context registrations don't exist, so resolving it fails with ``The requested service 'System.Fabric.ServiceContext' has not been registered``. Injecting ``Lazy<T>`` or ``Func<T>`` doesn't help, because the problem is where the component lives, not when it's created.
 
 Register such components against the service scope instead:
 
