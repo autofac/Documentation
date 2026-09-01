@@ -453,7 +453,7 @@ For your consuming components, you can also use attributed metadata if you don't
       public CustomerNotifier([WithMetadata("SendAllowed", "notification")] ISender notificationStrategy) { ... }
     }
 
-If your consuming components use the attribute, you need to register them ``WithAttributeFilter``:
+If your consuming components use the attribute, you need to register them ``WithAttributeFiltering``:
 
 .. sourcecode:: csharp
 
@@ -461,8 +461,8 @@ If your consuming components use the attribute, you need to register them ``With
     {
       protected override void Load(ContainerBuilder builder)
       {
-        builder.RegisterType<ShippingProcessor>().WithAttributeFilter();
-        builder.RegisterType<CustomerNotifier>().WithAttributeFilter();
+        builder.RegisterType<ShippingProcessor>().WithAttributeFiltering();
+        builder.RegisterType<CustomerNotifier>().WithAttributeFiltering();
       }
     }
 
