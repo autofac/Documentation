@@ -2,7 +2,7 @@
 Type Interceptors
 =================
 
-`Castle.Core <https://github.com/castleproject/Core>`_, part of `the Castle Project <http://castleproject.org>`_, provides a method interception framework called "DynamicProxy."
+`Castle.Core <https://github.com/castleproject/Core>`_, part of `the Castle Project <https://castleproject.org>`_, provides a method interception framework called "DynamicProxy."
 
 The ``Autofac.Extras.DynamicProxy`` integration package enables method calls on Autofac components to be intercepted by other components. Common use-cases are transaction handling, logging, and declarative security. You can use ``Autofac.Extras.DynamicProxy2`` for Autofac versions up to 4.0.0
 

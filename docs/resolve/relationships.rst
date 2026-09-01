@@ -10,7 +10,7 @@ For example, when Autofac is injecting a constructor parameter of type ``IEnumer
 
 Note: To override this default behavior *it is still possible to register explicit implementations of these types*.
 
-[Content on this document based on Nick Blumhardt's blog article `The Relationship Zoo <http://nblumhardt.com/2010/01/the-relationship-zoo/>`_.]
+[Content on this document based on Nick Blumhardt's blog article `The Relationship Zoo <https://nblumhardt.com/2010/01/the-relationship-zoo/>`_.]
 
 
 Supported Relationship Types

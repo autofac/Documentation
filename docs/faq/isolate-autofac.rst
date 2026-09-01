@@ -12,7 +12,7 @@ It can be desirable to try to keep references to the Autofac assemblies and IoC 
 Application Startup
 ===================
 
-Application startup is where your IoC container is built up and registrations are made. This is also where the IoC container is hooked into the `composition root <http://blog.ploeh.dk/2011/07/28/CompositionRoot/>`_ for the application. For console apps, this is the ``Main`` method; for ASP.NET apps this is the ``Startup`` class or the ``Global.asax``; for other applications there are other entry points.
+Application startup is where your IoC container is built up and registrations are made. This is also where the IoC container is hooked into the `composition root <https://blog.ploeh.dk/2011/07/28/CompositionRoot/>`_ for the application. For console apps, this is the ``Main`` method; for ASP.NET apps this is the ``Startup`` class or the ``Global.asax``; for other applications there are other entry points.
 
 You shouldn't try to separate the IoC container from this section of your application. This is the point where it specifically hooks into things. If you're trying to get Autofac away from your ``Global.asax`` or out of your ``Startup`` class (that is, you're trying to remove the Autofac package/assembly reference from the assembly with this code in it), **save yourself some time and don't do that**. You will potentially sink a lot of time into writing abstractions and wrappers around things only to replicate a lot of Autofac-specific syntax and capabilities.
 
@@ -68,7 +68,7 @@ However, there are a few areas where you may find yourself tied to Autofac...
 
 Service Location
 ----------------
-Some frameworks are lacking composition root hooks to enable all dependency injection hooks at the app startup level. One example of this is classic ASP.NET ``HttpModules`` - there is generally no hook that allows you to inject dependencies into a module. In cases like this, you may find use of service location useful (though you should definitely minimize service location where possible `given it's an anti-pattern <http://blog.ploeh.dk/2010/02/03/ServiceLocatorisanAnti-Pattern/>`_).
+Some frameworks are lacking composition root hooks to enable all dependency injection hooks at the app startup level. One example of this is classic ASP.NET ``HttpModules`` - there is generally no hook that allows you to inject dependencies into a module. In cases like this, you may find use of service location useful (though you should definitely minimize service location where possible `given it's an anti-pattern <https://blog.ploeh.dk/2010/02/03/ServiceLocatorisanAnti-Pattern/>`_).
 
 In cases where you need a service locator but don't want to tie to Autofac, consider using an abstraction like `CommonServiceLocator <https://www.nuget.org/packages/CommonServiceLocator/>`_ or `Microsoft.Extensions.DependencyInjection <https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection/>`_. In ASP.NET MVC applications, you're already provided with a ``DependencyResolver`` for service location; other application types may have similar abstractions already provided. By using one of these abstractions, you can remove the Autofac reference... though you'll have to keep a reference to the abstraction.
 

@@ -65,7 +65,7 @@ Option 1: Redesign Your Interfaces
 
 When you run into a situation where you have a bunch of components that implement identical services but *they can't be treated identically*, **this is generally an interface design problem**.
 
-From an object oriented development perspective, you'd want your objects to adhere to the `Liskov substitution principle <http://en.wikipedia.org/wiki/Liskov_substitution_principle>`_ and this sort of breaks that.
+From an object oriented development perspective, you'd want your objects to adhere to the `Liskov substitution principle <https://en.wikipedia.org/wiki/Liskov_substitution_principle>`_ and this sort of breaks that.
 
 Think about it from another angle: the standard "animal" example in object orientation. Say you have some animal objects and you are creating a special class that represents a bird cage that can hold small birds:
 

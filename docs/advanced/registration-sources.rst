@@ -4,7 +4,7 @@ Registration Sources
 
 A *registration source* is a way to dynamically feed registrations into an Autofac component context (e.g., container or lifetime scope).
 
-Registration sources are created by implementing the ``IRegistrationSource`` interface. Many of the Autofac features are implemented this way - for example, the :doc:`implicit relationship types <../resolve/relationships>` are added via registration sources. (You didn't think we actually registered every single type of collection manually into the container, did you?) `Nick Blumhardt has a great blog article about how this works. <http://nblumhardt.com/2010/01/declarative-context-adapters-autofac2/>`_
+Registration sources are created by implementing the ``IRegistrationSource`` interface. Many of the Autofac features are implemented this way - for example, the :doc:`implicit relationship types <../resolve/relationships>` are added via registration sources. (You didn't think we actually registered every single type of collection manually into the container, did you?) `Nick Blumhardt has a great blog article about how this works. <https://nblumhardt.com/2010/01/declarative-context-adapters-autofac2/>`_
 
 Registration sources are great when you don't have a finite set of registrations you can add to a container. Many times, :doc:`assembly scanning <../register/scanning>` and/or :doc:`use of modules <../configuration/modules>` can address dynamic registration concerns... but when all else fails or those means don't accomplish what you're looking to do, a registration source may be the way to go.
 

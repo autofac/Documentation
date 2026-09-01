@@ -9,7 +9,7 @@ An aggregate service is useful when you need to treat a set of dependencies as o
 
 An example is super- and subclasses where the superclass have one or more constructor-injected dependencies. The subclasses must usually inherit these dependencies, even though they might only be useful to the superclass. With an aggregate service, the superclass constructor parameters can be collapsed into one parameter, reducing the repetitiveness in subclasses. Another important side effect is that subclasses are now insulated against changes in the superclass dependencies, introducing a new dependency in the superclass means only changing the aggregate service definition.
 
-The pattern and this example `are both further elaborated here <http://peterspattern.com/dependency-injection-and-class-inheritance>`_.
+The pattern and this example `are both further elaborated here <https://peterspattern.com/dependency-injection-and-class-inheritance>`_.
 
 Aggregate services can be implemented by hand, e.g. by building a class with constructor-injected dependencies and exposing those as properties. Writing and maintaining aggregate service classes and accompanying tests can quickly get tedious though. The AggregateService extension to Autofac lets you generate aggregate services directly from interface definitions without having to write any implementation.
 
@@ -157,7 +157,7 @@ Because the implementation is ordinary, statically-compiled C#, this path involv
 Dynamic Proxy (Fallback)
 --------------------------
 
-When the generator can't statically determine the aggregate service interface, the implementation is generated at runtime instead, using DynamicProxy from `the Castle Project <http://castleproject.org>`_. Given the interface, a proxy is generated implementing it, translating calls to properties and methods into ``Resolve`` calls on an Autofac context.
+When the generator can't statically determine the aggregate service interface, the implementation is generated at runtime instead, using DynamicProxy from `the Castle Project <https://castleproject.org>`_. Given the interface, a proxy is generated implementing it, translating calls to properties and methods into ``Resolve`` calls on an Autofac context.
 
 The fallback is used when the interface isn't visible to the generator at compile time, for example:
 
@@ -184,7 +184,7 @@ Performance Considerations
 
 When the source generator produces the implementation, method and property access is a direct, statically-compiled ``Resolve`` call with no proxy indirection - the fastest path and the recommended default.
 
-When the dynamic proxy fallback is used, method calls pass through a dynamic proxy, so there is a small but non-zero amount of overhead on each method call. A performance study on Castle DynamicProxy vs other frameworks can be found `here <http://kozmic.pl/2009/03/31/dynamic-proxy-frameworks-comparison-update/>`_.
+When the dynamic proxy fallback is used, method calls pass through a dynamic proxy, so there is a small but non-zero amount of overhead on each method call. A performance study on Castle DynamicProxy vs other frameworks can be found `here <https://kozmic.pl/2009/03/31/dynamic-proxy-frameworks-comparison-update/>`_.
 
 .. _aggregate_services_aot:
 

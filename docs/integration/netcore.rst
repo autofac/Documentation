@@ -2,7 +2,7 @@
 .NET Core
 ============
 
-.NET Core comes with a `conforming container <http://blog.ploeh.dk/2014/05/19/conforming-container/>`_ in the form of `Microsoft.Extensions.DependencyInjection <https://github.com/aspnet/DependencyInjection>`_. The ``Autofac.Extensions.DependencyInjection`` package implements the abstractions for this to provide DI via Autofac.
+.NET Core comes with a `conforming container <https://blog.ploeh.dk/2014/05/19/conforming-container/>`_ in the form of `Microsoft.Extensions.DependencyInjection <https://github.com/aspnet/DependencyInjection>`_. The ``Autofac.Extensions.DependencyInjection`` package implements the abstractions for this to provide DI via Autofac.
 
 The integration with :doc:`ASP.NET Core <aspnetcore>` is very similar to this since the whole framework has unified the abstraction around dependency injection. Our :doc:`ASP.NET Core integration docs<aspnetcore>` have more info on specific topics relating to ASP.NET Core (and generically hosted application) usage.
 

@@ -36,12 +36,12 @@ Autofac infers implementation type from the expressions you use to register comp
 Use Constructor Injection
 =========================
 
-The concept of using constructor injection for required dependencies and property injection for optional dependencies is quite well known. An alternative, however, is to use the `"Null Object" <http://en.wikipedia.org/wiki/Null_Object_pattern>`_ or `"Special Case" <http://martinfowler.com/eaaCatalog/specialCase.html>`_ pattern to provide default, do-nothing implementations for the optional service. This prevents the possibility of special-case code in the implementation of the component (e.g. ``if (Logger != null) Logger.Log("message");``).
+The concept of using constructor injection for required dependencies and property injection for optional dependencies is quite well known. An alternative, however, is to use the `"Null Object" <https://en.wikipedia.org/wiki/Null_Object_pattern>`_ or `"Special Case" <https://martinfowler.com/eaaCatalog/specialCase.html>`_ pattern to provide default, do-nothing implementations for the optional service. This prevents the possibility of special-case code in the implementation of the component (e.g. ``if (Logger != null) Logger.Log("message");``).
 
 Use Relationship Types, Not Service Locators
 ============================================
 
-Giving components access to the container, storing it in a public static property, or making functions like ``Resolve()`` available on a global "IoC" class defeats the purpose of using dependency injection. Such designs have more in common with the `Service Locator <http://martinfowler.com/articles/injection.html#UsingAServiceLocator>`_ pattern.
+Giving components access to the container, storing it in a public static property, or making functions like ``Resolve()`` available on a global "IoC" class defeats the purpose of using dependency injection. Such designs have more in common with the `Service Locator <https://martinfowler.com/articles/injection.html#UsingAServiceLocator>`_ pattern.
 
 If components have a dependency on the container (or on a lifetime scope), look at how they're using the container to retrieve services, and add those services to the component's (dependency injected) constructor arguments instead.
 
@@ -55,7 +55,7 @@ Autofac overrides component registrations by default. This means that an applica
 Use Profilers for Performance Checking
 ======================================
 
-Before doing any performance optimization or making assumptions about potential memory leaks, **always run a profiler** like `SlimTune <http://code.google.com/p/slimtune/>`_, `dotTrace <http://www.jetbrains.com/profiler/>`_, or `ANTS <http://www.red-gate.com/products/dotnet-development/ants-performance-profiler/>`_ to see where time is truly being spent. It might not be where you think.
+Before doing any performance optimization or making assumptions about potential memory leaks, **always run a profiler** like `SlimTune <http://code.google.com/p/slimtune/>`_, `dotTrace <https://www.jetbrains.com/profiler/>`_, or `ANTS <https://www.red-gate.com/products/dotnet-development/ants-performance-profiler/>`_ to see where time is truly being spent. It might not be where you think.
 
 Register Once, Resolve Many
 ===========================

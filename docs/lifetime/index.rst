@@ -9,7 +9,7 @@ You may recall from the :doc:`registration topic <../register/registration>` tha
 - How can I ensure a singleton is correctly shared in my application?
 - How do I control any of this?
 
-Note: Most of the content here is based on `Nick Blumhardt's Autofac lifetime primer <http://nblumhardt.com/2011/01/an-autofac-lifetime-primer/>`_. While some things in Autofac have changed over time, the concepts described there remain valid and may be helpful in understanding lifetime scopes.
+Note: Most of the content here is based on `Nick Blumhardt's Autofac lifetime primer <https://nblumhardt.com/2011/01/an-autofac-lifetime-primer/>`_. While some things in Autofac have changed over time, the concepts described there remain valid and may be helpful in understanding lifetime scopes.
 
 Basic Concepts and Terminology
 ==============================

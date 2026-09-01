@@ -5,9 +5,9 @@ Adapters and Decorators
 Adapters
 ========
 
-The `adapter pattern <http://en.wikipedia.org/wiki/Adapter_pattern>`_ takes one service contract and adapts it (like a wrapper) to another.
+The `adapter pattern <https://en.wikipedia.org/wiki/Adapter_pattern>`_ takes one service contract and adapts it (like a wrapper) to another.
 
-This `introductory article <http://nblumhardt.com/2010/04/lightweight-adaptation-coming-soon/>`_ describes a concrete example of the adapter pattern and how you can work with it in Autofac.
+This `introductory article <https://nblumhardt.com/2010/04/lightweight-adaptation-coming-soon/>`_ describes a concrete example of the adapter pattern and how you can work with it in Autofac.
 
 Autofac provides built-in adapter registration so you can register a set of services and have them each automatically adapted to a different interface.
 
@@ -39,7 +39,7 @@ Autofac provides built-in adapter registration so you can register a set of serv
 Decorators
 ==========
 
-The `decorator pattern <http://en.wikipedia.org/wiki/Decorator_pattern>`_ is somewhat similar to the adapter pattern, where one service "wraps" another. However, in contrast to adapters, decorators expose the *same service* as what they're decorating. The point of using decorators is to add functionality to an object without changing the object's signature.
+The `decorator pattern <https://en.wikipedia.org/wiki/Decorator_pattern>`_ is somewhat similar to the adapter pattern, where one service "wraps" another. However, in contrast to adapters, decorators expose the *same service* as what they're decorating. The point of using decorators is to add functionality to an object without changing the object's signature.
 
 Autofac provides built-in decorator registration so you can register services and have them automatically wrapped with decorator classes.
 
@@ -160,7 +160,7 @@ Classic Syntax
 
 The "classic syntax" has been around since Autofac 2.4 and still works today. It's more complicated than the newer syntax but if you have some existing code that uses it, that code will continue to work.
 
-This `article <http://nblumhardt.com/2011/01/decorator-support-in-autofac-2-4/>`_ has some details about how decorators work in Autofac.
+This `article <https://nblumhardt.com/2011/01/decorator-support-in-autofac-2-4/>`_ has some details about how decorators work in Autofac.
 
 .. sourcecode:: csharp
 
