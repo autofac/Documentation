@@ -15,7 +15,7 @@ Autofac can help you implement a pool of components in your application without 
     nothing to gain by adding Autofac Pooling on top of those types.
 
 Getting Started
----------------
+===============
 
 To start creating pooled Autofac registrations, first add a reference to `the Autofac.Pooling NuGet package <https://nuget.org/packages/Autofac.Pooling>`_.
 
@@ -70,7 +70,7 @@ Like any other dependency, you can use these services in your constructors to in
 When the current :ref:`lifetime scope <lifetime-instance-scope-per-lifetime-scope>` ends, the retrieved instance is returned to the pool.
 
 Resetting Pooled Instances Between Resolves
--------------------------------------------
+===========================================
 
 With pooled components, there is often a need to do some work to reset the object when it is retrieved from or returned to the pool.
 
@@ -103,7 +103,7 @@ The ``OnGetFromPool`` method is passed the temporary ``IComponentContext`` of th
 If you cannot modify the component you are pooling, but need to have custom behavior similar to this, you can :ref:`implement a custom pool policy <pooled-instances-policies>`.
 
 Pool Capacity
--------------
+=============
 
 Each pooled registration has the notion of a pool capacity.  This capacity defaults to ``Environment.ProcessorCount * 2``, but can easily be customized using overloads of the extension methods:
 
@@ -132,7 +132,7 @@ If you, in fact, do want your pool to have custom behavior like blocking until a
     The behavior of that pool informs a lot of the behavior of Autofac.Pooling.
 
 Matching Lifetime Scopes
-------------------------
+========================
 
 In the same way that you can configure a normal registration to be scoped to a :ref:`matching lifetime scope <lifetime-instance-scope-per-matching-lifetime-scope>`, you can configure a pooled registration to be scoped in the same way:
 
@@ -149,7 +149,7 @@ When the tagged lifetime scope is disposed, the instance is returned to the pool
 .. _pooled-instances-policies:
 
 Pool Policies
--------------
+=============
 
 If you need some custom behavior that is invoked when instances are retrieved from, or returned to, the pool, you can implement ``IPooledRegistrationPolicy<TPooledObject>`` or override ``DefaultPooledRegistrationPolicy<TPooledObject>``.
 

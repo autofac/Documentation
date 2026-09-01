@@ -5,7 +5,7 @@ Circular Dependencies
 Circular dependencies are mutual runtime dependencies between components.
 
 Property/Property Dependencies
-------------------------------
+==============================
 
 This is when you have one class (``DependsByProperty1``) that takes a property dependency of a second type (``DependsByProperty2``), and the second type (``DependsByProperty2``) has a property dependency of the first type (``DependsByProperty1``).
 
@@ -40,7 +40,7 @@ Example:
       .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
 
 Constructor/Property Dependencies
----------------------------------
+=================================
 
 This is when you have one class (``DependsByCtor``) that takes a constructor dependency of a second type (``DependsByProperty``), and the second type (``DependsByProperty``) has a property dependency of the first type (``DependsByCtor``).
 
@@ -74,7 +74,7 @@ Example:
       .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
 
 Constructor/Constructor Dependencies
-------------------------------------
+====================================
 
 Two types with circular constructor dependencies are **not supported**. You will get an exception when you try to resolve types registered in this manner.
 

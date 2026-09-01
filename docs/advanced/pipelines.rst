@@ -1,12 +1,13 @@
+=================
 Resolve Pipelines
------------------
+=================
 
 In Autofac (from version 6.0 onwards), the work of actually resolving an instance of a registration when a service is requested is implemented as a **pipeline**, consisting of multiple **middleware**. Each individual middleware represents some part of the process required to construct or locate your instance and return it to you.
 
 For advanced customization scenarios, Autofac allows you to add your own middleware into the pipeline to intercept, short-circuit or extend the existing resolve behavior.
 
 Service Pipelines vs Registration Pipelines
--------------------------------------------
+===========================================
 
 An individual resolve request actually ends up invoking two different pipelines. The Service Pipeline, and the Registration Pipeline.
 
@@ -27,7 +28,7 @@ The Registration Pipeline is attached to each individual registration, and appli
 We can use this notion of separated pipelines to attach behavior to either all invocations of a given service (:doc:`decorators <adapters-decorators>` do this), or to an individual registration (for example, adding :doc:`lifetime events </lifetime/events>` to the pipeline).
 
 Pipeline Phases
----------------
+===============
 
 When we add middleware to a pipeline, we need to specify which **phase** of the pipeline the middleware should run in.
 
@@ -74,7 +75,7 @@ Here's the available pipeline phases, broken up into service phases and registra
     you will get an error. You need to use the appropriate phase depending on which pipeline you are adding to.
 
 Adding Registration Middleware
-------------------------------
+==============================
 
 Lets take a look at how we can insert our own middleware into the registration pipeline when we create a registration, with a simple 'Hello World' lambda middleware that prints some information to the console:
 
@@ -103,7 +104,7 @@ You have access to the created instance after ``next`` returns. This is because 
 If you don't invoke that ``next`` callback, the pipeline ends, and we return back up to the caller.
 
 Defining Middleware Classes
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+---------------------------
 
 In addition to providing middleware via a lambda function, you can also define your own middleware classes, and add instances of those to the pipeline:
 
@@ -134,7 +135,7 @@ In addition to providing middleware via a lambda function, you can also define y
 The two ways of adding middleware behave identically, but defining a class may help if you have complex middleware.
 
 Adding Middleware to all Registrations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------------------
 
 If you want to add a piece of middleware to all registrations, you can use the ``Registered`` event in the same way you would have added other shared registration behavior:
 
@@ -153,7 +154,7 @@ If you want to add a piece of middleware to all registrations, you can use the `
 
 
 ResolveRequestContext
----------------------
+=====================
 
 The context object passed into all middleware is an instance of ``ResolveRequestContext``. This object stores the initial attributes of a resolve request, and any properties updated while the request executes.
 
@@ -172,7 +173,7 @@ You can use this context to:
 
 
 Adding Service Middleware
--------------------------
+=========================
 
 Service middleware is attached to a service, rather than a specific registration. So when we add service middleware we can add behavior for all resolves of the service, without caring which registration is providing the instance.
 
@@ -197,7 +198,7 @@ Just like with registration middleware, you can register middleware classes inst
     builder.RegisterServiceMiddleware<IMyService>(new MyServiceMiddleware());
 
 Service Middleware Sources
---------------------------
+==========================
 
 In a similar way to :doc:`registration sources <registration-sources>`, you can add a **service middleware source** if you want to add service middleware dynamically at runtime.
 

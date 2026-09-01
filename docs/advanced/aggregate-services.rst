@@ -3,7 +3,7 @@ Aggregate Services
 ==================
 
 Introduction
-------------
+============
 
 An aggregate service is useful when you need to treat a set of dependencies as one dependency. When a class depends on several constructor-injected services, or have several property-injected services, moving those services into a separate class yields a simpler API.
 
@@ -14,7 +14,7 @@ The pattern and this example `are both further elaborated here <http://peterspat
 Aggregate services can be implemented by hand, e.g. by building a class with constructor-injected dependencies and exposing those as properties. Writing and maintaining aggregate service classes and accompanying tests can quickly get tedious though. The AggregateService extension to Autofac lets you generate aggregate services directly from interface definitions without having to write any implementation.
 
 Getting Started
----------------
+===============
 
 First, add a reference to `the Autofac.Extras.AggregateService NuGet package <https://nuget.org/packages/Autofac.Extras.AggregateService>`_, which brings in everything you need - including the source generator that produces the aggregate service implementations.
 
@@ -84,12 +84,12 @@ Finally, we register the aggregate service interface.
 The interface for the aggregate service will automatically have an implementation generated for you and the dependencies will be filled in as expected. By default that implementation is produced at compile time by a source generator; see `How It Works`_ for the details and for the cases where a runtime fallback is used instead.
 
 How Aggregate Services are Resolved
------------------------------------
+===================================
 
 The members of an aggregate service interface are translated into resolutions according to their shape. The samples below show the functionally equivalent hand-written code for each case.
 
 Properties
-~~~~~~~~~~
+----------
 
 Read-only properties mirror the behavior of regular constructor-injected dependencies. The type of each property will be resolved and cached in the aggregate service when the aggregate service instance is constructed.
 
@@ -113,7 +113,7 @@ Here is a functionally equivalent sample:
     }
 
 Methods
-~~~~~~~
+-------
 
 Methods will behave like factory delegates and will translate into a resolve call on each invocation. The method return type will be resolved, passing on any parameters to the resolve call.
 
@@ -131,17 +131,17 @@ A functionally equivalent sample of the method call:
     }
 
 Property Setters and Void Methods
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------------
 
 Property setters and methods without return types do not make sense in the aggregate service. Their presence in the aggregate service interface does not prevent the implementation from being generated. Calling such members, however, will throw an exception.
 
 How It Works
-------------
+============
 
 There are two ways an aggregate service implementation can be produced: a build-time source generator (the default and preferred path) and a runtime dynamic proxy (the fallback). Both produce the same behavior described above; they differ in *when* and *how* the implementation is created.
 
 Source Generation (Preferred)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------
 
 The ``Autofac.Extras.AggregateService`` package includes a `C# source generator <https://learn.microsoft.com/dotnet/csharp/roslyn-sdk/source-generators-overview>`_ that ships as an analyzer inside the package. You don't need to reference anything extra - when you add the package, the generator is active automatically.
 
@@ -155,7 +155,7 @@ For each aggregate service interface it can identify from these call sites, it e
 Because the implementation is ordinary, statically-compiled C#, this path involves no runtime proxy, no per-call reflection, and is compatible with trimming and Native AOT. See :ref:`aggregate_services_aot` below.
 
 Dynamic Proxy (Fallback)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------
 
 When the generator can't statically determine the aggregate service interface, the implementation is generated at runtime instead, using DynamicProxy from `the Castle Project <http://castleproject.org>`_. Given the interface, a proxy is generated implementing it, translating calls to properties and methods into ``Resolve`` calls on an Autofac context.
 
@@ -168,7 +168,7 @@ The fallback is used when the interface isn't visible to the generator at compil
 The fallback preserves behavior in every case, but it relies on runtime code generation, so it is **not** compatible with trimming or Native AOT.
 
 What the Generator Supports
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------
 
 The generator emits implementations for read-only properties, properties with setters (the setter throws, as described above), methods with return values (including generic methods and methods with generic constraints), ``void`` methods (which throw), and ``in``/``params`` method parameters. It also handles open generic aggregate service interfaces.
 
@@ -180,7 +180,7 @@ A few shapes always use the dynamic proxy fallback:
 When the generator skips an interface it can otherwise see, it reports an informational diagnostic (``AGSVC001``) at the registration call site so the fallback isn't silent.
 
 Performance Considerations
---------------------------
+==========================
 
 When the source generator produces the implementation, method and property access is a direct, statically-compiled ``Resolve`` call with no proxy indirection - the fastest path and the recommended default.
 
@@ -189,7 +189,7 @@ When the dynamic proxy fallback is used, method calls pass through a dynamic pro
 .. _aggregate_services_aot:
 
 Trimming and Native AOT
------------------------
+=======================
 
 Aggregate services work with :doc:`trimming and Native AOT <native-aot-trimming>` as long as the implementation comes from the source generator rather than the dynamic proxy fallback. The generated implementations are ordinary compiled C# with no runtime code generation, so the common case is fully trim- and AOT-safe and produces no warnings.
 

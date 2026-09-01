@@ -121,7 +121,7 @@ Register Service Implementations
 You can register your service types in one of three ways: by type, by interface, or by name.
 
 Register By Type
-""""""""""""""""
+~~~~~~~~~~~~~~~~
 
 Your first option is to simply register the service implementation type in the container and specify that implementation type in the .svc file. **This is the most common usage.**
 
@@ -144,7 +144,7 @@ And your ``.svc`` file would specify the appropriate service implementation type
 Note that **you need to use the fully-qualified name of your service in the .svc file**, i.e. ``Service="Namespace.ServiceType, AssemblyName"``.
 
 Register by Interface
-"""""""""""""""""""""
+~~~~~~~~~~~~~~~~~~~~~
 
 Your second option is to register the contract type in the container and specify the contract in the ``.svc`` file. This is handy if you don't want to change the ``.svc`` file but do want to change the implementation type that will handle requests.
 
@@ -168,7 +168,7 @@ And your .svc file would specify the service contract type and host factory, lik
 Note that **you need to use the fully-qualified name of your contract in the .svc file**, i.e. ``Service="Namespace.IContractType, AssemblyName"``.
 
 Register by Name
-""""""""""""""""
+~~~~~~~~~~~~~~~~
 
 The third option you have is to register a named service implementation in the container and specify that service name in the ``.svc`` file. This is handy if you want even further abstraction away from the ``.svc`` file.
 
@@ -316,12 +316,12 @@ Handling InstanceContextMode.Single Services
 Using ``InstanceContextMode.Single`` is not a good idea from a scalability point of view, and allowing multiple callers to access the single instance using ``ConcurrencyMode.Multiple`` means that you also need to be careful about multiple threads accessing any shared state. If possible you should create services with ``InstanceContextMode.PerCall``.
 
 IIS/WAS Hosted
-""""""""""""""
+~~~~~~~~~~~~~~
 
 The ``AutofacServiceHostFactory`` identifies WCF services that are marked with ``InstanceContextMode.Single`` and will ensure that the ``ServiceHost`` can be provided with a singleton instance from the container. An exception will be thrown if the service in the container was not registered with the ``SingleInstance()`` lifetime scope. It is also invalid to register a ``SingleInstance()`` service in the container for a WCF service that is not marked as ``InstanceContextMode.Single``.
 
 Self-Hosted
-"""""""""""
+~~~~~~~~~~~
 
 It is possible to manually perform constructor injection for service marked with ``InstanceContextMode.Single`` when self-hosting. This is achieved by resolving a ``SingleInstance()`` service from the container and then passing that into the constructor of a manually created ``ServiceHost``.
 

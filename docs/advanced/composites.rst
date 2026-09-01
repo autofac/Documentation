@@ -112,7 +112,7 @@ Composite wrappers can have their own additional dependencies, as well as use an
     }
 
 Metadata
---------
+========
 
 Composite registrations can have their own metadata, much like a normal registration; however they do **not** expose any metadata of the individual registrations they wrap:
 
@@ -128,19 +128,19 @@ Composite registrations can have their own metadata, much like a normal registra
     var logSink = container.Resolve<Meta<ILogSink>>();
 
 Lifetime
---------
+========
 
 Composite wrappers can have their own lifetime, much like any other registration. However, you should consider the implications of making composite registrations long-living; a ``SingleInstance`` composite would ignore any additional registrations for the wrapped service made in nested lifetime scopes (for example).
 
 Decorators
-----------
+==========
 
 When using the composite pattern, decorators are **only applied to the individual implementations**, and **not** to the composite itself.
 
 So, if you register a decorator for ``ILogSink``, and have a composite registration with implementations ``FileLogSink`` and ``DbLogSink``, when you resolve ``ILogSink`` ``FileLogSink`` and ``DbLogSink`` **will** be decorated, but your composite wrapper **will not** be decorated.
 
 Composites and Collections
---------------------------
+==========================
 
 Composite registrations are **never** returned when resolving a collection of implementations, even outside of a composite wrapper:
 

@@ -5,12 +5,12 @@ Handling Concurrency
 Autofac is designed for use in highly-concurrent applications. The guidance below will help you be successful in these situations.
 
 Component Registration
-----------------------
+======================
 
 ``ContainerBuilder`` and ``ComponentRegistryBuilder`` **are not thread-safe** and are designed to be used only on a single thread at the time the application starts up. This is the most common scenario and works for almost all applications.
 
 Service Resolution
-------------------
+==================
 
 **All container operations are safe for use between multiple threads.**
 
@@ -42,22 +42,22 @@ Take care also not to initialize components with closures over the "c" parameter
 The container hierarchy mechanism further reduces locking, by maintaining local copies of the component registrations for any factory/container components. Once the initial registration copy has been made, a thread using an 'inner' container can create or access such components without blocking any other thread.
 
 Lifetime Events
----------------
+===============
 
 When making use of the LifetimeEvents available, don't call back into the container in handlers for the ``Preparing``, ``Activating`` or ``Activated`` events: use the supplied ``IComponentContext`` instead.
 
 Thread Scoped Services
-----------------------
+======================
 
 You can use Autofac to register services that are specific to a thread. The :doc:`instance lifetime scope <../lifetime/instance-scope>` page has more information on this.
 
 Internals
----------
+=========
 
 Keeping in mind the guidelines above, here's a little more specific information about thread safety and locking in Autofac.
 
 Thread-Safe Types
------------------
+=================
 
 The following types are safe for concurrent access by multiple threads:
 
@@ -75,7 +75,7 @@ The following types are designed for single-threaded access at configuration tim
 So, a correct Autofac application will use a ``ContainerBuilder`` on a single thread to create the container at startup. Subsequent use of the container can occur on any thread.
 
 Deadlock Avoidance
-------------------
+==================
 
 Autofac is designed in such a way that deadlocks won't occur in normal use. This section is a guide for maintainers or extension writers.
 

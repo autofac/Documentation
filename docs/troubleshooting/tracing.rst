@@ -13,7 +13,7 @@ Autofac 6.0 introduced diagnostics support in the form of `System.Diagnostics.Di
 If you're interested in metrics for performance measurement, :doc:`Autofac also provides metrics <metrics>`.
 
 Quick Start
------------
+===========
 
 The easiest way to get started with diagnostics is to use the ``Autofac.Diagnostics.DefaultDiagnosticTracer`` class. This tracer will generate a hierarchical trace of resolution operations that you can use in troubleshooting.
 
@@ -71,7 +71,7 @@ If you don't have direct access to the container (e.g., in ASP.NET Core) you can
     }
 
 Default Diagnostic Tracer
--------------------------
+=========================
 
 The quick start above shows how you can get going with the ``Autofac.Diagnostics.DefaultDiagnosticTracer``.
 
@@ -165,7 +165,7 @@ An error trace will include where the error occurred and indicate failure::
 See how the return trip through the middleware changed to a ``X-`` in there? We know the error happened while executing the lambda. You can use these hints to see exactly where in the pipeline things are failing.
 
 DOT Graph Tracer
-----------------
+================
 
 In addition to the ``DefaultDiagnosticTracer`` we provide a graphing tracer in the ``Autofac.Diagnostics.DotGraph`` package.
 
@@ -268,7 +268,7 @@ Errors will also be highlighted so you can see where the error occurs.
 In this case, you can see the trace all the way down to the location where it failed is highlighted red and bold. You can also see the exception type and message.
 
 Custom Tracers
---------------
+==============
 
 Using ``System.Diagnostics.DiagnosticSource`` in Autofac allows you to create your own custom tracer that can handle various events and generate the data that interests you.
 

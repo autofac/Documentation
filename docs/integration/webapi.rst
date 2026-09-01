@@ -131,7 +131,7 @@ Implement the Filter Interface
 Instead of deriving from one of the existing Web API filter attributes your class implements the appropriate filter interface defined in the integration.
 
 Standard Action Filter Interface
-********************************
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The ``IAutofacActionFilter`` interface lets you define a filter that gets invoked before and after the execution of your action, in a similar way as if you derived from ``ActionFilterAttribute``.
 
@@ -164,7 +164,7 @@ The filter below is an action filter and implements ``IAutofacActionFilter`` ins
 Note in the sample there's no actual async code that runs so it returns ``Task.FromResult(0)``, which is a common way to return an "empty task." If your filter does require async code, you can return a real ``Task`` object or use ``async``/``await`` code just like any other asynchronous method.
 
 Continuation Action Filter Interface
-*************************************
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In addition to the regular ``IAutofacActionFilter`` in the example above, there is also an ``IAutofacContinuationActionFilter``. This interface also functions as an Action Filter, but rather than having an ``OnActionExecutingAsync`` and ``OnActionExecutedAsync`` method, it follows the continuation style with a single ``ExecuteActionFilterAsync`` method that takes a callback to run the next filter in the chain.
 
