@@ -2,13 +2,9 @@
 Azure Functions
 ===============
 
-Azure Functions supports dependency injection with the Microsoft dependency
-injection framework out of the box, but you can make it work with Autofac with a
-bit of bootstrapping code.
+Azure Functions supports dependency injection with the Microsoft dependency injection framework out of the box, but you can make it work with Autofac with a bit of bootstrapping code.
 
-We recommend reading the `official Microsoft documentation
-<https://docs.microsoft.com/en-us/azure/azure-functions/functions-dotnet-dependency-injection>`_
-for an overview of dependency injection in the context of Azure Functions.
+We recommend reading the `official Microsoft documentation <https://docs.microsoft.com/en-us/azure/azure-functions/functions-dotnet-dependency-injection>`_ for an overview of dependency injection in the context of Azure Functions.
 
 .. contents::
   :local:
@@ -16,20 +12,14 @@ for an overview of dependency injection in the context of Azure Functions.
 Overview of Steps
 =================
 
-#. Install Autofac, ``Autofac.Extensions.DependencyInjection``, and
-   ``Microsoft.Azure.Functions.Extensions`` from NuGet.
-#. Add an Autofac-based job activator to create instances of your function
-   classes.
-#. Create a ``Startup`` class where you register your components and replace the
-   default job activator.
+#. Install Autofac, ``Autofac.Extensions.DependencyInjection``, and ``Microsoft.Azure.Functions.Extensions`` from NuGet.
+#. Add an Autofac-based job activator to create instances of your function classes.
+#. Create a ``Startup`` class where you register your components and replace the default job activator.
 
 Autofac Job Activator
 =====================
 
-A job activator is responsible for instantiating the classes that hold your
-functions. Add the following code to your project — it's a job activator that
-resolves the appropriate class from an Autofac lifetime scope. We'll implement
-``LifetimeScopeWrapper`` and ``LoggerModule`` in the next steps.
+A job activator is responsible for instantiating the classes that hold your functions. Add the following code to your project — it's a job activator that resolves the appropriate class from an Autofac lifetime scope. We'll implement ``LifetimeScopeWrapper`` and ``LoggerModule`` in the next steps.
 
 .. sourcecode:: csharp
 
@@ -64,9 +54,7 @@ resolves the appropriate class from an Autofac lifetime scope. We'll implement
         }
     }
 
-Next, implement ``LifetimeScopeWrapper``. This class is resolved from the
-``IServiceCollection`` and allows us to dispose the Autofac lifetime scope after
-the function has completed.
+Next, implement ``LifetimeScopeWrapper``. This class is resolved from the ``IServiceCollection`` and allows us to dispose the Autofac lifetime scope after the function has completed.
 
 .. sourcecode:: csharp
 
@@ -85,9 +73,7 @@ the function has completed.
       }
   }
 
-Special logic is needed for us to be able to resolve ``ILogger`` because certain
-logger factories are not initialized until after the ``Startup`` class has run.
-We can work around this by adding the following code.
+Special logic is needed for us to be able to resolve ``ILogger`` because certain logger factories are not initialized until after the ``Startup`` class has run. We can work around this by adding the following code.
 
 .. sourcecode:: csharp
 
@@ -112,18 +98,14 @@ We can work around this by adding the following code.
         }
     }
 
-``LoggerModule`` should be included in your project even if you don't use
-``ILogger`` directly, since this interface is referenced by many of Microsoft's
-NuGet packages.
+``LoggerModule`` should be included in your project even if you don't use ``ILogger`` directly, since this interface is referenced by many of Microsoft's NuGet packages.
 
 Startup Class
 =============
 
-Finally, add a ``Startup`` class to tie everything together. This class is
-conceptually very similar to the ``Startup`` class in ASP.NET Core projects.
+Finally, add a ``Startup`` class to tie everything together. This class is conceptually very similar to the ``Startup`` class in ASP.NET Core projects.
 
-The ``FunctionsStartup`` base class is provided by the
-``Microsoft.Azure.Functions.Extensions`` NuGet package.
+The ``FunctionsStartup`` base class is provided by the ``Microsoft.Azure.Functions.Extensions`` NuGet package.
 
 .. sourcecode:: csharp
 
@@ -169,8 +151,7 @@ And that's it! Your function classes will now be resolved from Autofac.
 Example Function
 ================
 
-Here's an example of an HTTP-triggered function that uses a service from
-dependency injection. Notice that the class and ``Run`` method are not static.
+Here's an example of an HTTP-triggered function that uses a service from dependency injection. Notice that the class and ``Run`` method are not static.
 
 .. sourcecode:: csharp
 
@@ -200,8 +181,4 @@ dependency injection. Notice that the class and ``Run`` method are not static.
 Acknowledgements
 ================
 
-This guide was inspired by
-`Autofac.Extensions.DependencyInjection.AzureFunctions
-<https://github.com/junalmeida/autofac-azurefunctions>`_, a community NuGet
-package. Give ``Autofac.Extensions.DependencyInjection.AzureFunctions`` a try if
-you would prefer a NuGet package over the DIY approach presented here.
+This guide was inspired by `Autofac.Extensions.DependencyInjection.AzureFunctions <https://github.com/junalmeida/autofac-azurefunctions>`_, a community NuGet package. Give ``Autofac.Extensions.DependencyInjection.AzureFunctions`` a try if you would prefer a NuGet package over the DIY approach presented here.

@@ -2,15 +2,11 @@
 Pooled Instances
 ================
 
-Frequently, applications find that they have components that are expensive to initialize
-(like a database or external service connection of some kind), and you'd like to re-use instances
-if you can rather than have to create new ones each time.
+Frequently, applications find that they have components that are expensive to initialize (like a database or external service connection of some kind), and you'd like to re-use instances if you can rather than have to create new ones each time.
 
-This is usually referred to as maintaining a 'pool' of objects. When you want a new instance of an object,
-you get one from the pool, and when you are done with it, you return it to the pool.
+This is usually referred to as maintaining a 'pool' of objects. When you want a new instance of an object, you get one from the pool, and when you are done with it, you return it to the pool.
 
-Autofac can help you implement a pool of components in your application without you having to write your
-own pooling implementation, and making these pooled components feel more natural in the world of DI.
+Autofac can help you implement a pool of components in your application without you having to write your own pooling implementation, and making these pooled components feel more natural in the world of DI.
 
 .. note::
 
@@ -21,11 +17,9 @@ own pooling implementation, and making these pooled components feel more natural
 Getting Started
 ---------------
 
-To start creating pooled Autofac registrations, first add a reference to
-`the Autofac.Pooling NuGet package <https://nuget.org/packages/Autofac.Pooling>`_.
+To start creating pooled Autofac registrations, first add a reference to `the Autofac.Pooling NuGet package <https://nuget.org/packages/Autofac.Pooling>`_.
 
-Once you have that, you can start defining and using pooled registrations, with the new lifetime configuration
-methods, ``PooledInstancePerLifetimeScope`` and ``PooledInstancePerMatchingLifetimeScope``:
+Once you have that, you can start defining and using pooled registrations, with the new lifetime configuration methods, ``PooledInstancePerLifetimeScope`` and ``PooledInstancePerMatchingLifetimeScope``:
 
 .. sourcecode:: csharp
 
@@ -60,8 +54,7 @@ methods, ``PooledInstancePerLifetimeScope`` and ``PooledInstancePerMatchingLifet
     // Instance gets returned back to the pool again at the
     // end of the lifetime scope.
 
-Like any other dependency, you can use these services in your constructors to inject
-the pooled instance:
+Like any other dependency, you can use these services in your constructors to inject the pooled instance:
 
 .. sourcecode:: csharp
 
@@ -79,11 +72,9 @@ When the current :ref:`lifetime scope <lifetime-instance-scope-per-lifetime-scop
 Resetting Pooled Instances Between Resolves
 -------------------------------------------
 
-With pooled components, there is often a need to do some work to reset the object when it is
-retrieved from or returned to the pool.
+With pooled components, there is often a need to do some work to reset the object when it is retrieved from or returned to the pool.
 
-Autofac allows a component to be aware of when it is retrieved from or returned to the pool, by
-implementing the ``IPooledComponent`` interface:
+Autofac allows a component to be aware of when it is retrieved from or returned to the pool, by implementing the ``IPooledComponent`` interface:
 
 .. sourcecode:: csharp
 
@@ -101,8 +92,7 @@ implementing the ``IPooledComponent`` interface:
         }
     }
 
-The ``OnGetFromPool`` method is passed the temporary ``IComponentContext`` of the current resolve
-operation, plus any parameters passed to the resolve.
+The ``OnGetFromPool`` method is passed the temporary ``IComponentContext`` of the current resolve operation, plus any parameters passed to the resolve.
 
 .. warning::
 
@@ -110,14 +100,12 @@ operation, plus any parameters passed to the resolve.
     accessing the pooled component. This means that any instances you resolve from that ``IComponentContext``
     should be discarded in ``OnReturnToPool`` to prevent memory leaks.
 
-If you cannot modify the component you are pooling, but need to have custom behavior similar to this,
-you can :ref:`implement a custom pool policy <pooled-instances-policies>`.
+If you cannot modify the component you are pooling, but need to have custom behavior similar to this, you can :ref:`implement a custom pool policy <pooled-instances-policies>`.
 
 Pool Capacity
 -------------
 
-Each pooled registration has the notion of a pool capacity.  This capacity defaults to ``Environment.ProcessorCount * 2``,
-but can easily be customized using overloads of the extension methods:
+Each pooled registration has the notion of a pool capacity.  This capacity defaults to ``Environment.ProcessorCount * 2``, but can easily be customized using overloads of the extension methods:
 
 .. sourcecode:: csharp
 
@@ -126,19 +114,15 @@ but can easily be customized using overloads of the extension methods:
             .As<ICustomConnection>()
             .PooledInstancePerLifetimeScope(100);
 
-It's important to understand that **the capacity of a pool does not place a limit on the number of instances it allocates/activates**,
-or can be in use at any one time; instead it limits how many instances are **retained** by the pool.
+It's important to understand that **the capacity of a pool does not place a limit on the number of instances it allocates/activates**, or can be in use at any one time; instead it limits how many instances are **retained** by the pool.
 
-In practical terms, this means that if your pool capacity is 100, and you currently have 100 instances in use, then
-resolving another instance will just activate a brand new instance of the component, rather than blocking/failing.
+In practical terms, this means that if your pool capacity is 100, and you currently have 100 instances in use, then resolving another instance will just activate a brand new instance of the component, rather than blocking/failing.
 
-However, if you have 101 instances of the component in use, the next instance that is returned to the pool will be discarded
-rather than retained. In this situation, the ``OnReturnToPool`` method on ``IPooledComponent`` would still be called, but the instance will then immediately be thrown away.
+However, if you have 101 instances of the component in use, the next instance that is returned to the pool will be discarded rather than retained. In this situation, the ``OnReturnToPool`` method on ``IPooledComponent`` would still be called, but the instance will then immediately be thrown away.
 
 When an instance is discarded by the pool, if the object implements ``IDisposable``, ``Dispose`` will be called.
 
-If you, in fact, do want your pool to have custom behavior like blocking until a resource is available, you can :ref:`implement
-a custom pool policy <pooled-instances-policies>`.
+If you, in fact, do want your pool to have custom behavior like blocking until a resource is available, you can :ref:`implement a custom pool policy <pooled-instances-policies>`.
 
 .. note::
 
@@ -150,8 +134,7 @@ a custom pool policy <pooled-instances-policies>`.
 Matching Lifetime Scopes
 ------------------------
 
-In the same way that you can configure a normal registration to be scoped to a :ref:`matching lifetime scope <lifetime-instance-scope-per-matching-lifetime-scope>`,
-you can configure a pooled registration to be scoped in the same way:
+In the same way that you can configure a normal registration to be scoped to a :ref:`matching lifetime scope <lifetime-instance-scope-per-matching-lifetime-scope>`, you can configure a pooled registration to be scoped in the same way:
 
 .. sourcecode:: csharp
 
@@ -159,8 +142,7 @@ you can configure a pooled registration to be scoped in the same way:
            .As<ICustomConnection>()
            .PooledInstancePerMatchingLifetimeScope("tag");
 
-Pooled registrations with a matching lifetime scope result in each tagged scope retrieving its own instance from the pool, and child scopes
-sharing the same pooled instance.
+Pooled registrations with a matching lifetime scope result in each tagged scope retrieving its own instance from the pool, and child scopes sharing the same pooled instance.
 
 When the tagged lifetime scope is disposed, the instance is returned to the pool.
 
@@ -169,8 +151,7 @@ When the tagged lifetime scope is disposed, the instance is returned to the pool
 Pool Policies
 -------------
 
-If you need some custom behavior that is invoked when instances are retrieved from, or returned to, the pool, you can implement
-``IPooledRegistrationPolicy<TPooledObject>`` or override ``DefaultPooledRegistrationPolicy<TPooledObject>``.
+If you need some custom behavior that is invoked when instances are retrieved from, or returned to, the pool, you can implement ``IPooledRegistrationPolicy<TPooledObject>`` or override ``DefaultPooledRegistrationPolicy<TPooledObject>``.
 
 Here's an example of a simple policy that will block any further requests for pooled instances once the available capacity is used up:
 

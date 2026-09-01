@@ -77,8 +77,7 @@ In the component registration expression, you can make use of the incoming param
 
     builder.Register((MyConfig config) => new Worker(config));
 
-If you need access to the full list of parameters, it's available by changing the delegate signature you use for registration.
-Instead of specifying the parameter as an argument to the lambda, take in an ``IComponentContext`` and an ``IEnumerable<Parameter>``:
+If you need access to the full list of parameters, it's available by changing the delegate signature you use for registration. Instead of specifying the parameter as an argument to the lambda, take in an ``IComponentContext`` and an ``IEnumerable<Parameter>``:
 
 .. sourcecode:: csharp
 
