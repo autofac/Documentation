@@ -4,7 +4,7 @@ Azure Functions
 
 Azure Functions supports dependency injection with the Microsoft dependency injection framework out of the box, but you can make it work with Autofac with a bit of bootstrapping code.
 
-We recommend reading the `official Microsoft documentation <https://docs.microsoft.com/en-us/azure/azure-functions/functions-dotnet-dependency-injection>`_ for an overview of dependency injection in the context of Azure Functions.
+We recommend reading the `official Microsoft documentation <https://learn.microsoft.com/en-us/azure/azure-functions/functions-dotnet-dependency-injection>`_ for an overview of dependency injection in the context of Azure Functions.
 
 .. contents::
   :local:

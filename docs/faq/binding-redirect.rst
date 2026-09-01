@@ -12,7 +12,7 @@ We do this because, generally speaking, we don't want to force anyone to update 
 
 **In .NET Core this "just works."** The project system figures out the latest version of Autofac in the project (i.e., your direct reference) and redirects all bindings to that. No extra cruft, no work. Like magic.
 
-**In .NET full framework projects this results in is the need to use assembly binding redirects.** `This is the official supported way <https://msdn.microsoft.com/en-us/library/vstudio/2fc472t2.aspx>`_ to tell the .NET runtime that you need to redirect requests for one version of a strong-named assembly to a later version of that assembly. This is common enough that both NuGet and Visual Studio will, in many cases, automatically add these to your configuration files.
+**In .NET full framework projects this results in is the need to use assembly binding redirects.** `This is the official supported way <https://learn.microsoft.com/en-us/dotnet/framework/configure-apps/redirect-assembly-versions>`_ to tell the .NET runtime that you need to redirect requests for one version of a strong-named assembly to a later version of that assembly. This is common enough that both NuGet and Visual Studio will, in many cases, automatically add these to your configuration files.
 
 Here's an example of what assembly binding redirects look like:
 
@@ -53,7 +53,7 @@ Here's an example of what assembly binding redirects look like:
         </runtime>
     </configuration>
 
-Assembly binding redirects are an unfortunate side-effect of `assembly strong-naming <https://msdn.microsoft.com/en-us/library/wd40t7ad.aspx>`_. You don't need binding redirects if assemblies aren't strong-named; but there are some environments that require assemblies to be strong-named, so Autofac continues to strong-name assemblies.
+Assembly binding redirects are an unfortunate side-effect of `assembly strong-naming <https://learn.microsoft.com/en-us/dotnet/standard/assembly/strong-named>`_. You don't need binding redirects if assemblies aren't strong-named; but there are some environments that require assemblies to be strong-named, so Autofac continues to strong-name assemblies.
 
 **Even if Autofac always kept every reference up to date, you would still not escape assembly binding redirects.** Autofac integration packages, like :doc:`the Web API integration <../integration/webapi>`, rely on other strong-named packages that then have their own dependencies. For example, the `Microsoft Web API packages <https://www.nuget.org/packages/Microsoft.AspNet.WebApi.Client/>`_ rely on `Newtonsoft.Json <https://www.nuget.org/packages/Newtonsoft.Json/>`_ and they don't always keep up with the latest version. They instead specify a minimum compatible version. *If you update your local version of Newtonsoft.Json... you get a binding redirect.*
 

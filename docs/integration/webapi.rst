@@ -373,7 +373,7 @@ Once you've implemented ``System.Web.Http.ModelBinding.IModelBinder`` to handle 
 Mark Parameters With ModelBinderAttribute
 -----------------------------------------
 
-Even if you have your model binder registered, you still need to mark your parameters with the ``[ModelBinder]`` attribute so Web API knows to use a model binder instead of a media type formatter to bind your model. You don't have to specify the model binder type anymore, but you do have to mark the parameter with the attribute. `This is also mentioned in the Web API documentation. <https://docs.microsoft.com/en-us/aspnet/web-api/overview/formats-and-model-binding/parameter-binding-in-aspnet-web-api>`_
+Even if you have your model binder registered, you still need to mark your parameters with the ``[ModelBinder]`` attribute so Web API knows to use a model binder instead of a media type formatter to bind your model. You don't have to specify the model binder type anymore, but you do have to mark the parameter with the attribute. `This is also mentioned in the Web API documentation. <https://learn.microsoft.com/en-us/aspnet/web-api/overview/formats-and-model-binding/parameter-binding-in-aspnet-web-api>`_
 
 .. sourcecode:: csharp
 
@@ -516,4 +516,4 @@ The :doc:`per-request lifetime scope <../faq/per-request-scope>` topic outlines 
 Example
 =======
 
-There is an example project showing Web API in conjunction with OWIN self hosting `in the Autofac examples repository <https://github.com/autofac/Examples/tree/master/src/WebApiExample.OwinSelfHost>`_.
+There is an example project showing Web API in conjunction with OWIN self hosting `in the Autofac examples repository <https://github.com/autofac/Examples/tree/main/src/WebApiExample.OwinSelfHost>`_.

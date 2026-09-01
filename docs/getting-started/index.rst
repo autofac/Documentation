@@ -22,7 +22,7 @@ This getting started guide walks you through these steps for a simple console ap
 Structuring the Application
 ===========================
 
-The idea behind inversion of control is that, rather than tie the classes in your application together and let classes "new up" their dependencies, you switch it around so dependencies are instead passed in during class construction. `Martin Fowler has an excellent article explaining dependency injection/inversion of control <http://martinfowler.com/articles/injection.html>`_ if you want more on that.
+The idea behind inversion of control is that, rather than tie the classes in your application together and let classes "new up" their dependencies, you switch it around so dependencies are instead passed in during class construction. `Martin Fowler has an excellent article explaining dependency injection/inversion of control <https://martinfowler.com/articles/injection.html>`_ if you want more on that.
 
 For our sample app, we'll define a class that writes the current date out. However, we don't want it tied to the ``Console`` because we want to be able to test the class later or use it in a place where the console isn't available.
 
@@ -225,7 +225,7 @@ Now when you run your program...
 
 Later, if you want your application to write a different date, you could implement a different ``IDateWriter`` and then change the registration at app startup. You don't have to change any other classes. Yay, inversion of control!
 
-**Note: generally speaking, service location is largely considered an anti-pattern** `(see article) <http://blog.ploeh.dk/2010/02/03/ServiceLocatorIsAnAntiPattern.aspx>`_. That is, manually creating scopes everywhere and sprinkling use of the container through your code is not necessarily the best way to go. Using the :doc:`Autofac integration libraries <../integration/index>` you usually won't have to do what we did in the sample app above. Instead, things get resolved from a central, "top level" location in the application and manual resolution is rare. Of course, how you design your app is up to you.
+**Note: generally speaking, service location is largely considered an anti-pattern** `(see article) <https://blog.ploeh.dk/2010/02/03/ServiceLocatorIsAnAntiPattern.aspx>`_. That is, manually creating scopes everywhere and sprinkling use of the container through your code is not necessarily the best way to go. Using the :doc:`Autofac integration libraries <../integration/index>` you usually won't have to do what we did in the sample app above. Instead, things get resolved from a central, "top level" location in the application and manual resolution is rare. Of course, how you design your app is up to you.
 
 Going Further
 =============
@@ -241,7 +241,7 @@ Need Help?
 
 - You can `ask questions on StackOverflow <https://stackoverflow.com/questions/tagged/autofac>`_.
 - You can `participate in the Autofac Google Group <https://groups.google.com/forum/#forum/autofac>`_.
-- There's an introductory `Autofac tutorial <http://www.codeproject.com/KB/architecture/di-with-autofac.aspx>`_ on CodeProject.
+- There's an introductory `Autofac tutorial <https://www.codeproject.com/KB/architecture/di-with-autofac.aspx>`_ on CodeProject.
 - We have :doc:`advanced debugging tips <../troubleshooting/index>` if you want to dive deep.
 
 Building from Source

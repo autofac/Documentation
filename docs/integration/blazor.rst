@@ -4,7 +4,7 @@ Blazor
 
 
 
-`ASP.NET Core Blazor <https://docs.microsoft.com/en-gb/aspnet/core/blazor/>`_ uses the generic app hosting in ASP.NET Core 3+ but the two `hosting models <https://docs.microsoft.com/en-gb/aspnet/core/blazor/hosting-models>`_ have slightly different integrations.
+`ASP.NET Core Blazor <https://learn.microsoft.com/en-us/aspnet/core/blazor/>`_ uses the generic app hosting in ASP.NET Core 3+ but the two `hosting models <https://learn.microsoft.com/en-us/aspnet/core/blazor/hosting-models>`_ have slightly different integrations.
 
 **Server-side** implementations are configured in exactly the same way as any other `ASP.NET Core 3 <aspnetcore>`_ application.
 
@@ -33,4 +33,4 @@ This example for WebAssembly works as of March 30, 2021 with .NET 5. Example:
     }
   }
 
-Once registered, Blazor components can use `dependency injection <https://docs.microsoft.com/en-gb/aspnet/core/blazor/dependency-injection>`_ via the `standard @inject Razor directive <https://docs.microsoft.com/en-us/aspnet/core/blazor/dependency-injection?view=aspnetcore-3.0#request-a-service-in-a-component>`_.
+Once registered, Blazor components can use `dependency injection <https://learn.microsoft.com/en-us/aspnet/core/blazor/dependency-injection>`_ via the `standard @inject Razor directive <https://learn.microsoft.com/en-us/aspnet/core/blazor/dependency-injection#request-a-service-in-a-component>`_.

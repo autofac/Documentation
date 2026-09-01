@@ -36,7 +36,7 @@ Session isn't always rehydrated. If the handler being accessed (e.g., the web fo
 Unreliable Disposal
 -------------------
 
-``Session_End`` doesn't always fire. `Per the docs on SessionStateModule.End <https://msdn.microsoft.com/en-us/library/system.web.sessionstate.sessionstatemodule.end.aspx>`_, if you use out-of-proc session state you won't actually get the ``Session_End`` event, so you won't be able to clean up.
+``Session_End`` doesn't always fire. `Per the docs on SessionStateModule.End <https://learn.microsoft.com/en-us/dotnet/api/system.web.sessionstate.sessionstatemodule.end>`_, if you use out-of-proc session state you won't actually get the ``Session_End`` event, so you won't be able to clean up.
 
 How to Do It
 ============

@@ -216,7 +216,7 @@ While Autofac offers :doc:`a more first-class approach to property injection <pr
 
 The ``ResolveOptional`` method will try to resolve the value but won't throw an exception if the service isn't registered. (You will still get an exception if the service is registered but can't properly be resolved.) This is one of the options for :doc:`resolving a service <../resolve/index>`.
 
-**Property injection is not recommended in the majority of cases.** Alternatives like `the Null Object pattern <http://en.wikipedia.org/wiki/Null_Object_pattern>`_, overloaded constructors or constructor parameter default values make it possible to create cleaner, "immutable" components with optional dependencies using constructor injection.
+**Property injection is not recommended in the majority of cases.** Alternatives like `the Null Object pattern <https://en.wikipedia.org/wiki/Null_Object_pattern>`_, overloaded constructors or constructor parameter default values make it possible to create cleaner, "immutable" components with optional dependencies using constructor injection.
 
 .. _register-select-impl-by-parameter:
 

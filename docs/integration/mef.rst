@@ -2,7 +2,7 @@
 Managed Extensibility Framework (MEF)
 =====================================
 
-The Autofac MEF integration allows you to expose extensibility points in your applications using the `Managed Extensibility Framework <https://msdn.microsoft.com/en-us/library/dd460648(VS.100).aspx>`_.
+The Autofac MEF integration allows you to expose extensibility points in your applications using the `Managed Extensibility Framework <https://learn.microsoft.com/en-us/dotnet/framework/mef/>`_.
 
 To use MEF in an Autofac application, you must reference the .NET framework ``System.ComponentModel.Composition.dll`` assembly and get the `Autofac.Mef <https://www.nuget.org/packages/Autofac.Mef/>`_ package from NuGet.
 

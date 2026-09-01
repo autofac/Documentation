@@ -2,7 +2,7 @@
 Captive Dependencies
 ====================
 
-A "captive dependency" occurs when a component intended to live for a *short* amount of time gets held by a component that lives for a *long* time. `This blog article from Mark Seemann <http://blog.ploeh.dk/2014/06/02/captive-dependency/>`_ does a good job of explaining the concept.
+A "captive dependency" occurs when a component intended to live for a *short* amount of time gets held by a component that lives for a *long* time. `This blog article from Mark Seemann <https://blog.ploeh.dk/2014/06/02/captive-dependency/>`_ does a good job of explaining the concept.
 
 **Autofac does not necessarily prevent you from creating captive dependencies.** You may find times when you get a resolution exception because of the way a captive is set up, but you won't always. Stopping captive dependencies is the responsibility of the developer.
 
