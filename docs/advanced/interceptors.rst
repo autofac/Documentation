@@ -241,3 +241,8 @@ Straddling a major version is what breaks. ``Autofac.Extras.DynamicProxy`` 8.x d
 ``System.IO.FileLoadException: Could not load file or assembly 'Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc'. The located assembly's manifest definition does not match the assembly reference. (Exception from HRESULT: 0x80131040)``
 
 On .NET Framework a binding redirect to ``5.0.0.0`` may get you past it, but Castle 5 removed API that Castle 4 exposed, so a redirect only holds if the library on the older version doesn't reach for anything that went away. Modern .NET has no binding redirects, so there the only real fix is getting every direct and transitive dependency onto Castle.Core 5.x - which sometimes means filing issues with projects still on 4.x. `The Castle.Core issue discussing this versioning policy has the background. <https://github.com/castleproject/Core/issues/288>`_
+
+Example
+=======
+
+There is an example project showing interception wired up both on the registration and with an attribute `in the Autofac examples repository <https://github.com/autofac/Examples/tree/main/src/DynamicProxyExample>`_.

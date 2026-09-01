@@ -362,3 +362,8 @@ Multiple Files or Sections
 --------------------------
 
 You can use multiple settings readers in the same container, to read different sections or even different config files if the filename is supplied to the ``ConfigurationSettingsReader`` constructor.
+
+Example
+=======
+
+There is an example project showing configuration-driven registration, including loading a plugin assembly the application holds no reference to, `in the Autofac examples repository <https://github.com/autofac/Examples/tree/main/src/ConfigurationExample>`_.

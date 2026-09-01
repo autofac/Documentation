@@ -354,3 +354,8 @@ When you get this low, you can control the subscriptions for your events separat
     // the tracer should get an event.
     var tracer = new ConsoleOperationTracer();
     container.DiagnosticSource.Subscribe(tracer, e => e == "Autofac.Operation.Start");
+
+Example
+=======
+
+There is an example project showing the DOT graph tracer, including how to render the captured graph, `in the Autofac examples repository <https://github.com/autofac/Examples/tree/main/src/DotGraphExample>`_.

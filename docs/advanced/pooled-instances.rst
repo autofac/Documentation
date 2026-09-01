@@ -249,3 +249,8 @@ Handing over storage moves some responsibilities with it, and these are easy to 
 - If the pool implements ``IDisposable``, the container disposes it at shutdown.
 
 Unless you need one of those knobs, a :ref:`pool policy <pooled-instances-policies>` is the simpler place to customize behavior.
+
+Example
+=======
+
+There is an example project showing instance reuse across lifetime scopes and a reset-on-return policy `in the Autofac examples repository <https://github.com/autofac/Examples/tree/main/src/PoolingExample>`_.
