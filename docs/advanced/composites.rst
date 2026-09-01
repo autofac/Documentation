@@ -106,10 +106,39 @@ Composite wrappers can have their own additional dependencies, as well as use an
     public class MetaCompositeWrapper : ILogSink
     {
         // Access the metadata of each implementation.
-        public LazyCompositeWrapper(IEnumerable<Meta<ILogSink>> implementations)
+        public MetaCompositeWrapper(IEnumerable<Meta<ILogSink>> implementations)
         {
         }
     }
+
+Keyed Composites
+================
+
+By default a composite wraps the implementations registered *without* a key. If you also key the composite, resolving that key gives you a composite over just the implementations sharing it - so one composite type can serve several groups.
+
+.. sourcecode:: csharp
+
+    var builder = new ContainerBuilder();
+
+    builder.Register(ctx => new FileLogSink()).As<ILogSink>().Keyed<ILogSink>("disk");
+    builder.Register(ctx => new RollingFileLogSink()).As<ILogSink>().Keyed<ILogSink>("disk");
+    builder.Register(ctx => new DbLogSink()).As<ILogSink>().Keyed<ILogSink>("remote");
+
+    builder.RegisterComposite<CompositeLogSink, ILogSink>()
+           .Keyed<ILogSink>("disk")
+           .Keyed<ILogSink>("remote");
+
+    var container = builder.Build();
+
+    // Composite over every unkeyed implementation.
+    var all = container.Resolve<ILogSink>();
+
+    // Composite over only the implementations keyed "disk".
+    var disk = container.ResolveKeyed<ILogSink>("disk");
+
+Without the extra ``Keyed`` calls, ``ResolveKeyed<ILogSink>("disk")`` returns the last implementation registered under that key rather than a composite. You still get only one unkeyed composite registration; keying is what opts a composite into this behavior.
+
+This works through the :doc:`implicit relationship types <../resolve/relationships>` too, so a composite taking ``IEnumerable<Lazy<ILogSink>>`` gets the keyed subset just the same.
 
 Metadata
 ========
@@ -137,7 +166,7 @@ Decorators
 
 When using the composite pattern, decorators are **only applied to the individual implementations**, and **not** to the composite itself.
 
-So, if you register a decorator for ``ILogSink``, and have a composite registration with implementations ``FileLogSink`` and ``DbLogSink``, when you resolve ``ILogSink`` ``FileLogSink`` and ``DbLogSink`` **will** be decorated, but your composite wrapper **will not** be decorated.
+So, if you register a decorator for ``ILogSink``, and have a composite registration with implementations ``FileLogSink`` and ``DbLogSink``, when you resolve ``ILogSink``, ``FileLogSink`` and ``DbLogSink`` **will** be decorated, but your composite wrapper **will not** be decorated.
 
 Composites and Collections
 ==========================

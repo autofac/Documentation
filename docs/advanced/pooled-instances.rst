@@ -218,3 +218,34 @@ You can then use this policy when registering your pool:
     builder.RegisterType<MyCustomConnection>()
             .As<ICustomConnection>()
             .PooledInstancePerLifetimeScope(new BlockingPolicy<MyCustomConnection>(100));
+
+If the policy itself needs dependencies, pass a factory instead of an instance. The factory receives an ``IComponentContext`` so it can resolve them:
+
+.. sourcecode:: csharp
+
+    builder.RegisterType<MyCustomConnection>()
+            .As<ICustomConnection>()
+            .PooledInstancePerLifetimeScope(
+                ctx => new BlockingPolicy<MyCustomConnection>(ctx.Resolve<IPoolSettings>().MaxConcurrency));
+
+Controlling Where Instances Are Stored
+======================================
+
+A policy decides *what happens* when an instance is fetched or returned. If you also need to control *where instances live* - how the pool is sized, and when it evicts - supply an ``ObjectPoolProvider``:
+
+.. sourcecode:: csharp
+
+    builder.RegisterType<MyCustomConnection>()
+            .As<ICustomConnection>()
+            .PooledInstancePerLifetimeScope(ctx => ctx.Resolve<ObjectPoolProvider>());
+
+The provider factory runs once, resolved from the scope that owns the pool, so it can pull dependencies out of the container. Autofac still constructs the pooled instances and still raises the ``IPooledComponent`` callbacks; the provider only owns storage and eviction. There are overloads that take a policy factory and a provider factory together, and matching ones on ``PooledInstancePerMatchingLifetimeScope``.
+
+Handing over storage moves some responsibilities with it, and these are easy to get wrong:
+
+- **Pool capacity no longer applies.** Because the provider owns sizing, ``MaximumRetained`` on the policy stops having any effect.
+- **The pool must be thread-safe.** One pool is shared across every lifetime scope and thread that resolves the component.
+- **The pool disposes what it discards.** ``ObjectPool<T>.Return`` reports no result and there is no eviction callback, so instances the pool declines on return or evicts later are the pool's to dispose. Autofac cannot see those decisions.
+- If the pool implements ``IDisposable``, the container disposes it at shutdown.
+
+Unless you need one of those knobs, a :ref:`pool policy <pooled-instances-policies>` is the simpler place to customize behavior.

@@ -155,6 +155,8 @@ You can use that context to make decisions in your decorators if you want. It ca
 
 **You cannot specify a lifetime scope on a decorator.** The lifetime of a decorator is tied to the lifetime of the thing it decorates. The service and all decorators get disposed at the same time. If you decorate a singleton, all the decorators are also going to be singletons. If you decorate something that's instance per request (e.g., in a web app) the decorators will also live for the whole request.
 
+**Ownership follows the decorated component as well.** :doc:`Registering the decorated service as ExternallyOwned <../lifetime/disposal>` opts the whole chain out of disposal tracking - neither the decorated instance nor any decorator over it will be disposed when the scope ends. That holds however many decorators are stacked, since it's the ownership of the underlying component that governs.
+
 Classic Syntax
 --------------
 
