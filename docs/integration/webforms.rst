@@ -270,6 +270,32 @@ Once this is in place, pages and controls will not have their dependencies injec
       // ...use the property later as needed.
     }
 
+Required Properties
+-------------------
+
+A page or control that declares C# ``required`` properties needs no attribute at all. The ``AttributedInjectionModule`` recognizes required members and injects **only** those properties:
+
+.. sourcecode:: csharp
+
+    // No [InjectProperties] needed - the required modifier is the opt-in.
+    public partial class MyPage : Page
+    {
+      public required IService MyService { get; set; }
+
+      // Not required, so not injected on this path.
+      public IOtherService Other { get; set; }
+    }
+
+Required properties declared on a base class count too, since Autofac walks the inheritance chain looking for them.
+
+The attributes still win where both are present. The module checks ``InjectPropertiesAttribute`` first, then ``InjectUnsetPropertiesAttribute``, and only falls back to required properties when neither is applied - so putting ``[InjectProperties]`` on a page with required properties injects *every* public settable property, not just the required ones.
+
+If you are injecting properties by hand rather than through the module, ``RequiredPropertySelector`` gives you the same filter:
+
+.. sourcecode:: csharp
+
+    cp.RequestLifetime.InjectProperties(objectToSet, new RequiredPropertySelector());
+
 Dependency Injection via Base Page Class
 ----------------------------------------
 

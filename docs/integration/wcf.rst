@@ -320,6 +320,8 @@ IIS/WAS Hosted
 
 The ``AutofacServiceHostFactory`` identifies WCF services that are marked with ``InstanceContextMode.Single`` and will ensure that the ``ServiceHost`` can be provided with a singleton instance from the container. An exception will be thrown if the service in the container was not registered with the ``SingleInstance()`` lifetime scope. It is also invalid to register a ``SingleInstance()`` service in the container for a WCF service that is not marked as ``InstanceContextMode.Single``.
 
+If the singleton is also :doc:`intercepted <../advanced/interceptors>`, the factory hosts a forwarding proxy instead of your service class, so a ``ServiceBehaviorAttribute`` on the class is never read. ``InstanceContextMode.Single`` is re-applied for you; anything else set there - ``ConcurrencyMode`` in particular, given the recommendation above - has to come from configuration or from the ``AutofacHostFactory.HostConfigurationAction`` hook.
+
 Self-Hosted
 ~~~~~~~~~~~
 
