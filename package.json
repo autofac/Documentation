@@ -9,7 +9,7 @@
     "eslint-plugin-jsdoc": "^62.8.1",
     "eslint-plugin-prettier": "^5.5.4",
     "globals": "^17.4.0",
-    "markdownlint-cli2": "^0.22.0",
+    "markdownlint-cli2": "^0.23.2",
     "node-plantuml-latest": "^2.4.0"
   },
   "license": "MIT",
