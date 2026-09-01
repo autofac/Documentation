@@ -243,7 +243,7 @@ Then define a new ``ServiceRoute`` using the ``AutofacServiceHostFactory`` and s
 
     RouteTable.Routes.Add(new ServiceRoute("Service1", new AutofacServiceHostFactory(), typeof(Service1)));
 
-Finally, add the ``UrlRoutingModule`` to the `web.config` file.
+Finally, add the ``UrlRoutingModule`` to the ``web.config`` file.
 
 .. sourcecode:: xml
 

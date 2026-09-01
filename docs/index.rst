@@ -1,5 +1,5 @@
 ===================================
-Welcome to Autofac's documentation!
+Welcome to Autofac's Documentation!
 ===================================
 
 .. image:: logo.png
@@ -28,7 +28,7 @@ Autofac is an addictive `IoC container <http://martinfowler.com/articles/injecti
    owners.rst
 
 
-Indices and tables
+Indices and Tables
 ==================
 
 * :ref:`genindex`

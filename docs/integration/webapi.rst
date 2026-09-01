@@ -300,7 +300,7 @@ In the same way as with standard Web API filters,  you are able to set the ``Htt
 
 To match the standard Web API behavior, if you set the ``Response`` property, then no subsequent action filters will be invoked. However, any action filters already invoked will have ``OnActionExecutedAsync`` called with the appropriate response populated.
 
-Standard Web API Filter Attributes are Singletons
+Standard Web API Filter Attributes Are Singletons
 -------------------------------------------------
 
 You may notice that if you use the standard Web API filters that you can't use ``InstancePerRequest`` dependencies.

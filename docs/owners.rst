@@ -6,7 +6,7 @@ Becoming an Autofac owner is going a step beyond :doc:`being a contributor <cont
 
 We haven't seen a great onboarding guide for getting owners up and productive or explaining the responsibilities so... this is our attempt at that.
 
-Ownership is About Trust
+Ownership Is About Trust
 ========================
 
 **This is the number one difference between ownership and contribution.**

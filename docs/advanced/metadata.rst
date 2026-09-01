@@ -62,7 +62,7 @@ Other components can consume metadata using the ``Meta<T>`` type.
       }
     }
 
-To consume metadata without creating the target component, use `Meta<Lazy<T>>` or the .NET 4 `Lazy<T, TMetadata>` types as shown below.
+To consume metadata without creating the target component, use ``Meta<Lazy<T>>`` or the .NET 4 ``Lazy<T, TMetadata>`` types as shown below.
 
 Strongly-Typed Metadata
 =======================

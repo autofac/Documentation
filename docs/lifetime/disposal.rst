@@ -171,7 +171,7 @@ Note that with :doc:`Autofac integration libraries <../integration/index>` stand
 
 You can :doc:`read more about creating lifetime scopes here <working-with-scopes>`.
 
-Child Scopes are NOT Automatically Disposed
+Child Scopes Are NOT Automatically Disposed
 ===========================================
 
 While lifetime scopes themselves implement ``IDisposable``, the lifetime scopes that you create are **not automatically disposed for you.** If you create a lifetime scope, you are responsible for calling ``Dispose()`` on it to clean it up and trigger the automatic disposal of components. This is done easily with a ``using`` statement, but if you create a scope without a ``using``, don't forget to dispose of it when you're done with it.

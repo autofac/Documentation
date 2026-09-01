@@ -134,7 +134,7 @@ In addition to providing middleware via a lambda function, you can also define y
 
 The two ways of adding middleware behave identically, but defining a class may help if you have complex middleware.
 
-Adding Middleware to all Registrations
+Adding Middleware to All Registrations
 --------------------------------------
 
 If you want to add a piece of middleware to all registrations, you can use the ``Registered`` event in the same way you would have added other shared registration behavior:

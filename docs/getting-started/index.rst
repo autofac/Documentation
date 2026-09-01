@@ -102,7 +102,7 @@ The easiest way to do this is through NuGet. The "Autofac" package has all the c
 Application Startup
 ===================
 
-At application startup, you need to create a `ContainerBuilder` and register your :doc:`components <../glossary>` with it. A *component* is an expression, .NET type, or other bit of code that exposes one or more *services* and can take in other *dependencies*.
+At application startup, you need to create a ``ContainerBuilder`` and register your :doc:`components <../glossary>` with it. A *component* is an expression, .NET type, or other bit of code that exposes one or more *services* and can take in other *dependencies*.
 
 In simple terms, think about a .NET type that implements an interface, like this:
 

@@ -83,7 +83,7 @@ Finally, we register the aggregate service interface.
 
 The interface for the aggregate service will automatically have an implementation generated for you and the dependencies will be filled in as expected. By default that implementation is produced at compile time by a source generator; see `How It Works`_ for the details and for the cases where a runtime fallback is used instead.
 
-How Aggregate Services are Resolved
+How Aggregate Services Are Resolved
 ===================================
 
 The members of an aggregate service interface are translated into resolutions according to their shape. The samples below show the functionally equivalent hand-written code for each case.

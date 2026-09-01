@@ -88,7 +88,7 @@ Both techniques can be used in conjunction with the assembly scanning support, s
 
 .. _associate_interceptors:
 
-Associate Interceptors with Types to be Intercepted
+Associate Interceptors with Types to Be Intercepted
 ---------------------------------------------------
 
 To pick which interceptor is associated with your type, you have two choices.
