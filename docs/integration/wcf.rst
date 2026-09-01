@@ -320,6 +320,8 @@ IIS/WAS Hosted
 
 The ``AutofacServiceHostFactory`` identifies WCF services that are marked with ``InstanceContextMode.Single`` and will ensure that the ``ServiceHost`` can be provided with a singleton instance from the container. An exception will be thrown if the service in the container was not registered with the ``SingleInstance()`` lifetime scope. It is also invalid to register a ``SingleInstance()`` service in the container for a WCF service that is not marked as ``InstanceContextMode.Single``.
 
+If the singleton is also :doc:`intercepted <../advanced/interceptors>`, the factory hosts a forwarding proxy instead of your service class, so a ``ServiceBehaviorAttribute`` on the class is never read. ``InstanceContextMode.Single`` is re-applied for you; anything else set there - ``ConcurrencyMode`` in particular, given the recommendation above - has to come from configuration or from the ``AutofacHostFactory.HostConfigurationAction`` hook.
+
 Self-Hosted
 ~~~~~~~~~~~
 
@@ -331,25 +333,6 @@ It is possible to manually perform constructor injection for service marked with
     var service = container.Resolve<IService1>();
     // Pass it into the ServiceHost preventing it from creating an instance with the default constructor.
     var host = new ServiceHost(service, new Uri("http://localhost:8080/Service1"));
-
-Singletons With Interception
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Combining ``SingleInstance()`` with :doc:`interception <../advanced/interceptors>` needs nothing extra from you. Register the service the way you normally would and hosting works:
-
-.. sourcecode:: csharp
-
-    builder.RegisterType<Service1>()
-           .As<IService1>()
-           .EnableInterfaceInterceptors()
-           .InterceptedBy(typeof(CallLogger))
-           .SingleInstance();
-
-It didn't always. WCF refuses to host a class that both *declares* and *inherits* ``ServiceContractAttribute``, and a dynamic proxy is exactly that shape, because Castle copies type-level attributes from the proxied interface onto the generated class. ``AutofacServiceHostFactory`` now hands WCF a ``DispatchProxy`` that forwards every call to the resolved instance; it inherits the contract only through the interface it implements, so WCF accepts it and the interceptors still run.
-
-One consequence does reach your code. The type WCF hosts is that forwarding proxy rather than your service class, so a ``ServiceBehaviorAttribute`` applied to the class isn't seen. ``InstanceContextMode.Single`` is re-applied for you, because hosting a supplied instance requires it - but anything else you set on that attribute, ``ConcurrencyMode`` included, has to come from configuration or from the ``AutofacHostFactory.HostConfigurationAction`` hook, which runs against each host before it is returned.
-
-Wrapping only happens where it's needed. A plain service class carries its contract on the interface rather than on itself, so an ordinary singleton goes to WCF untouched.
 
 Simulating a Request Lifetime Scope
 -----------------------------------
