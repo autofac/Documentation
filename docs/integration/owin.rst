@@ -2,9 +2,9 @@
 OWIN
 ====
 
-`OWIN (Open Web Interface for .NET) <http://owin.org/>`_ is a simpler model for composing web-based applications without tying the application to the web server. To do this, a concept of "middleware" is used to create a pipeline through which requests travel.
+OWIN (Open Web Interface for .NET) is a simpler model for composing web-based applications without tying the application to the web server. To do this, a concept of "middleware" is used to create a pipeline through which requests travel.
 
-Due to the differences in the way OWIN handles the application pipeline (detecting when a request starts/ends, etc.) integrating Autofac into an OWIN application is slightly different than the way it gets integrated into more "standard" ASP.NET apps. `You can read about OWIN and how it works on this overview. <http://www.asp.net/aspnet/overview/owin-and-katana/an-overview-of-project-katana>`_
+Due to the differences in the way OWIN handles the application pipeline (detecting when a request starts/ends, etc.) integrating Autofac into an OWIN application is slightly different than the way it gets integrated into more "standard" ASP.NET apps. `Microsoft's overview of Project Katana <https://learn.microsoft.com/en-us/aspnet/aspnet/overview/owin-and-katana/an-overview-of-project-katana>`_ covers how OWIN works.
 
 **The important thing to remember is that order of OWIN middleware registration matters.** Middleware gets processed in order of registration, like a chain, so you need to register foundational things (like Autofac middleware) first.
 
@@ -82,6 +82,38 @@ If you want more control over when DI-enabled middleware is added to the pipelin
     // AFTER the Web API middleware/handling.
     app.UseWebApi(config);
     app.UseMiddlewareFromContainer<MyCustomMiddleware>();
+
+Disposal and Application Shutdown
+=================================
+
+Two things get disposed in an OWIN application, and Autofac only handles one of them.
+
+**Request lifetime scopes are disposed for you** when Autofac creates them - that is, when you pass a container to ``UseAutofacMiddleware`` or ``UseAutofacLifetimeScopeInjector``. The scope is disposed as the request unwinds, whether or not the request succeeded.
+
+**Nothing disposes your container.** The package never registers for application shutdown on your behalf, so if you want the container disposed when the application stops, ask for it:
+
+.. sourcecode:: csharp
+
+    public class Startup
+    {
+      public void Configuration(IAppBuilder app)
+      {
+        var builder = new ContainerBuilder();
+        // Register dependencies, then...
+        var container = builder.Build();
+
+        app.UseAutofacMiddleware(container);
+
+        // Dispose the container when the host shuts down.
+        app.DisposeScopeOnAppDisposing(container);
+      }
+    }
+
+This hooks the OWIN ``host.OnAppDisposing`` token. **A host that doesn't supply that token makes the call do nothing** - there's no error, so don't treat it as a guarantee on every host. Self-hosted applications generally provide it.
+
+For a long-running server this matters less than it sounds, because the process is ending anyway. It matters when the host outlives the application, as when a self-host is started and stopped repeatedly in the same process or in tests, where an undisposed container leaks everything it was tracking.
+
+If you supply the request scope yourself using the ``UseAutofacLifetimeScopeInjector`` overload that takes a ``Func<IOwinContext, ILifetimeScope>``, **you own disposing that scope too.** Autofac only disposes scopes it created.
 
 Example
 =======
