@@ -17,106 +17,16 @@ Quick Start
 ===========
 
 * Reference the ``Autofac.Extensions.DependencyInjection`` package from NuGet.
-* In your ``Program.Main`` method, attach the hosting mechanism to Autofac. (See the examples below.)
+* In your ``Program.Main`` method, attach the hosting mechanism to Autofac.
 * In the ``ConfigureServices`` method of your ``Startup`` class register things into the ``IServiceCollection`` using extension methods provided by other libraries.
 * In the ``ConfigureContainer`` method of your ``Startup`` class register things directly into an Autofac ``ContainerBuilder``.
 
 The ``IServiceProvider`` will automatically be created for you, so there's nothing you have to do but *register things*.
 
-ASP.NET Core 1.1 - 2.2
-----------------------
+Attaching to the Host
+---------------------
 
-This example shows **ASP.NET Core 1.1 - 2.2** usage, where you call ``services.AddAutofac()`` on the ``WebHostBuilder``. **This is not for ASP.NET Core 3+** or the .NET Core 3+ generic hosting support - ASP.NET Core 3 requires you to specify a service provider factory directly rather than adding it to the service collection.
-
-.. sourcecode:: csharp
-
-    public class Program
-    {
-      public static void Main(string[] args)
-      {
-        // ASP.NET Core 1.1 - 2.2:
-        // The ConfigureServices call here allows for
-        // ConfigureContainer to be supported in Startup with
-        // a strongly-typed ContainerBuilder.
-        // AddAutofac() is a convenience method for
-        // services.AddSingleton<IServiceProviderFactory<ContainerBuilder>>(new AutofacServiceProviderFactory())
-        var host = new WebHostBuilder()
-            .UseKestrel()
-            .ConfigureServices(services => services.AddAutofac())
-            .UseContentRoot(Directory.GetCurrentDirectory())
-            .UseIISIntegration()
-            .UseStartup<Startup>()
-            .Build();
-
-        host.Run();
-      }
-    }
-
-This example shows **ASP.NET Core 1.1 - 2.2** usage, where you return an ``IServiceProvider`` from the ``ConfigureServices(IServiceCollection services)`` delegate. **This is not for ASP.NET Core 3+** or the .NET Core 3+ generic hosting support - ASP.NET Core 3 has deprecated the ability to return a service provider from ``ConfigureServices``.
-
-.. sourcecode:: csharp
-
-    public class Startup
-    {
-      public Startup(IHostingEnvironment env)
-      {
-        // In ASP.NET Core 3.0 env will be an IWebHostEnvironment , not IHostingEnvironment.
-        var builder = new ConfigurationBuilder()
-            .SetBasePath(env.ContentRootPath)
-            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-            .AddEnvironmentVariables();
-        this.Configuration = builder.Build();
-      }
-
-      public IConfigurationRoot Configuration { get; private set; }
-
-      public ILifetimeScope AutofacContainer { get; private set; }
-
-      // ConfigureServices is where you register dependencies and return an `IServiceProvider` implemented by `AutofacServiceProvider`.
-      // This is the old, not recommended way, and is NOT SUPPORTED in ASP.NET Core 3.0+.
-      public IServiceProvider ConfigureServices(IServiceCollection services)
-      {
-        // Add services to the collection
-        services.AddOptions();
-
-        // Create a container-builder and register dependencies
-        var builder = new ContainerBuilder();
-
-        // Populate the service-descriptors added to `IServiceCollection`
-        // BEFORE you add things to Autofac so that the Autofac
-        // registrations can override stuff in the `IServiceCollection`
-        // as needed
-        builder.Populate(services);
-
-        // Register your own things directly with Autofac
-        builder.RegisterModule(new MyApplicationModule());
-
-        AutofacContainer = builder.Build();
-
-        // this will be used as the service-provider for the application!
-        return new AutofacServiceProvider(AutofacContainer);
-      }
-
-      // Configure is where you add middleware.
-      // You can use IApplicationBuilder.ApplicationServices
-      // here if you need to resolve things from the container.
-      public void Configure(
-        IApplicationBuilder app,
-        ILoggerFactory loggerFactory)
-      {
-        loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
-        loggerFactory.AddDebug();
-        app.UseMvc();
-      }
-    }
-
-ASP.NET Core 3.0+ and Generic Hosting
--------------------------------------
-
-**Hosting changed in ASP.NET Core 3.0** and requires a different integration. You can no longer return ``IServiceProvider`` from ``ConfigureServices``, nor can you add your service provider factory to the service collection.
-
-This is for ASP.NET Core 3+ and the .NET Core 3+ generic hosting support:
+Attach the Autofac service provider factory to the host. You cannot return an ``IServiceProvider`` from ``ConfigureServices``, and you cannot add the factory to the service collection - it has to be supplied to the host builder directly.
 
 .. sourcecode:: csharp
 
@@ -124,7 +34,6 @@ This is for ASP.NET Core 3+ and the .NET Core 3+ generic hosting support:
     {
       public static void Main(string[] args)
       {
-        // ASP.NET Core 3.0+:
         // The UseServiceProviderFactory call attaches the
         // Autofac provider to the generic hosting mechanism.
         var host = Host.CreateDefaultBuilder(args)
@@ -144,7 +53,7 @@ This is for ASP.NET Core 3+ and the .NET Core 3+ generic hosting support:
 Startup Class
 -------------
 
-In your Startup class (which is basically the same across all the versions of ASP.NET Core) you then use ``ConfigureContainer`` to access the Autofac container builder and register things directly with Autofac.
+In your Startup class you then use ``ConfigureContainer`` to access the Autofac container builder and register things directly with Autofac.
 
 .. sourcecode:: csharp
 
