@@ -7,7 +7,7 @@ Most of the time, when :ref:`registering reflection components <register-registr
 For advanced use-cases, you can implement custom behaviour to choose both the set of available constructors for a type, and which one to use of the available set.
 
 FindConstructorsWith & IConstructorFinder
------------------------------------------
+=========================================
 
 The ``FindConstructorsWith`` method on a registration allows you to specify how to determine the set of *available* constructors for a registration, either using a delegate to retrieve constructors from the ``Type``:
 
@@ -45,7 +45,7 @@ or by implementing ``IConstructorFinder``, which makes it easier to cache the fo
 .. note:: In the case of open generic registrations, the ``Type`` passed to either the ``FindConstructorsWith`` delegate or ``IConstructorFinder`` will be that of the *concrete* type, not the generic.
 
 IConstructorSelector
---------------------
+====================
 
 Once the set of available constructors has been determined, each time the component is resolved, one of those constructors must be *selected*.
 

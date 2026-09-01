@@ -31,7 +31,7 @@ When configuring an application by IoC it is often necessary to set the paramete
 
 The implementer of a module determines how the module's configuration parameters map to the properties and constructor parameters of the components inside.
 
-Configuration Parameters are Explicit
+Configuration Parameters Are Explicit
 -------------------------------------
 
 Configuring an application directly through its components creates a large surface area that will need to be considered when upgrading the application. When it is possible to set potentially any property of any class through a configuration file that will differ at every site, refactoring is no longer safe.

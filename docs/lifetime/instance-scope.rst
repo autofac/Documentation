@@ -237,7 +237,7 @@ What this means is that if you try to resolve components that are registered as 
 Instance Per Owned
 ==================
 
-The `Owned<T>` :doc:`implicit relationship type <../resolve/relationships>` creates new nested lifetime scopes. It is possible to scope dependencies to the owned instance using the instance-per-owned registrations.
+The ``Owned<T>`` :doc:`implicit relationship type <../resolve/relationships>` creates new nested lifetime scopes. It is possible to scope dependencies to the owned instance using the instance-per-owned registrations.
 
 .. sourcecode:: csharp
 

@@ -446,7 +446,7 @@ And don't forget at app startup, around where you set the container, you need to
       new MultitenantServiceImplementationDataProvider();
 
 Managing Service Attributes
-"""""""""""""""""""""""""""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 When configuring WCF services in XML configuration (e.g., web.config), WCF automatically infers the name of the service element it expects from the concrete service implementation type. For example, in a single-tenant implementation, your ``MyNamespace.IMyService`` service interface might have one implementation called ``MyNamespace.MyService`` and that's what WCF would expect to look for in ``web.config``, like this:
 
@@ -522,7 +522,7 @@ Now in your XML configuration file, you can use the configuration name you speci
 
 
 Tenant-Specific Service Implementations
-"""""""""""""""""""""""""""""""""""""""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you are hosting multitenant services (:ref:`hosting`), you can provide tenant-specific service implementations. This allows you to provide a base implementation of a service and share the service contract with tenants to allow them to develop custom service implementations.
 
@@ -540,7 +540,7 @@ WCF Application Startup
 Application startup is generally the same as any other multitenant application (:ref:`register_dependencies`), but there are a couple of minor things to do for clients, and a little bit of hosting setup for services.
 
 WCF Client Application Startup
-""""""""""""""""""""""""""""""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **In a WCF client application**, when you register your service clients you'll need to register the behavior that propagates the tenant ID to the service. If you're following the :doc:`standard WCF integration guidance <../integration/wcf>`, then registering a service client looks like this:
 
@@ -578,7 +578,7 @@ WCF Client Application Startup
     // ... register tenant overrides, etc.
 
 WCF Service Application Startup
-"""""""""""""""""""""""""""""""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **In a WCF service application**, you register your defaults and tenant-specific overrides just as you normally would (:ref:`register_dependencies`) but you have to also:
 

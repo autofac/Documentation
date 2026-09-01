@@ -1,14 +1,13 @@
+=================
 Resolve Pipelines
------------------
+=================
 
-In Autofac (from version 6.0 onwards), the work of actually resolving an instance of a registration when a service is requested is implemented as a **pipeline**,
-consisting of multiple **middleware**. Each individual middleware represents some part of the process required to construct or locate your instance and return it to you.
+In Autofac (from version 6.0 onwards), the work of actually resolving an instance of a registration when a service is requested is implemented as a **pipeline**, consisting of multiple **middleware**. Each individual middleware represents some part of the process required to construct or locate your instance and return it to you.
 
-For advanced customization scenarios, Autofac allows you to add your own middleware into the pipeline to intercept, short-circuit or extend the existing resolve
-behavior.
+For advanced customization scenarios, Autofac allows you to add your own middleware into the pipeline to intercept, short-circuit or extend the existing resolve behavior.
 
 Service Pipelines vs Registration Pipelines
--------------------------------------------
+===========================================
 
 An individual resolve request actually ends up invoking two different pipelines. The Service Pipeline, and the Registration Pipeline.
 
@@ -22,23 +21,18 @@ Lets take a look at the 'default' execution pipeline for a typical service:
 
     An example resolve pipeline consisting of a Service Pipeline and a Registration Pipeline.
 
-The Service Pipeline is attached to a given service, the thing you use to resolve something. These are common
-for all resolves of the service, regardless of the actual registration that supplies an instance.
+The Service Pipeline is attached to a given service, the thing you use to resolve something. These are common for all resolves of the service, regardless of the actual registration that supplies an instance.
 
-The Registration Pipeline is attached to each individual registration, and applies to all
-resolves that invoke that registration, regardless of the service used to resolve it.
+The Registration Pipeline is attached to each individual registration, and applies to all resolves that invoke that registration, regardless of the service used to resolve it.
 
-We can use this notion of separated pipelines to attach behavior to either all invocations
-of a given service (:doc:`decorators <adapters-decorators>` do this), or to an individual registration
-(for example, adding :doc:`lifetime events </lifetime/events>` to the pipeline).
+We can use this notion of separated pipelines to attach behavior to either all invocations of a given service (:doc:`decorators <adapters-decorators>` do this), or to an individual registration (for example, adding :doc:`lifetime events </lifetime/events>` to the pipeline).
 
 Pipeline Phases
----------------
+===============
 
 When we add middleware to a pipeline, we need to specify which **phase** of the pipeline the middleware should run in.
 
-By specifying a phase, we allow ordering of middleware inside the pipeline,
-so we are not dependent on the actual order in which middleware is added.
+By specifying a phase, we allow ordering of middleware inside the pipeline, so we are not dependent on the actual order in which middleware is added.
 
 Here's the available pipeline phases, broken up into service phases and registration phases.
 
@@ -81,10 +75,9 @@ Here's the available pipeline phases, broken up into service phases and registra
     you will get an error. You need to use the appropriate phase depending on which pipeline you are adding to.
 
 Adding Registration Middleware
-------------------------------
+==============================
 
-Lets take a look at how we can insert our own middleware into the registration pipeline
-when we create a registration, with a simple 'Hello World' lambda middleware that prints some information to the console:
+Lets take a look at how we can insert our own middleware into the registration pipeline when we create a registration, with a simple 'Hello World' lambda middleware that prints some information to the console:
 
 .. code-block:: csharp
 
@@ -104,20 +97,16 @@ when we create a registration, with a simple 'Hello World' lambda middleware tha
         });
     });
 
-You can see that we call the next middleware in the pipeline using the ``next`` callback provided,
-allowing the resolve operation to continue.
+You can see that we call the next middleware in the pipeline using the ``next`` callback provided, allowing the resolve operation to continue.
 
-You have access to the created instance after ``next`` returns. This is because calling ``next``
-invokes the next middleware in the pipeline, which also calls ``next``, and so on, until the end of the pipeline, when the instance
-is activated.
+You have access to the created instance after ``next`` returns. This is because calling ``next`` invokes the next middleware in the pipeline, which also calls ``next``, and so on, until the end of the pipeline, when the instance is activated.
 
 If you don't invoke that ``next`` callback, the pipeline ends, and we return back up to the caller.
 
 Defining Middleware Classes
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+---------------------------
 
-In addition to providing middleware via a lambda function, you can also define your own middleware classes,
-and add instances of those to the pipeline:
+In addition to providing middleware via a lambda function, you can also define your own middleware classes, and add instances of those to the pipeline:
 
 .. code-block:: csharp
 
@@ -145,11 +134,10 @@ and add instances of those to the pipeline:
 
 The two ways of adding middleware behave identically, but defining a class may help if you have complex middleware.
 
-Adding Middleware to all Registrations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Adding Middleware to All Registrations
+--------------------------------------
 
-If you want to add a piece of middleware to all registrations, you can use the ``Registered`` event
-in the same way you would have added other shared registration behavior:
+If you want to add a piece of middleware to all registrations, you can use the ``Registered`` event in the same way you would have added other shared registration behavior:
 
 .. code-block:: csharp
 
@@ -166,18 +154,16 @@ in the same way you would have added other shared registration behavior:
 
 
 ResolveRequestContext
----------------------
+=====================
 
-The context object passed into all middleware is an instance of ``ResolveRequestContext``. This object
-stores the initial attributes of a resolve request, and any properties updated while the request executes.
+The context object passed into all middleware is an instance of ``ResolveRequestContext``. This object stores the initial attributes of a resolve request, and any properties updated while the request executes.
 
 You can use this context to:
 
 - Check the service being resolved with the ``Service`` property.
 - Check the Registration being used to provide the service.
 - Get or set the result of the resolve operation with the ``Instance`` property.
-- Access the parameters of the request with the ``Parameters`` property and
-  change those parameters with the ``ChangeParameters`` method.
+- Access the parameters of the request with the ``Parameters`` property and change those parameters with the ``ChangeParameters`` method.
 - Resolve another service (using any of the normal Resolve methods).
 
 .. note::
@@ -187,11 +173,9 @@ You can use this context to:
 
 
 Adding Service Middleware
--------------------------
+=========================
 
-Service middleware is attached to a service, rather than a specific registration. So when we add service
-middleware we can add behavior for all resolves of the service, without caring which registration is providing the
-instance.
+Service middleware is attached to a service, rather than a specific registration. So when we add service middleware we can add behavior for all resolves of the service, without caring which registration is providing the instance.
 
 You add service middleware directly onto the ``ContainerBuilder``:
 
@@ -214,16 +198,13 @@ Just like with registration middleware, you can register middleware classes inst
     builder.RegisterServiceMiddleware<IMyService>(new MyServiceMiddleware());
 
 Service Middleware Sources
---------------------------
+==========================
 
-In a similar way to :doc:`registration sources <registration-sources>`, you can add a **service middleware source**
-if you want to add service middleware dynamically at runtime.
+In a similar way to :doc:`registration sources <registration-sources>`, you can add a **service middleware source** if you want to add service middleware dynamically at runtime.
 
-This can be particularly useful for things like open generic services, where we don't know the
-**actual** service type until runtime.
+This can be particularly useful for things like open generic services, where we don't know the **actual** service type until runtime.
 
-You define a service middleware source by implementing ``IServiceMiddlewareSource``,
-and registering your source with the ``ContainerBuilder``.
+You define a service middleware source by implementing ``IServiceMiddlewareSource``, and registering your source with the ``ContainerBuilder``.
 
 .. code-block:: csharp
 

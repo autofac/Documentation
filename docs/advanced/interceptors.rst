@@ -84,12 +84,11 @@ Under the covers, ``EnableInterfaceInterceptors()`` creates an interface proxy t
 
 Both techniques can be used in conjunction with the assembly scanning support, so you can configure batches of components using the same methods.
 
-**Special case: WCF proxy and remoting objects**
-While WCF proxy objects *look* like interfaces, the ``EnableInterfaceInterceptors()`` mechanism won't work because, behind the scenes, the .NET desktop framework is actually using a ``System.Runtime.Remoting.TransparentProxy`` object that behaves like the interface. As of v6.0.0 of ``Autofac.Extras.DynamicProxy`` the ability to intercept ``TransparentProxy`` objects was removed in an effort to improve cross-platform support.
+**Special case: WCF proxy and remoting objects** While WCF proxy objects *look* like interfaces, the ``EnableInterfaceInterceptors()`` mechanism won't work because, behind the scenes, the .NET desktop framework is actually using a ``System.Runtime.Remoting.TransparentProxy`` object that behaves like the interface. As of v6.0.0 of ``Autofac.Extras.DynamicProxy`` the ability to intercept ``TransparentProxy`` objects was removed in an effort to improve cross-platform support.
 
 .. _associate_interceptors:
 
-Associate Interceptors with Types to be Intercepted
+Associate Interceptors with Types to Be Intercepted
 ---------------------------------------------------
 
 To pick which interceptor is associated with your type, you have two choices.
@@ -197,10 +196,7 @@ As of Castle.Core 4.2.0, the Castle.Core *NuGet package version* updates but the
 
 Unfortunately, .NET core doesn't have assembly binding redirects so if you have a *transitive* dependency on Castle.Core through a library like Autofac.Extras.DynamicProxy and you *also* have a direct dependency on Castle.Core, you may see something like:
 
-``System.IO.FileLoadException: Could not load file or assembly
-'Castle.Core, Version=4.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc'.
-The located assembly's manifest definition does not match the
-assembly reference. (Exception from HRESULT: 0x80131040)``
+``System.IO.FileLoadException: Could not load file or assembly 'Castle.Core, Version=4.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc'. The located assembly's manifest definition does not match the assembly reference. (Exception from HRESULT: 0x80131040)``
 
 This happens because of the back-versioned assembly.
 

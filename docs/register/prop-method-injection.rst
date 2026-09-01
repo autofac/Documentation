@@ -65,7 +65,7 @@ In the above example, resolving ``MyComponent`` would populate ``Logger`` in the
   then it is required, and must be injected, or provided via a parameter, regardless of its nullability.
 
 Required Properties and Constructors
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can mix-and-match constructors and required properties if you so wish:
 
@@ -129,7 +129,7 @@ To avoid this, mark constructors that set all your required properties with the 
 Since the constructor is marked as setting all required members, no required property injection will occur in Autofac, when *that constructor* is used to create an instance of the component.
 
 Required Properties and Parameters
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Any ``TypedParameter`` provided at :doc:`registration <parameters>` or :doc:`resolve <../resolve/parameters>` will be considered when injecting required properties. However, ``NamedParameter`` and ``PositionalParameter`` are not considered valid parameters for property injection, since they are considered to only apply to constructor parameters.
 

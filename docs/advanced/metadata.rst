@@ -62,7 +62,7 @@ Other components can consume metadata using the ``Meta<T>`` type.
       }
     }
 
-To consume metadata without creating the target component, use `Meta<Lazy<T>>` or the .NET 4 `Lazy<T, TMetadata>` types as shown below.
+To consume metadata without creating the target component, use ``Meta<Lazy<T>>`` or the .NET 4 ``Lazy<T, TMetadata>`` types as shown below.
 
 Strongly-Typed Metadata
 =======================
@@ -234,7 +234,7 @@ You can filter based on :doc:`a service key <keyed-services>` or based on regist
 The ``KeyFilterAttribute``, ``MetadataFilterAttribute``, and ``WithAttributeFiltering`` extension method below can be found in the ``Autofac.Features.AttributeFilters`` namespace in the core Autofac package.
 
 KeyFilterAttribute
-""""""""""""""""""
+~~~~~~~~~~~~~~~~~~
 
 The ``KeyFilterAttribute`` allows you to select a specific keyed service to consume.
 
@@ -263,7 +263,7 @@ That component will require you to register a keyed service with the specified n
     var container = builder.Build();
 
 MetadataFilterAttribute
-"""""""""""""""""""""""
+~~~~~~~~~~~~~~~~~~~~~~~
 
 The ``MetadataFilterAttribute`` allows you to filter for components based on specific metadata values.
 

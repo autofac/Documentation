@@ -2,13 +2,11 @@
 log4net Integration Middleware
 ==============================
 
-While there is no specific assembly for log4net support, you can easily inject ``log4net.ILog`` values using a simple piece of middleware, and a very small custom module to
-add that middleware to all your registrations.
+While there is no specific assembly for log4net support, you can easily inject ``log4net.ILog`` values using a simple piece of middleware, and a very small custom module to add that middleware to all your registrations.
 
 The ``Log4NetMiddleware`` is also a good example of how to use :doc:`pipeline middleware <../advanced/pipelines>`.
 
-Here's the sample middleware that injects ``ILog`` parameters based on the type of the component being activated.
-This sample middleware handles both constructor and property injection.
+Here's the sample middleware that injects ``ILog`` parameters based on the type of the component being activated. This sample middleware handles both constructor and property injection.
 
 .. sourcecode:: csharp
 
@@ -54,8 +52,7 @@ This sample middleware handles both constructor and property injection.
 
 **Performance Note**: At the time of this writing, calling ``LogManager.GetLogger(type)`` has a slight performance hit as the internal log manager locks the collection of loggers to retrieve the appropriate logger. An enhancement to the middleware would be to add caching around logger instances so you can reuse them without the lock hit in the ``LogManager`` call.
 
-Here's the simple ``MiddlewareModule`` (not specific to Logging), that adds a single middleware instance to the
-pipeline for every registration.
+Here's the simple ``MiddlewareModule`` (not specific to Logging), that adds a single middleware instance to the pipeline for every registration.
 
 .. sourcecode:: csharp
 

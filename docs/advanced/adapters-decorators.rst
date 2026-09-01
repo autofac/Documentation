@@ -3,7 +3,7 @@ Adapters and Decorators
 =======================
 
 Adapters
---------
+========
 
 The `adapter pattern <http://en.wikipedia.org/wiki/Adapter_pattern>`_ takes one service contract and adapts it (like a wrapper) to another.
 
@@ -37,14 +37,14 @@ Autofac provides built-in adapter registration so you can register a set of serv
     var buttons = container.Resolve<IEnumerable<ToolbarButton>>();
 
 Decorators
-----------
+==========
 
 The `decorator pattern <http://en.wikipedia.org/wiki/Decorator_pattern>`_ is somewhat similar to the adapter pattern, where one service "wraps" another. However, in contrast to adapters, decorators expose the *same service* as what they're decorating. The point of using decorators is to add functionality to an object without changing the object's signature.
 
 Autofac provides built-in decorator registration so you can register services and have them automatically wrapped with decorator classes.
 
 Simplified Syntax
-=================
+-----------------
 
 Autofac 4.9.0 `came with a simplified decorator syntax <https://alexmg.com/posts/upcoming-decorator-enhancements-in-autofac-4-9>`_ that can be used as an alternative to the classic syntax (below). It is easier to use and has a bit more flexibility than the earlier mechanism.
 
@@ -156,7 +156,7 @@ You can use that context to make decisions in your decorators if you want. It ca
 **You cannot specify a lifetime scope on a decorator.** The lifetime of a decorator is tied to the lifetime of the thing it decorates. The service and all decorators get disposed at the same time. If you decorate a singleton, all the decorators are also going to be singletons. If you decorate something that's instance per request (e.g., in a web app) the decorators will also live for the whole request.
 
 Classic Syntax
-==============
+--------------
 
 The "classic syntax" has been around since Autofac 2.4 and still works today. It's more complicated than the newer syntax but if you have some existing code that uses it, that code will continue to work.
 

@@ -11,9 +11,8 @@ You may recall from the :doc:`registration topic <../register/registration>` tha
 
 Note: Most of the content here is based on `Nick Blumhardt's Autofac lifetime primer <http://nblumhardt.com/2011/01/an-autofac-lifetime-primer/>`_. While some things in Autofac have changed over time, the concepts described there remain valid and may be helpful in understanding lifetime scopes.
 
-------------------------------
 Basic Concepts and Terminology
-------------------------------
+==============================
 
 The **lifetime** of a service is how long the service instance will live in your application - from the original instantiation to :doc:`disposal <disposal>`. For example, if you "new up" an object that implements `IDisposable <https://msdn.microsoft.com/en-us/library/system.idisposable.aspx>`_ and then later call ``Dispose()`` on it, the lifetime of that object is from the time you instantiated it all the way through disposal (or garbage collection if you didn't proactively dispose it).
 
@@ -62,9 +61,8 @@ As you work in your application, it's good to remember these concepts so you mak
 
     **It is important to always resolve services from a lifetime scope and not the root container.** Due to the disposal tracking nature of lifetime scopes, if you resolve a lot of disposable components from the container (the "root lifetime scope"), you may inadvertently cause yourself a memory leak. The root container will hold references to those disposable components for as long as it lives (usually the lifetime of the application) so it can dispose of them. :doc:`You can change disposal behavior if you choose <disposal>`, but it's a good practice to only resolve from a scope. If Autofac detects usage of a singleton or shared component, it will automatically place it in the appropriate tracking scope.
 
---------------------
 Scopes and Hierarchy
---------------------
+====================
 
 The easiest way to visualize lifetime scopes is as a hierarchy, like a tree. You start with the root container - the *root lifetime scope* - and each unit of work (web request, etc.) - each *child lifetime scope* - branches off from there.
 
@@ -87,9 +85,8 @@ Part of the job of the lifetime scope is to :doc:`handle disposal of the compone
 
 You can read more about :doc:`working with lifetime scopes <working-with-scopes>` (including more code examples!), :doc:`component disposal <disposal>` and the different :doc:`instance scopes available <instance-scope>` in the respective documentation.
 
----------------------------
 Example: Singleton Lifetime
----------------------------
+===========================
 
 Earlier we noted that a component will get its dependencies from the scope that owns the component. Let's dive into this with an example: singletons.
 
@@ -197,9 +194,8 @@ In picture format, it looks like this:
 
 As you can see, lifetime scope plays a role not only in how long a component lives but also where it gets its dependencies. As you design your application, you need to consider this so you don't run into issues where you think you're overriding a value but you're foiled by the component's declared lifetime. You can read more about the options for component instance scope :doc:`in our instance scope docs <instance-scope>`.
 
-------------------------
 Example: Web Application
-------------------------
+========================
 
 Let's look at a web application as a more concrete example to illustrate lifetime scope usage. Say you have the following scenario:
 
@@ -240,9 +236,8 @@ A rough sequence of events for a web app framework like :doc:`ASP.NET Core <../i
 4. At the end of each web request, the request lifetime scope will be disposed and the controllers will be garbage collected. The logger will remain alive and cached at the root lifetime scope so it can continue to be injected for the rest of the application lifetime.
 5. At the end of the web application (during shutdown) the web app framework should dispose of the root container and release the logger.
 
-----------------------------
 Additional Topics to Explore
-----------------------------
+============================
 
 .. toctree::
 

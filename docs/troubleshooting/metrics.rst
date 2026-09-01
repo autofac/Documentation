@@ -11,7 +11,7 @@ Autofac 9.1 introduced opt-in performance metrics using `System.Diagnostics.Metr
 If you're interested in tracing to find out why something is wired up how it is, :doc:`Autofac also provides tracing <tracing>`.
 
 Enabling Metrics
-----------------
+================
 
 Set the ``AUTOFAC_METRICS`` environment variable to ``true`` or ``1`` before your process starts.
 
@@ -27,7 +27,7 @@ Set the ``AUTOFAC_METRICS`` environment variable to ``true`` or ``1`` before you
     set AUTOFAC_METRICS=true
 
 Available Counters
-------------------
+==================
 
 Metrics are published under the meter name ``autofac`` (version ``1.0.0``). The following instruments are available:
 
@@ -93,7 +93,7 @@ Metrics are published under the meter name ``autofac`` (version ``1.0.0``). The 
     The lock contention metrics include per-service and per-lifetime-scope detail in their tags. This can produce high-cardinality data, so be mindful of the storage implications if you forward these to an external metrics backend.
 
 Collecting Metrics
-------------------
+==================
 
 Because Autofac uses the standard ``System.Diagnostics.Metrics`` API, you can collect these metrics with any compatible tool.
 

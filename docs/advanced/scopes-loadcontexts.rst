@@ -1,3 +1,4 @@
+=======================================
 AssemblyLoadContext and Lifetime Scopes
 =======================================
 
@@ -69,6 +70,6 @@ You indicate that a lifetime scope is for an ``AssemblyLoadContext`` with the ne
 
   AssemblyLoadContexts are tricky to use in such a way that unloading is guaranteed every time (whether using Autofac or not). See the dotnet documentation on `troubleshooting unloadability <https://learn.microsoft.com/en-us/dotnet/standard/assembly/unloadability#troubleshoot-unloadability-issues>`_ if you run into problems.
 
-You can create additional lifetime scopes from your "load context scope" using the regular `BeginLifetimeScope` method, without needing to further track your load context.
+You can create additional lifetime scopes from your "load context scope" using the regular ``BeginLifetimeScope`` method, without needing to further track your load context.
 
-That means you can load a plugin, then the plugin can resolve `ILifetimeScope` and create new scopes, with all the assembly metadata being isolated to that initial "load context scope".
+That means you can load a plugin, then the plugin can resolve ``ILifetimeScope`` and create new scopes, with all the assembly metadata being isolated to that initial "load context scope".

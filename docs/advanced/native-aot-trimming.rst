@@ -63,7 +63,7 @@ A warning doesn't necessarily mean the feature is broken - it means *the compile
 
     Resolving a relationship type like ``IEnumerable<T>`` or ``Lazy<T>`` does **not** warn at your call site, because that resolution goes through Autofac's built-in registration sources rather than an API you call directly. These work for reference types but can still fail at runtime for value-type cases (see below). "No warning" here doesn't guarantee "fully AOT-safe."
 
-What Fails at Runtime under Native AOT
+What Fails at Runtime Under Native AOT
 ======================================
 
 A couple of scenarios compile cleanly but throw a ``DependencyResolutionException`` at runtime under Native AOT, because they need code that can only be generated at runtime:

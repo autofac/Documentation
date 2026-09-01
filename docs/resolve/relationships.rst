@@ -144,7 +144,7 @@ If you would rather control ``B`` disposal yourself all the time, :doc:`register
 
 Dynamic Instantiation (Func<B>)
 -------------------------------
-Using an *auto-generated factory* can let you resolve a new `B` programmatically within the control flow of your program, without requiring a direct dependency on the Autofac library. Use this relationship type if:
+Using an *auto-generated factory* can let you resolve a new ``B`` programmatically within the control flow of your program, without requiring a direct dependency on the Autofac library. Use this relationship type if:
 
 * You need to create more than one instance of a given service.
 * You want to specifically control when the setup of the service occurs.

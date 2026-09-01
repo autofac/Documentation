@@ -2,17 +2,13 @@
 Composites
 ==========
 
-The `composite pattern <https://en.wikipedia.org/wiki/Composite_pattern>`_ allows a collection of objects to be treated in the
-same way as a single instance of that same type of object.
+The `composite pattern <https://en.wikipedia.org/wiki/Composite_pattern>`_ allows a collection of objects to be treated in the same way as a single instance of that same type of object.
 
-In Autofac 6.0, we added support for expressing the composite pattern for services in your container that have multiple implementations,
-but should be exposed through a single wrapper class.
+In Autofac 6.0, we added support for expressing the composite pattern for services in your container that have multiple implementations, but should be exposed through a single wrapper class.
 
-You can register a **composite wrapper** registration for a service, that will be returned when a consuming class resolves
-that service, and can take a collection of the same service as a constructor parameter.
+You can register a **composite wrapper** registration for a service, that will be returned when a consuming class resolves that service, and can take a collection of the same service as a constructor parameter.
 
-This functionality is particularly useful if you find yourself needing to add a provider for a service, but you
-don't want the consuming code of the original provider to a) have to change, or b) know that there are multiple providers.
+This functionality is particularly useful if you find yourself needing to add a provider for a service, but you don't want the consuming code of the original provider to a) have to change, or b) know that there are multiple providers.
 
 .. sourcecode:: csharp
 
@@ -70,9 +66,7 @@ For more complex composite creation, you can also specify a lambda for your comp
 
     builder.RegisterComposite<ILogSink>((context, parameters, implementations) => new CompositeLogSink(implementations));
 
-In the lambda, ``context`` is the ``IComponentContext`` in which the resolution is happening (so you could resolve other things if needed),
-``parameters`` is an ``IEnumerable<Parameter>`` with all the parameters passed in,
-and ``implementations`` is an ``IEnumerable`` of all the implementations of the service.
+In the lambda, ``context`` is the ``IComponentContext`` in which the resolution is happening (so you could resolve other things if needed), ``parameters`` is an ``IEnumerable<Parameter>`` with all the parameters passed in, and ``implementations`` is an ``IEnumerable`` of all the implementations of the service.
 
 It is also possible to register open generic composites:
 
@@ -90,8 +84,7 @@ It is also possible to register open generic composites:
     // Will return a composite of FileLogSink<HttpClient> and DbLogSink<HttpClient>.
     var sink = container.Resolve<ILogSink<HttpClient>>();
 
-Composite wrappers can have their own additional dependencies, as well as use any combination of the :doc:`implicit relationships <../resolve/relationships>`
-on the set of implementations passed in:
+Composite wrappers can have their own additional dependencies, as well as use any combination of the :doc:`implicit relationships <../resolve/relationships>` on the set of implementations passed in:
 
 .. sourcecode:: csharp
 
@@ -119,7 +112,7 @@ on the set of implementations passed in:
     }
 
 Metadata
---------
+========
 
 Composite registrations can have their own metadata, much like a normal registration; however they do **not** expose any metadata of the individual registrations they wrap:
 
@@ -135,22 +128,19 @@ Composite registrations can have their own metadata, much like a normal registra
     var logSink = container.Resolve<Meta<ILogSink>>();
 
 Lifetime
---------
+========
 
-Composite wrappers can have their own lifetime, much like any other registration. However, you should consider the
-implications of making composite registrations long-living; a ``SingleInstance`` composite would ignore any additional registrations
-for the wrapped service made in nested lifetime scopes (for example).
+Composite wrappers can have their own lifetime, much like any other registration. However, you should consider the implications of making composite registrations long-living; a ``SingleInstance`` composite would ignore any additional registrations for the wrapped service made in nested lifetime scopes (for example).
 
 Decorators
-----------
+==========
 
 When using the composite pattern, decorators are **only applied to the individual implementations**, and **not** to the composite itself.
 
-So, if you register a decorator for ``ILogSink``, and have a composite registration with implementations ``FileLogSink`` and ``DbLogSink``, when you resolve ``ILogSink``
-``FileLogSink`` and ``DbLogSink`` **will** be decorated, but your composite wrapper **will not** be decorated.
+So, if you register a decorator for ``ILogSink``, and have a composite registration with implementations ``FileLogSink`` and ``DbLogSink``, when you resolve ``ILogSink`` ``FileLogSink`` and ``DbLogSink`` **will** be decorated, but your composite wrapper **will not** be decorated.
 
 Composites and Collections
---------------------------
+==========================
 
 Composite registrations are **never** returned when resolving a collection of implementations, even outside of a composite wrapper:
 
