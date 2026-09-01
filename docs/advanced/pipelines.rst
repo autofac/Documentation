@@ -197,6 +197,115 @@ Just like with registration middleware, you can register middleware classes inst
 
     builder.RegisterServiceMiddleware<IMyService>(new MyServiceMiddleware());
 
+If the service type isn't known at compile time - you're looping over types found by a scan, say - there are overloads that take a ``Type`` instead of a generic parameter:
+
+.. code-block:: csharp
+
+    foreach (var serviceType in assembly.GetTypes().Where(t => t.IsInterface))
+    {
+        builder.RegisterServiceMiddleware(serviceType, PipelinePhase.ResolveRequestStart, (context, next) =>
+        {
+            next(context);
+        });
+    }
+
+Two optional arguments are worth knowing about. A ``descriptor`` names the middleware in :doc:`resolve traces <../troubleshooting/tracing>`, so a trace reads ``custom-middleware`` instead of ``anonymous``. A ``MiddlewareInsertionMode`` of ``StartOfPhase`` puts your middleware ahead of the other middleware in the same phase rather than after it.
+
+.. code-block:: csharp
+
+    builder.RegisterServiceMiddleware<IMyService>(
+        "tenant-resolution",
+        PipelinePhase.ScopeSelection,
+        MiddlewareInsertionMode.StartOfPhase,
+        (context, next) => next(context));
+
+Examples
+========
+
+The middleware API is general enough that it's not obvious when you'd reach for it. These are the shapes that come up most often.
+
+Timing a Resolve
+----------------
+
+Wrapping the activation phase measures how long it takes to construct a component. ``NewInstanceActivated`` distinguishes a real activation from a shared instance being handed back, so you don't record timings for work that never happened.
+
+.. code-block:: csharp
+
+    builder.RegisterType<ExpensiveComponent>().ConfigurePipeline(p =>
+    {
+        p.Use(PipelinePhase.Activation, MiddlewareInsertionMode.StartOfPhase, (context, next) =>
+        {
+            var stopwatch = Stopwatch.StartNew();
+            next(context);
+            stopwatch.Stop();
+
+            if (context.NewInstanceActivated)
+            {
+                Console.WriteLine("Activated {0} in {1}ms", context.Service, stopwatch.ElapsedMilliseconds);
+            }
+        });
+    });
+
+Substituting Parameters
+-----------------------
+
+``ParameterSelection`` runs just before activation, which makes it the place to change what gets passed to the constructor. Use ``ChangeParameters`` rather than assigning to ``Parameters``, and append to the existing set so an explicitly-passed parameter still wins.
+
+.. code-block:: csharp
+
+    builder.RegisterType<ReportGenerator>().ConfigurePipeline(p =>
+    {
+        p.Use(PipelinePhase.ParameterSelection, (context, next) =>
+        {
+            var extra = new TypedParameter(typeof(IClock), new SystemClock());
+            context.ChangeParameters(context.Parameters.Concat(new[] { extra }));
+
+            next(context);
+        });
+    });
+
+Short-Circuiting a Resolve
+--------------------------
+
+Setting ``Instance`` and *not* calling ``next`` ends the pipeline and returns your object. This is how you supply an instance from somewhere Autofac doesn't know about - an external cache, for example.
+
+.. code-block:: csharp
+
+    builder.RegisterServiceMiddleware<IPricingTable>(PipelinePhase.Sharing, (context, next) =>
+    {
+        if (cache.TryGet(out IPricingTable cached))
+        {
+            // Skip activation entirely; nothing further in the pipeline runs.
+            context.Instance = cached;
+            return;
+        }
+
+        next(context);
+        cache.Store((IPricingTable)context.Instance);
+    });
+
+Bear in mind that an instance you supply this way was not activated by Autofac, so it isn't tracked for disposal and the :doc:`lifetime events <../lifetime/events>` don't fire for it. If the cached object needs cleaning up, that's yours to arrange.
+
+Applying Behavior Across Many Services
+--------------------------------------
+
+Service middleware plus the ``Type`` overloads cover the "apply this to everything" case that would otherwise mean an extension method on every single registration. Because it attaches to the *service*, it runs no matter which registration ends up satisfying the request - including through :doc:`decorators <adapters-decorators>`, where a registration-level hook would only see the innermost component.
+
+.. code-block:: csharp
+
+    var auditableServices = typeof(Program).Assembly
+        .GetTypes()
+        .Where(t => t.IsInterface && t.IsDefined(typeof(AuditedAttribute), false));
+
+    foreach (var serviceType in auditableServices)
+    {
+        builder.RegisterServiceMiddleware(serviceType, "audit", PipelinePhase.ResolveRequestStart, (context, next) =>
+        {
+            next(context);
+            auditLog.Record(context.Service, context.Instance);
+        });
+    }
+
 Service Middleware Sources
 ==========================
 
