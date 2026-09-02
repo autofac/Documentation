@@ -2,7 +2,7 @@
 Best Practices and Recommendations
 ==================================
 
-You can always ask for Autofac usage guidance `on StackOverflow <https://stackoverflow.com/questions/tagged/autofac>`_ using the ``autofac`` tag or in `the discussion group <https://groups.google.com/forum/#forum/autofac>`_, but these quick tips can help get you going.
+You can always ask for Autofac usage guidance `on StackOverflow <https://stackoverflow.com/questions/tagged/autofac>`_ using the ``autofac`` tag or in `the discussion group <https://groups.google.com/g/autofac>`_, but these quick tips can help get you going.
 
 Always Resolve Dependencies from Nested Lifetimes
 =================================================
@@ -55,7 +55,7 @@ Autofac overrides component registrations by default. This means that an applica
 Use Profilers for Performance Checking
 ======================================
 
-Before doing any performance optimization or making assumptions about potential memory leaks, **always run a profiler** like `SlimTune <http://code.google.com/p/slimtune/>`_, `dotTrace <https://www.jetbrains.com/profiler/>`_, or `ANTS <https://www.red-gate.com/products/dotnet-development/ants-performance-profiler/>`_ to see where time is truly being spent. It might not be where you think.
+Before doing any performance optimization or making assumptions about potential memory leaks, **always run a profiler** - `dotTrace <https://www.jetbrains.com/profiler/>`_, `ANTS <https://www.red-gate.com/products/dotnet-development/ants-performance-profiler/>`_ and the `Visual Studio profiling tools <https://learn.microsoft.com/en-us/visualstudio/profiling/>`_ are all reasonable choices - to see where time is truly being spent. It might not be where you think.
 
 Register Once, Resolve Many
 ===========================
@@ -77,7 +77,7 @@ Becomes:
 
     builder.Register(c => new Component());
 
-This can yield an improvement of up to 10x faster ``Resolve()`` calls, but only makes sense for components that appear in many object graphs. See :doc:`the registration documentation <../register/index>` for more on lambda components.
+A lambda registration skips the reflection Autofac otherwise does to pick and invoke a constructor, so it resolves faster - but the size of the difference depends on the graph, and it only pays off for components that appear in a lot of them. Autofac has a `benchmark suite <https://github.com/autofac/Autofac/tree/develop/bench>`_ if you want to measure the effect on your own workload rather than take a number on faith. See :doc:`the registration documentation <../register/index>` for more on lambda components.
 
 Consider a Container as Immutable
 =================================

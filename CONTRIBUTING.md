@@ -2,7 +2,7 @@
 
 User documentation is viewable at <https://docs.autofac.org> (a CNAME to <https://autofac.readthedocs.io>). It is stored in the `/docs` folder in this source repo.
 
-We also have API docs at <https://autofac.org/apidoc/>. This documentation is what gets put in the <https://github.com/autofac/autofac.github.com/tree/master/apidoc> folder.
+We also have API docs at <https://autofac.org/apidoc/>. This documentation is what gets put in the <https://github.com/autofac/autofac.github.com/tree/main/apidoc> folder.
 
 - [Checkout and Setup](#checkout-and-setup)
 - [Validating Changes](#validating-changes)
@@ -30,8 +30,8 @@ After cloning, set up the tools and dependencies.
 # Set up your Python virtual environment
 python3 -m venv .venv
 
-# Activate the virtual environment (cross-platform)
-.venv\Scripts\Activate.ps1
+# Activate the virtual environment
+.venv/bin/Activate.ps1   # .venv\Scripts\Activate.ps1 on Windows
 
 # Restore dependencies
 npm install
@@ -42,7 +42,7 @@ dotnet tool restore
 pre-commit install
 
 # At times you may need to FORCE PULL tags because the most recent doc version
-# tag follows the `master` branch.
+# tag follows the `main` branch.
 git pull --tags --force
 
 # When you're done, deactivate your virtual environment.
@@ -53,7 +53,6 @@ deactivate
 
 This repository uses `pre-commit` hooks to automatically validate code quality. These hooks run automatically when you commit, and include:
 
-- **eslint**: Lints JavaScript files
 - **markdownlint**: Checks Markdown formatting in `.md` files
 - **doc8**: Validates reStructuredText (`.rst`) files in the `docs/` folder for formatting and style issues
 - **General checks**: YAML/JSON validation, trailing whitespace, merge conflict markers, etc.
@@ -66,6 +65,10 @@ pre-commit run --all-files
 
 # Run the linting
 npm run lint
+
+# Build the docs the way CI does - warnings are errors, which is what
+# catches a broken :doc: reference that the linters cannot see
+python -m sphinx -b html -W --keep-going -d docs/_build/doctrees docs docs/_build/html
 ```
 
 ## VS Code Integration
@@ -78,9 +81,7 @@ The tasks all assume you're working with PowerShell since that's cross-platform.
 
 ## Updating User Docs
 
-To build the docs and see them locally, you need to follow the [Getting Started](https://docs.readthedocs.org/en/latest/getting_started.html) docs on Read The Docs so you get Python and Sphinx installed.
-
-The docs are written in [reStructuredText](http://sphinx-doc.org/rest.html), which is very similar to Markdown but not quite. References below.
+The docs are written in [reStructuredText](https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html), which is similar to Markdown but not the same. References below.
 
 Updates to the documentation checked into the `/docs` folder will automatically propagate to Read The Docs. No build or separate push is required.
 
@@ -140,7 +141,7 @@ DocFX may generate warnings about missing XML documentation. These indicate meth
 
 ### Deploying API Documentation
 
-API documentation is automatically deployed to `autofac.github.com/apidoc/` when you push to the `master` branch (via the `.github/workflows/deploy-apidoc.yaml` workflow). The workflow:
+API documentation is automatically deployed to `autofac.github.com/apidoc/` when you push to the `main` branch (via the `.github/workflows/deploy-apidoc.yaml` workflow). The workflow:
 
 1. Builds the API documentation using DocFX
 2. Synchronizes the built docs to the `autofac/autofac.github.com` repository
@@ -167,20 +168,17 @@ To enable the automated deployment workflow, a repository admin must:
    - `APIDOCS_APP_ID`: The app ID from step 1
    - `APIDOCS_APP_PRIVATE_KEY`: The full contents of the `.pem` file from step 2 (including `-----BEGIN PRIVATE KEY-----` and `-----END PRIVATE KEY-----`)
 
-Once set up, pushing to `master` will automatically deploy updated API docs to `autofac.github.com/apidoc/`.
+Once set up, pushing to `main` will automatically deploy updated API docs to `autofac.github.com/apidoc/`.
 
 ## Updating the Primary Documentation Version
 
 When a new core Autofac version is released, we need to update the docs so that the "latest" is always tagged with the right Autofac version. This happens in a few places:
 
-1. In `./.github/workflows/update-version-tag.yaml` there is a tag setting that indicates which doc tag the `master` branch should follow. This keeps `latest` and that tag version in alignment.
+1. In `./.github/workflows/update-version-tag.yaml` there is a tag setting that indicates which doc tag the `main` branch should follow. This keeps `latest` and that tag version in alignment.
 2. In `./docs/conf.py` there are `version` and `release` values that indicate the version information that will be rendered into the pages.
 
 ## References
 
-- [ReStructured Text Quick Start](http://docutils.sourceforge.net/docs/user/rst/quickstart.html)
-- [ReStructured Text Quick Reference](http://docutils.sourceforge.net/docs/user/rst/quickref.html)
-- [ReStructured Text Cheat Sheet](http://docutils.sourceforge.net/docs/user/rst/cheatsheet.txt)
-- [ReStructured Text Primer](http://sphinx-doc.org/rest.html)
-- [Sphinx Markup Constructs](http://sphinx-doc.org/markup/index.html)
-- [ReadTheDocs Getting Started](https://docs.readthedocs.org/en/latest/getting_started.html)
+- [Sphinx reStructuredText documentation](https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html) - the primer, roles and directives
+- [docutils reStructuredText reference](https://docutils.sourceforge.io/rst.html) - the underlying specification
+- [Read the Docs documentation](https://docs.readthedocs.io/)
