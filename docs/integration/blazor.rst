@@ -1,36 +1,41 @@
-============
+======
 Blazor
-============
+======
 
+`Blazor <https://learn.microsoft.com/en-us/aspnet/core/blazor/>`_ runs the same components in two very different places, and which one you're in decides how Autofac gets wired up. There is nothing Blazor-specific in Autofac itself - the difference is entirely in which host builder you have to work with.
 
+Server-Side Blazor
+==================
 
-`ASP.NET Core Blazor <https://learn.microsoft.com/en-us/aspnet/core/blazor/>`_ uses the generic app hosting in ASP.NET Core 3+ but the two `hosting models <https://learn.microsoft.com/en-us/aspnet/core/blazor/hosting-models>`_ have slightly different integrations.
+Blazor Server, and the server project of a Blazor Web App, run on ordinary ASP.NET Core hosting. :doc:`Set Autofac up exactly as you would for any other ASP.NET Core application <aspnetcore>` - attach ``AutofacServiceProviderFactory`` to the host builder and register through ``ConfigureContainer``. Nothing further is needed.
 
-**Server-side** implementations are configured in exactly the same way as any other `ASP.NET Core 3 <aspnetcore>`_ application.
+Blazor WebAssembly
+==================
 
-**Client-side** injection is slightly more restricted due to requirements for `WebAssembly <https://webassembly.org>`_ hosting.
-
-This example for WebAssembly works as of March 30, 2021 with .NET 5. Example:
+A WebAssembly app - a standalone Blazor WebAssembly project, or the ``.Client`` project of a Blazor Web App - is built by ``WebAssemblyHostBuilder``, which has no ``Host`` property to hang a service provider factory from. Instead it exposes ``ConfigureContainer``, which takes the factory directly:
 
 .. sourcecode:: csharp
 
-  public class Program
-  {
-    public static async Task Main(string[] args)
+    var builder = WebAssemblyHostBuilder.CreateDefault(args);
+
+    builder.ConfigureContainer(new AutofacServiceProviderFactory(ConfigureContainer));
+
+    builder.RootComponents.Add<App>("#app");
+
+    await builder.Build().RunAsync();
+
+    static void ConfigureContainer(ContainerBuilder containerBuilder)
     {
-        var builder = WebAssemblyHostBuilder.CreateDefault(args);
-        builder.ConfigureContainer(new AutofacServiceProviderFactory(ConfigureContainer));
-
-        builder.RootComponents.Add<App>("#app");
-
-        await builder.Build().RunAsync();
+        // Autofac registrations go here.
     }
 
+The registration callback can go either place: pass it to the ``AutofacServiceProviderFactory`` constructor as above, or as the second argument to ``ConfigureContainer``. There is also a factory overload taking ``ContainerBuildOptions`` if you need it.
 
-    private static void ConfigureContainer(ContainerBuilder builder)
-    {
-      // add any registrations here
-    }
-  }
+Components then consume services through the `standard @inject directive <https://learn.microsoft.com/en-us/aspnet/core/blazor/dependency-injection>`_ - the same as with the built-in container.
 
-Once registered, Blazor components can use `dependency injection <https://learn.microsoft.com/en-us/aspnet/core/blazor/dependency-injection>`_ via the `standard @inject Razor directive <https://learn.microsoft.com/en-us/aspnet/core/blazor/dependency-injection#request-a-service-in-a-component>`_.
+A Blazor Web App with WebAssembly interactivity has **two** projects and therefore two containers, one per process. Registrations made in the server project are not visible to components rendered on the client, so anything both sides resolve has to be registered in both.
+
+Trimming
+========
+
+WebAssembly publishes with trimming enabled, which can remove types that are only ever reached by reflection - and reflection is how Autofac finds constructors and properties. :doc:`The Native AOT and trimming page <../advanced/native-aot-trimming>` covers which Autofac features are trim-safe and how to read the warnings.
