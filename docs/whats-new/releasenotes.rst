@@ -31,7 +31,6 @@ Release notes for Autofac and integration packages are all stored in the GitHub 
  - `Common Service Locator <https://github.com/autofac/Autofac.Extras.CommonServiceLocator/releases>`_
  - `Moq <https://github.com/autofac/Autofac.Extras.Moq/releases>`_
  - `FakeItEasy <https://github.com/autofac/Autofac.Extras.FakeItEasy/releases>`_
- - `MvvmCross <https://github.com/autofac/Autofac.Extras.MvvmCross/releases>`_
 
 * Multitenancy
 
@@ -44,3 +43,4 @@ Release notes for Autofac and integration packages are all stored in the GitHub 
  - `Aggregate Services <https://github.com/autofac/Autofac.Extras.AggregateService/releases>`_
  - `Attribute Metadata <https://github.com/autofac/Autofac.Extras.AttributeMetadata/releases>`_
  - `Dynamic Proxy / Interception <https://github.com/autofac/Autofac.Extras.DynamicProxy/releases>`_
+ - `Pooled Instances <https://github.com/autofac/Autofac.Pooling/releases>`_
