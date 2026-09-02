@@ -200,7 +200,9 @@ To cut a release:
    The two hashes must be identical.
 #. Write up the release on the GitHub releases page for the repository, explaining what changed. Packages come from the package sources; there is nothing to attach.
 
-**Never merge** ``develop`` **into** ``main``\ **, and never merge** ``main`` **back into** ``develop``\ **.** A ``--no-ff`` merge creates a commit that exists only on ``main`` - a commit that was never built on ``develop``, that changes the hash being released, and that leaves ``develop`` permanently one commit behind. That is exactly the drift the same-hash rule exists to prevent.
+**Never create a merge commit between the two branches, in either direction.** ``--ff-only`` is the only merge that should ever run against them; if it refuses, stop and reconcile rather than dropping the flag. A ``--no-ff`` merge produces a commit that exists only on ``main`` - one that was never built on ``develop``, that changes the hash being released, and that leaves ``develop`` permanently one commit behind. That is exactly the drift the same-hash rule exists to prevent.
+
+Standard Gitflow would also have you merge the release branch back into ``develop`` when you're done. Don't. The fast-forward already left both branches on the same commit, so there is nothing to merge back.
 
 If a release does end up with a merge commit on ``main``, fix it by fast-forwarding ``develop`` up to ``main`` instead:
 
