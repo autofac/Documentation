@@ -98,12 +98,18 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'furo'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-#html_theme_options = {}
+# The source_* keys render the "Edit this page" link. Read the Docs injects an
+# equivalent of its own, but Furo doesn't read that context.
+html_theme_options = {
+    'source_repository': 'https://github.com/autofac/Documentation/',
+    'source_branch': 'main',
+    'source_directory': 'docs/',
+}
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
