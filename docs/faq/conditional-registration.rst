@@ -21,6 +21,11 @@ Use Modules
 
 There is an example of this :doc:`in the documentation for Autofac modules <../configuration/modules>`.
 
+Conditional Registration
+========================
+
+If the condition is "only register this when something else hasn't already," Autofac has that built in. ``OnlyIf()`` takes a predicate over the registrations made so far, and ``IfNotRegistered()`` is the shorthand for standing down when a service already has a provider. :ref:`Both are covered in the registration documentation <register-conditional-registration>`.
+
 Lambda Registrations
 ====================
 

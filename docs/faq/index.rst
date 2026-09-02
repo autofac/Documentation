@@ -9,6 +9,8 @@ Frequently Asked Questions
     instance-per-session.rst
     iis-restart.rst
     conditional-registration.rst
+    update-container.rst
+    plugin-assemblies.rst
     share-across-app-types.rst
     isolate-autofac.rst
     binding-redirect.rst

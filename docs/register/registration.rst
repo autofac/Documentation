@@ -427,6 +427,8 @@ To override this behavior, use the ``PreserveExistingDefaults()`` modifier:
 
 In this scenario, ``ConsoleLogger`` will be the default for ``ILogger`` because the later registration for ``FileLogger`` used ``PreserveExistingDefaults()``.
 
+.. _register-conditional-registration:
+
 Conditional Registration
 ========================
 
