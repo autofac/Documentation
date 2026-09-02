@@ -240,8 +240,7 @@ Need Help?
 ==========
 
 - You can `ask questions on StackOverflow <https://stackoverflow.com/questions/tagged/autofac>`_.
-- You can `participate in the Autofac Google Group <https://groups.google.com/forum/#forum/autofac>`_.
-- There's an introductory `Autofac tutorial <https://www.codeproject.com/KB/architecture/di-with-autofac.aspx>`_ on CodeProject.
+- You can `participate in the Autofac discussion group <https://groups.google.com/g/autofac>`_.
 - We have :doc:`advanced debugging tips <../troubleshooting/index>` if you want to dive deep.
 
 Building from Source

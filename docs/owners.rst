@@ -65,7 +65,7 @@ Issue Review
 
 Issues come in for a lot of reasons - from questions to bug reports to enhancement requests.
 
-If the issue is a question, we generally try to get them to post to `StackOverflow <https://stackoverflow.com>`_ and tag the question ``autofac``. We do that because then the question can be searched by other people. People trying to figure out how something works largely won't come looking through the closed issues list in GitHub, so answering the question in GitHub only helps *that one person* while answering on StackOverflow can help many people. We also discourage folks from double-posting questions - if it's on StackOverflow *and* it's been filed on GitHub, put a link to the StackOverflow question in the issue and close the issue. (This information should also be in the issue template in every Autofac repo, so folks double-posting aren't actually reading the issue template.)
+If the issue is a question, we generally try to get them to post to `StackOverflow <https://stackoverflow.com/questions/tagged/autofac>`_ and tag the question ``autofac``. We do that because then the question can be searched by other people. People trying to figure out how something works largely won't come looking through the closed issues list in GitHub, so answering the question in GitHub only helps *that one person* while answering on StackOverflow can help many people. We also discourage folks from double-posting questions - if it's on StackOverflow *and* it's been filed on GitHub, put a link to the StackOverflow question in the issue and close the issue. (This information should also be in the issue template in every Autofac repo, so folks double-posting aren't actually reading the issue template.)
 
 If the issue is a bug report, we need some ability to reproduce the issue so we can verify it. Ideally this is in the form of a simple, self-contained failing unit test. If there is no reproduction, encourage the person to add one so you can more adequately help.
 
@@ -119,11 +119,9 @@ Support is one of those "hidden costs" of being an owner of an open source proje
 
 We accept support requests through a variety of channels.
 
-- `StackOverflow <https://stackoverflow.com>`_ with questions that are tagged ``autofac``.
-- `Google Groups <https://groups.google.com/forum/#!forum/autofac>`_
-- `Twitter <https://twitter.com/autofacioc>`_
-- `Gitter <https://gitter.im/autofac/Autofac>`_
-- GitHub issues (though, ideally, "How do I...?" sorts of questions go on StackOverflow)
+- `StackOverflow <https://stackoverflow.com/questions/tagged/autofac>`_ with questions tagged ``autofac``.
+- `The Autofac discussion group <https://groups.google.com/g/autofac>`_.
+- GitHub issues, though ideally "How do I...?" questions go to StackOverflow.
 
 At a minimum, as an owner you should subscribe to the ``autofac`` questions on SO and the Google Group.
 
@@ -174,17 +172,47 @@ From a general policy perspective, we should always be *compatible* with the lat
 Release Process
 ===============
 
-We follow the `Gitflow workflow process <https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow/>`_. Ongoing development should happen in the ``develop`` branch. Continuous integration builds get published to MyGet and can be consumed for testing purposes.
+We follow the `Gitflow workflow process <https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow/>`_. Ongoing development happens in the ``develop`` branch, and the release branch is ``main``.
 
-When it's time to cut a release, we'll:
+Pushes to ``develop`` publish packages to `GitHub Packages <https://github.com/orgs/autofac/packages>`_, which is where you get builds for testing before a release. Pushing a ``vX.Y.Z`` tag publishes to both GitHub Packages and NuGet - **the tag push is what releases to NuGet, not the push of** ``main``\ **.**
 
-- Ensure the semantic version is correct based on the changes since the last release. Update if needed, do a final CI build on the ``develop`` branch.
-- Merge ``develop`` into ``master`` and tag the repo with ``vX.Y.Z`` using the semantic version of the release.
-- After the CI build is complete and pushed to MyGet, push the package from MyGet to NuGet as the final release.
-- When NuGet has the new release, download the published package manually from NuGet.
-- Create a release page on the GitHub repository for the thing that just released. In that release page, add the release notes explaining the changes that have taken place. Upload the .nupkg you downloaded from NuGet so folks can get it if needed.
+**After a release,** ``develop`` **and** ``main`` **must point at the exact same commit hash.** Not equivalent content - the same hash. The release has to ship the commit that was actually built and validated on ``develop``.
 
-We maintain the manual .nupkg download because there are some areas around the world that may have NuGet blocked or strongly filtered. This allows those areas to manually get the library if they need it and host their own repository.
+To cut a release:
+
+#. Check the semantic version is right for the changes since the last release, update it in ``default.proj`` if needed, and let a final CI build run on ``develop``.
+#. Fast-forward ``main`` up to ``develop``:
+
+   .. sourcecode:: shell
+
+       git checkout main
+       git merge --ff-only develop
+
+   Always ``--ff-only``. If it refuses, ``main`` has commits ``develop`` doesn't - stop and reconcile. Do not fall back to a merge commit.
+#. Tag the release on ``main`` with ``git tag vX.Y.Z``, push ``main``, then push the tag.
+#. Switch back to ``develop`` locally, so nothing lands on ``main`` by accident.
+#. Confirm the two branches agree:
+
+   .. sourcecode:: shell
+
+       git rev-parse origin/develop origin/main
+
+   The two hashes must be identical.
+#. Write up the release on the GitHub releases page for the repository, explaining what changed. Packages come from the package sources; there is nothing to attach.
+
+**Never create a merge commit between the two branches, in either direction.** ``--ff-only`` is the only merge that should ever run against them; if it refuses, stop and reconcile rather than dropping the flag. A ``--no-ff`` merge produces a commit that exists only on ``main`` - one that was never built on ``develop``, that changes the hash being released, and that leaves ``develop`` permanently one commit behind. That is exactly the drift the same-hash rule exists to prevent.
+
+Standard Gitflow would also have you merge the release branch back into ``develop`` when you're done. Don't. The fast-forward already left both branches on the same commit, so there is nothing to merge back.
+
+If a release does end up with a merge commit on ``main``, fix it by fast-forwarding ``develop`` up to ``main`` instead:
+
+.. sourcecode:: shell
+
+    git checkout develop
+    git merge --ff-only origin/main
+    git push origin develop
+
+That moves the ``develop`` pointer without creating a commit, leaving both tips on the same hash.
 
 You Are Not Alone
 =================
