@@ -28,7 +28,7 @@ import os
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx_copybutton']
+extensions = ['sphinx_copybutton', 'notfound.extension', 'sphinx_sitemap']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -110,6 +110,19 @@ html_theme_options = {
     'source_branch': 'main',
     'source_directory': 'docs/',
 }
+
+# Where Read the Docs serves the default version. Sphinx emits this as
+# <link rel="canonical">, and sphinx-sitemap builds every URL from it.
+html_baseurl = 'https://docs.autofac.org/en/latest/'
+
+# html_baseurl already carries the language and version, so the sitemap only
+# needs the page link appended. The default scheme would repeat both, and would
+# use the version above ('9.0') rather than the 'latest' the site is served at.
+sitemap_url_scheme = '{link}'
+
+# Generated pages with nothing to index; the 404 in particular should never be
+# advertised to a crawler.
+sitemap_excludes = ['404.html', 'search.html', 'genindex.html']
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
