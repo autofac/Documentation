@@ -180,6 +180,26 @@ Lifetime Scopes and Disposal
 
 Just as with the ``Func<T>`` relationships or calling ``Resolve<T>()`` directly, using delegate factories is resolving something from a lifetime scope. If the thing you're resolving is disposable, :doc:`the lifetime scope will track it and dispose of it when the scope is disposed <../lifetime/disposal>`. Resolving directly from the container or from a very long-lived lifetime scope when using disposable components may result in a memory leak as the scope holds references to all the disposable components resolved.
 
+AOT and Runtime Code Generation
+===============================
+
+Autofac builds a delegate factory by compiling an expression tree the first time the factory type is resolved, which requires the runtime to generate code. Delegate factories therefore fail on runtimes that compile everything ahead of time and have no JIT available - notably Mono full AOT, which is what iOS and MAUI release builds use. The failure surfaces when the factory is resolved rather than at build time::
+
+    Autofac.Core.DependencyResolutionException: An exception was thrown while activating λ:System.Func`N[<Parameters>].
+     ---> System.ExecutionEngineException: Attempting to JIT compile method '(wrapper dynamic-method) <signature>' while running in aot-only mode.
+
+On these platforms, resolve the component directly and supply the parameters yourself. Delegate factories match parameters by name, so ``NamedParameter`` is the closest equivalent:
+
+.. sourcecode:: csharp
+
+    var holding = scope.Resolve<Shareholding>(
+      new NamedParameter("symbol", "ABC"),
+      new NamedParameter("holding", 1234u));
+
+Enabling the `Mono interpreter <https://learn.microsoft.com/dotnet/maui/macios/interpreter>`_ also avoids the error, at the cost of runtime performance across the whole app.
+
+:doc:`Native AOT and trimming <native-aot-trimming>` covers trimming and .NET Native AOT more generally.
+
 RegisterGeneratedFactory (Obsolete)
 ===================================
 
