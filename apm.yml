@@ -1,6 +1,6 @@
 name: documentation
 version: 1.0.0
-description: AI agent instructions for Documentation, generated from autofac/.github by tools/Update-AiInstruction.ps1 there.
+description: AI agent instructions for Documentation.
 author: Autofac Project
 targets:
   - claude
